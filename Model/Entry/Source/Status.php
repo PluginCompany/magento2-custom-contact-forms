@@ -1,0 +1,116 @@
+<?php
+/**
+ * Copyright (c) 2014-2026 Plugin Company
+ *
+ * This file is part of Custom Contact Forms for Magento 2, released under the MIT License.
+ * See the LICENSE file in the project root.
+ */
+namespace PluginCompany\ContactForms\Model\Entry\Source;
+
+class Status implements \Magento\Framework\Option\ArrayInterface
+{
+    /**
+     * get possible values
+     * @access public
+     * @param bool $withEmpty
+     * @return array
+     * @author Milan Simek
+     */
+    public function getAllOptions($withEmpty = true){
+        $options =  array(
+            array(
+                'label' => __('New'),
+                'value' => 0
+            ),
+            array(
+                'label' => __('Viewed'),
+                'value' => 1
+            ),
+            array(
+                'label' => __('In Progress'),
+                'value' => 2
+            ),
+            array(
+                'label' => __('On Hold'),
+                'value' => 3
+            ),
+            array(
+                'label' => __('Awaiting User'),
+                'value' => 4
+            ),
+            array(
+                'label' => __('Answered'),
+                'value' => 5
+            ),
+            array(
+                'label' => __('Approved'),
+                'value' => 6
+            ),
+            array(
+                'label' => __('Rejected'),
+                'value' => 7
+            ),
+            array(
+                'label' => __('Closed'),
+                'value' => 8
+            ),
+            array(
+                'label' => __('Complete'),
+                'value' => 9
+            ),
+        );
+        if ($withEmpty) {
+            array_unshift($options, array('label'=>'', 'value'=>''));
+        }
+        return $options;
+
+    }
+    /**
+     * get options as array
+     * @access public
+     * @param bool $withEmpty
+     * @return string
+     * @author Milan Simek
+     */
+    public function getOptionsArray($withEmpty = true) {
+        $options = array();
+        foreach ($this->getAllOptions($withEmpty) as $option) {
+            $options[$option['value']] = $option['label'];
+        }
+        return $options;
+    }
+
+    public function toOptionArray($withEmpty = true){
+        return $this->getAllOptions($withEmpty);
+    }
+    /**
+     * get option text
+     * @access public
+     * @param mixed $value
+     * @return string
+     * @author Milan Simek
+     */
+    public function getOptionText($value) {
+        $options = $this->getOptionsArray();
+        if (!is_array($value)) {
+            $value = array($value);
+        }
+        $texts = array();
+        foreach ($value as $v) {
+            if (isset($options[$v])) {
+                $texts[] = $options[$v];
+            }
+        }
+        return implode(', ', $texts);
+    }
+
+    /**
+     * Get options in "key-value" format
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->getOptionsArray();
+    }
+}

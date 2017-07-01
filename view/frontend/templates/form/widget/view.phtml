@@ -1,0 +1,54 @@
+<?php
+/**
+ * Copyright (c) 2014-2026 Plugin Company
+ *
+ * This file is part of Custom Contact Forms for Magento 2, released under the MIT License.
+ * See the LICENSE file in the project root.
+ */
+
+/**
+ * Form view widget template
+ *
+ * @category    PluginCompany
+ * @package     PluginCompany_ContactForms
+ * @author      Milan Simek
+ */
+$form = $this->getCurrentForm();
+if ($form) {
+    ?>
+<div data-mage-init='{"PluginCompany_ContactForms/js/<?php echo $this->getShowFormAs(); ?>": <?php echo $this->getJsConfigJson(); ?>}'>
+    <div style="<?php echo $this->getWrapperStyles(); ?>">
+        <div id="pccf_form_<?php echo $form->getId() ?>"
+             class="<?php echo $this->getCssClasses(); ?>"
+             style="<?php echo $this->getStyles(); ?>;">
+            <img class="pccf_loader" src="<?php echo $this->getViewFileUrl('PluginCompany_ContactForms::img/gears-anim.gif'); ?>" style="position:absolute;left:50%;top:50%;margin-left:-90px;margin-top:-80px" />
+            <div class="form-view pccformwrapper <?php echo $form->getWrapClass(); ?> " style="position:relative;visibility:hidden;">
+                <?php if ($form->isPanel()) { ?>
+            <?php if ($form->getShowTitle() == '1') { ?>
+                <div class="panel-heading" style="text-align:center">
+                    <h3 class="panel-title"><?php if($f = $form->getFrontendTitle()){echo $f;}else{echo '&nbsp;';}; ?></h3>
+                </div>
+            <?php } ?>
+                <div class="panel-body" style="padding-top:14px">
+                    <?php }elseif ($form->getFormWrapper() == 'well' && $form->getShowTitle() == '1') {?>
+                        <legend style="text-align:center"><?php echo $form->getFrontendTitle();?></legend>
+                    <?php } ?>
+                    <div class="messages"></div>
+                    <div class="form-horizontal pccform" method="post" action="<?php echo $this->getSubmitUrl();?>" data-mage-init='{"validation":{}}'>
+                        <?php echo $this->getFormHtml(); ?>
+                    </div>
+                    <?php if ($form->isPanel()) { ?>
+                </div>
+            <?php } ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php if(trim($form->getCustomCss())){ ?>
+    <style type="text/css">
+        <?php echo $form->getCustomCss(); ?>
+    </style>
+<?php } ?>
+<?php } ?>
+

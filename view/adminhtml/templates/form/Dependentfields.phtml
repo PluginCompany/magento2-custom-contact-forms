@@ -1,0 +1,27 @@
+<?php
+/**
+ * Copyright (c) 2014-2026 Plugin Company
+ *
+ * This file is part of Custom Contact Forms for Magento 2, released under the MIT License.
+ * See the LICENSE file in the project root.
+ */
+?>
+<dfields></dfields>
+
+<script>
+    var DfieldsJson = <?php echo $block->getDfieldsJSON(); ?>;
+</script>
+<script>
+    require([
+            'PluginCompany_ContactForms/dfields/src/js/main'
+        ], function(Dfields) {
+            return {}
+        }
+    );
+    function updateDfieldInput(val){
+        require('uiRegistry')
+            .get('plugincompany_form_form.plugincompany_form_form.conditional_fields.dfields.dependent_fields')
+            .value(val);
+    }
+</script>
+
