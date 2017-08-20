@@ -11,7 +11,7 @@ namespace PluginCompany\ContactForms\Controller\Adminhtml;
 abstract class Entry extends \Magento\Backend\App\Action
 {
 
-    const ADMIN_RESOURCE = 'PluginCompany_ContactForms::top_level';
+    const ADMIN_RESOURCE = 'PluginCompany_ContactForms::manage_entry';
     protected $_coreRegistry;
 
     /**

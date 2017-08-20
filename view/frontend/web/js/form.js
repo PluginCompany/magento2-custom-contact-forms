@@ -470,7 +470,7 @@ define([
             this.form.find('option').each(function() {
                 var opt = $(this);
                 var text= opt.text();
-                if(!text.indexOf('||||')) return;
+                if(text.indexOf('||||') == -1) return;
                 text = text.split('||||');
                 $.each(text, function(k, v) {
                     opt.before('<option>' + v + '</option>');

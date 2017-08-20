@@ -12,7 +12,7 @@ use Magento\Framework\Exception\LocalizedException;
 
 class Save extends \Magento\Backend\App\Action
 {
-
+    const ADMIN_RESOURCE = 'PluginCompany_ContactForms::manage_entry';
     protected $dataPersistor;
 
     /**

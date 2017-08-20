@@ -11,6 +11,7 @@ namespace PluginCompany\ContactForms\Controller\Adminhtml\Entry;
 class Index extends \Magento\Backend\App\Action
 {
 
+    const ADMIN_RESOURCE = 'PluginCompany_ContactForms::manage_entry';
     protected $resultPageFactory;
 
     /**

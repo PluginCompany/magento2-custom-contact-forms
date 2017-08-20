@@ -3,17 +3,12 @@
 	<acl>
 		<resources>
 			<resource id="Magento_Backend::admin">
-				<resource id="PluginCompany_ContactForms::Form" sortOrder="10" title="Form">
-					<resource id="PluginCompany_ContactForms::Form_save" sortOrder="10" title="Save Form"/>
-					<resource id="PluginCompany_ContactForms::Form_delete" sortOrder="20" title="Delete Form"/>
-					<resource id="PluginCompany_ContactForms::Form_update" sortOrder="30" title="Update Form"/>
-					<resource id="PluginCompany_ContactForms::Form_view" sortOrder="40" title="View Form"/>
-				</resource>
-				<resource id="PluginCompany_ContactForms::Entry" sortOrder="10" title="Entry">
-					<resource id="PluginCompany_ContactForms::Entry_save" sortOrder="10" title="Save Entry"/>
-					<resource id="PluginCompany_ContactForms::Entry_delete" sortOrder="20" title="Delete Entry"/>
-					<resource id="PluginCompany_ContactForms::Entry_update" sortOrder="30" title="Update Entry"/>
-					<resource id="PluginCompany_ContactForms::Entry_view" sortOrder="40" title="View Entry"/>
+                <resource id="Magento_Backend::content">
+					<resource id="PluginCompany_ContactForms::general" sortOrder="10" title="Custom Contact Forms">
+						<resource id="PluginCompany_ContactForms::manage_form" sortOrder="0" title="Manage Forms"/>
+						<resource id="PluginCompany_ContactForms::manage_entry" sortOrder="10" title="Manage Form Submissions"/>
+						<resource id="PluginCompany_ContactForms::system_config" sortOrder="20" title="System Configuration"/>
+					</resource>
 				</resource>
 			</resource>
 		</resources>

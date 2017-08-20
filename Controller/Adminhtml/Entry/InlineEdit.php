@@ -11,6 +11,7 @@ namespace PluginCompany\ContactForms\Controller\Adminhtml\Entry;
 class InlineEdit extends \Magento\Backend\App\Action
 {
 
+    const ADMIN_RESOURCE = 'PluginCompany_ContactForms::manage_entry';
     protected $jsonFactory;
 
     /**
