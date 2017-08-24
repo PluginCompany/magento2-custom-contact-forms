@@ -61,7 +61,6 @@ class Submit extends Action
         EntryFactory $entryFactory,
         EntryRepository $entryRepository,
         FormRepository $formRepository,
-        LoggerInterface $logger,
         Data $jsonHelper,
         ContextHelper $contextHelper,
         Session $customerSession,
@@ -71,7 +70,7 @@ class Submit extends Action
         $this->entryFactory = $entryFactory;
         $this->entryRepository = $entryRepository;
         $this->formRepository = $formRepository;
-        $this->logger = $logger;
+        $this->logger = $contextHelper->getLogger();
         $this->jsonHelper = $jsonHelper;
         $this->contextHelper = $contextHelper;
         $this->customerSession = $customerSession;

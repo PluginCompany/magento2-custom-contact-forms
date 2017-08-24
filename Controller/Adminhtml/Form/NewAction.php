@@ -17,14 +17,16 @@ class NewAction extends \PluginCompany\ContactForms\Controller\Adminhtml\Form
      * @param \Magento\Backend\App\Action\Context $context
      * @param \Magento\Framework\Registry $coreRegistry
      * @param \Magento\Backend\Model\View\Result\ForwardFactory $resultForwardFactory
+     * @param \PluginCompany\ContactForms\Model\FormRepository $formRepository
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
         \Magento\Framework\Registry $coreRegistry,
-        \Magento\Backend\Model\View\Result\ForwardFactory $resultForwardFactory
+        \Magento\Backend\Model\View\Result\ForwardFactory $resultForwardFactory,
+        \PluginCompany\ContactForms\Model\FormRepository $formRepository
     ) {
         $this->resultForwardFactory = $resultForwardFactory;
-        parent::__construct($context, $coreRegistry);
+        parent::__construct($context, $coreRegistry, $formRepository);
     }
 
     /**

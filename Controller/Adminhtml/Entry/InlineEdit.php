@@ -13,17 +13,21 @@ class InlineEdit extends \Magento\Backend\App\Action
 
     const ADMIN_RESOURCE = 'PluginCompany_ContactForms::manage_entry';
     protected $jsonFactory;
+    protected $entryRepository;
 
     /**
      * @param \Magento\Backend\App\Action\Context $context
      * @param \Magento\Framework\Controller\Result\JsonFactory $jsonFactory
+     * @param \PluginCompany\ContactForms\Model\EntryRepository
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
-        \Magento\Framework\Controller\Result\JsonFactory $jsonFactory
+        \Magento\Framework\Controller\Result\JsonFactory $jsonFactory,
+        \PluginCompany\ContactForms\Model\EntryRepository $entryRepository
     ) {
         parent::__construct($context);
         $this->jsonFactory = $jsonFactory;
+        $this->entryRepository = $entryRepository;
     }
 
     /**
@@ -46,7 +50,7 @@ class InlineEdit extends \Magento\Backend\App\Action
             } else {
                 foreach (array_keys($postItems) as $modelid) {
                     /** @var \Magento\Cms\Model\Block $block */
-                    $model = $this->_objectManager->create('PluginCompany\ContactForms\Model\Entry')->load($modelid);
+                    $model = $this->entryRepository->getByIdOrNew($modelid);
                     try {
                         $model->setData(array_merge($model->getData(), $postItems[$modelid]));
                         $model->save();

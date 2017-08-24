@@ -17,12 +17,17 @@ abstract class Entry extends \Magento\Backend\App\Action
     /**
      * @param \Magento\Backend\App\Action\Context $context
      * @param \Magento\Framework\Registry $coreRegistry
+     * @param \PluginCompany\ContactForms\Model\EntryRepository
      */
+    protected $entryRepository;
+
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
-        \Magento\Framework\Registry $coreRegistry
+        \Magento\Framework\Registry $coreRegistry,
+        \PluginCompany\ContactForms\Model\EntryRepository $entryRepository
     ) {
         $this->_coreRegistry = $coreRegistry;
+        $this->entryRepository = $entryRepository;
         parent::__construct($context);
     }
 

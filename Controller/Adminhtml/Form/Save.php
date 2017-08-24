@@ -18,14 +18,23 @@ class Save extends \Magento\Backend\App\Action
     protected $dataPersistor;
 
     /**
+     * @var \PluginCompany\ContactForms\Model\FormRepository
+     */
+    protected $formRepository;
+
+    /**
      * @param \Magento\Backend\App\Action\Context $context
      * @param \Magento\Framework\App\Request\DataPersistorInterface $dataPersistor
+     * @param \PluginCompany\ContactForms\Model\FormRepository
      */
+
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
-        \Magento\Framework\App\Request\DataPersistorInterface $dataPersistor
+        \Magento\Framework\App\Request\DataPersistorInterface $dataPersistor,
+        \PluginCompany\ContactForms\Model\FormRepository $formRepository
     ) {
         $this->dataPersistor = $dataPersistor;
+        $this->formRepository = $formRepository;
         parent::__construct($context);
     }
 
@@ -41,8 +50,8 @@ class Save extends \Magento\Backend\App\Action
         $data = $this->getRequest()->getPostValue();
         if ($data) {
             $id = $this->getRequest()->getParam('form_id');
-        
-            $model = $this->_objectManager->create('PluginCompany\ContactForms\Model\Form')->load($id);
+
+            $model = $this->formRepository->getByIdOrNew($id);
             if (!$model->getId() && $id) {
                 $this->messageManager->addErrorMessage(__('This Form no longer exists.'));
                 return $resultRedirect->setPath('*/*/');

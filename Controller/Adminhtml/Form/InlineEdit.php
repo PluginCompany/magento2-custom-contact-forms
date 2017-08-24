@@ -14,15 +14,24 @@ class InlineEdit extends \Magento\Backend\App\Action
     protected $jsonFactory;
 
     /**
+     * @var \PluginCompany\ContactForms\Model\FormRepository
+     */
+    protected $formRepository;
+
+    /**
      * @param \Magento\Backend\App\Action\Context $context
      * @param \Magento\Framework\Controller\Result\JsonFactory $jsonFactory
+     * @param \PluginCompany\ContactForms\Model\FormRepository
      */
+
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
-        \Magento\Framework\Controller\Result\JsonFactory $jsonFactory
+        \Magento\Framework\Controller\Result\JsonFactory $jsonFactory,
+        \PluginCompany\ContactForms\Model\FormRepository $formRepository
     ) {
         parent::__construct($context);
         $this->jsonFactory = $jsonFactory;
+        $this->formRepository = $formRepository;
     }
 
     /**
@@ -44,9 +53,8 @@ class InlineEdit extends \Magento\Backend\App\Action
                 $error = true;
             } else {
                 foreach (array_keys($postItems) as $modelid) {
-                    /** @var \Magento\Cms\Model\Block $block */
-                    $model = $this->_objectManager->create('PluginCompany\ContactForms\Model\Form')->load($modelid);
                     try {
+                        $model = $this->formRepository->getById($modelid);
                         $model->setData(array_merge($model->getData(), $postItems[$modelid]));
                         $model->save();
                     } catch (\Exception $e) {

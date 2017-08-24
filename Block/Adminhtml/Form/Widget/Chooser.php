@@ -10,32 +10,33 @@ namespace PluginCompany\ContactForms\Block\Adminhtml\Form\Widget;;
  */
 class Chooser extends \Magento\Backend\Block\Widget\Grid\Extended
 {
+
     /**
-     * @var \Magento\Cms\Model\BlockFactory
-     */
-    protected $_blockFactory;
+     * @var  \PluginCompany\ContactForms\Model\FormRepository
+    */
+    protected $formRepository;
 
     /**
      * @var \Magento\Cms\Model\ResourceModel\Block\CollectionFactory
      */
-    protected $_collectionFactory;
+    protected $collectionFactory;
 
     /**
      * @param \Magento\Backend\Block\Template\Context $context
      * @param \Magento\Backend\Helper\Data $backendHelper
-     * @param \Magento\Cms\Model\BlockFactory $blockFactory
-     * @param \Magento\Cms\Model\ResourceModel\Block\CollectionFactory $collectionFactory
+     * @param \PluginCompany\ContactForms\Model\FormRepository $formRepository
+     * @param \PluginCompany\ContactForms\Model\ResourceModel\Form\CollectionFactory $collectionFactory
      * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
         \Magento\Backend\Helper\Data $backendHelper,
-        \PluginCompany\ContactForms\Model\FormFactory $blockFactory,
+        \PluginCompany\ContactForms\Model\FormRepository $formRepository,
         \PluginCompany\ContactForms\Model\ResourceModel\Form\CollectionFactory $collectionFactory,
         array $data = []
     ) {
-        $this->_blockFactory = $blockFactory;
-        $this->_collectionFactory = $collectionFactory;
+        $this->formRepository = $formRepository;
+        $this->collectionFactory = $collectionFactory;
         parent::__construct($context, $backendHelper, $data);
     }
 
@@ -79,9 +80,9 @@ class Chooser extends \Magento\Backend\Block\Widget\Grid\Extended
         );
 
         if ($element->getValue()) {
-            $block = $this->_blockFactory->create()->load($element->getValue());
-            if ($block->getId()) {
-                $chooser->setLabel($this->escapeHtml($block->getTitle()));
+            $form = $this->formRepository->getByIdOrNew($element->getValue());
+            if ($form->getId()) {
+                $chooser->setLabel($this->escapeHtml($form->getTitle()));
             }
         }
 
@@ -117,13 +118,13 @@ class Chooser extends \Magento\Backend\Block\Widget\Grid\Extended
     }
 
     /**
-     * Prepare Cms static blocks collection
+     * Prepare Contact Form collection
      *
      * @return \Magento\Backend\Block\Widget\Grid\Extended
      */
     protected function _prepareCollection()
     {
-        $this->setCollection($this->_collectionFactory->create());
+        $this->setCollection($this->collectionFactory->create());
         return parent::_prepareCollection();
     }
 

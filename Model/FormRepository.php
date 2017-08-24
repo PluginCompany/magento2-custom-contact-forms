@@ -105,6 +105,13 @@ class FormRepository implements FormRepositoryInterface
         return $form;
     }
 
+    public function getByIdOrNew($formId)
+    {
+        $form = $this->formFactory->create();
+        $form->getResource()->load($form, $formId);
+        return $form;
+    }
+
     /**
      * {@inheritdoc}
      */

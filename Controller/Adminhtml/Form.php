@@ -17,11 +17,16 @@ abstract class Form extends \Magento\Backend\App\Action
     /**
      * @param \Magento\Backend\App\Action\Context $context
      * @param \Magento\Framework\Registry $coreRegistry
+     * @var \PluginCompany\ContactForms\Model\FormRepository
      */
+    protected $formRepository;
+
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
-        \Magento\Framework\Registry $coreRegistry
+        \Magento\Framework\Registry $coreRegistry,
+        \PluginCompany\ContactForms\Model\FormRepository $formRepository
     ) {
+        $this->formRepository = $formRepository;
         $this->_coreRegistry = $coreRegistry;
         parent::__construct($context);
     }

@@ -16,18 +16,18 @@ class Dependentfields extends \Magento\Framework\View\Element\Template
     private $request;
 
     /**
-     * @var \PluginCompany\ContactForms\Model\FormFactory
+     * @var \PluginCompany\ContactForms\Model\FormRepository
      */
-    private $formFactory;
+    private $formRepository;
 
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\Framework\App\Request\Http $request,
-        \PluginCompany\ContactForms\Model\FormFactory $formFactory,
+        \PluginCompany\ContactForms\Model\FormRepository $formRepository,
         array $data = []
     ){
         $this->request = $request;
-        $this->formFactory = $formFactory;
+        $this->formRepository = $formRepository;
         parent::__construct(
             $context,
             $data
@@ -52,7 +52,7 @@ class Dependentfields extends \Magento\Framework\View\Element\Template
             $json = '[]';
         }else{
             //form contents of existing form
-            $json = $this->formFactory->create()->load($id)->getDependentFields();
+            $json = $this->formRepository->getByIdOrNew($id)->getDependentFields();
             if(!$json){
                 $json = '[]';
             }

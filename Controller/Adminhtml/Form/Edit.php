@@ -17,14 +17,16 @@ class Edit extends \PluginCompany\ContactForms\Controller\Adminhtml\Form
      * @param \Magento\Backend\App\Action\Context $context
      * @param \Magento\Framework\Registry $coreRegistry
      * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
+     * @param \PluginCompany\ContactForms\Model\FormRepository $formRepository
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
         \Magento\Framework\Registry $coreRegistry,
-        \Magento\Framework\View\Result\PageFactory $resultPageFactory
+        \Magento\Framework\View\Result\PageFactory $resultPageFactory,
+        \PluginCompany\ContactForms\Model\FormRepository $formRepository
     ) {
         $this->resultPageFactory = $resultPageFactory;
-        parent::__construct($context, $coreRegistry);
+        parent::__construct($context, $coreRegistry, $formRepository);
     }
 
     /**
@@ -34,13 +36,9 @@ class Edit extends \PluginCompany\ContactForms\Controller\Adminhtml\Form
      */
     public function execute()
     {
-        // 1. Get ID and create model
         $id = $this->getRequest()->getParam('form_id');
-        $model = $this->_objectManager->create('PluginCompany\ContactForms\Model\Form');
-        
-        // 2. Initial checking
         if ($id) {
-            $model->load($id);
+            $model = $this->formRepository->getByIdOrNew($id);
             if (!$model->getId()) {
                 $this->messageManager->addErrorMessage(__('This Form no longer exists.'));
                 /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */

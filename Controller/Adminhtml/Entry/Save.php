@@ -14,15 +14,20 @@ class Save extends \Magento\Backend\App\Action
 {
     const ADMIN_RESOURCE = 'PluginCompany_ContactForms::manage_entry';
     protected $dataPersistor;
+    protected $entryRepository;
 
     /**
      * @param \Magento\Backend\App\Action\Context $context
      * @param \Magento\Framework\App\Request\DataPersistorInterface $dataPersistor
+     * @param \PluginCompany\ContactForms\Model\EntryRepository
      */
+
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
-        \Magento\Framework\App\Request\DataPersistorInterface $dataPersistor
+        \Magento\Framework\App\Request\DataPersistorInterface $dataPersistor,
+        \PluginCompany\ContactForms\Model\EntryRepository $entryRepository
     ) {
+        $this->entryRepository = $entryRepository;
         $this->dataPersistor = $dataPersistor;
         parent::__construct($context);
     }
@@ -39,10 +44,10 @@ class Save extends \Magento\Backend\App\Action
         $data = $this->getRequest()->getPostValue();
         if ($data) {
             $id = $this->getRequest()->getParam('entity_id');
-        
-            $model = $this->_objectManager->create('PluginCompany\ContactForms\Model\Entry')->load($id);
+
+            $model = $this->entryRepository->getByIdOrNew($id);
             if (!$model->getId() && $id) {
-                $this->messageManager->addErrorMessage(__('This Entry no longer exists.'));
+                $this->messageManager->addErrorMessage(__('This Form Submission no longer exists.'));
                 return $resultRedirect->setPath('*/*/');
             }
         

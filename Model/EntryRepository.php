@@ -105,6 +105,13 @@ class EntryRepository implements EntryRepositoryInterface
         return $entry;
     }
 
+    public function getByIdOrNew($entryId)
+    {
+        $entry = $this->entryFactory->create();
+        $entry->getResource()->load($entry, $entryId);
+        return $entry;
+    }
+
     /**
      * {@inheritdoc}
      */

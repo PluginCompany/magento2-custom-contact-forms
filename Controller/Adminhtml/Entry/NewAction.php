@@ -21,10 +21,11 @@ class NewAction extends \PluginCompany\ContactForms\Controller\Adminhtml\Entry
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
         \Magento\Framework\Registry $coreRegistry,
-        \Magento\Backend\Model\View\Result\ForwardFactory $resultForwardFactory
+        \Magento\Backend\Model\View\Result\ForwardFactory $resultForwardFactory,
+        \PluginCompany\ContactForms\Model\EntryRepository $entryRepository
     ) {
         $this->resultForwardFactory = $resultForwardFactory;
-        parent::__construct($context, $coreRegistry);
+        parent::__construct($context, $coreRegistry, $entryRepository);
     }
 
     /**

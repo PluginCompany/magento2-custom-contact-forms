@@ -21,10 +21,11 @@ class Edit extends \PluginCompany\ContactForms\Controller\Adminhtml\Entry
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
         \Magento\Framework\Registry $coreRegistry,
-        \Magento\Framework\View\Result\PageFactory $resultPageFactory
+        \Magento\Framework\View\Result\PageFactory $resultPageFactory,
+        \PluginCompany\ContactForms\Model\EntryRepository $entryRepository
     ) {
         $this->resultPageFactory = $resultPageFactory;
-        parent::__construct($context, $coreRegistry);
+        parent::__construct($context, $coreRegistry, $entryRepository);
     }
 
     /**
@@ -36,11 +37,10 @@ class Edit extends \PluginCompany\ContactForms\Controller\Adminhtml\Entry
     {
         // 1. Get ID and create model
         $id = $this->getRequest()->getParam('entry_id');
-        $model = $this->_objectManager->create('PluginCompany\ContactForms\Model\Entry');
-        
+
         // 2. Initial checking
         if ($id) {
-            $model->load($id);
+            $model = $this->entryRepository->getByIdOrNew($id);
             if (!$model->getId()) {
                 $this->messageManager->addErrorMessage(__('This Entry no longer exists.'));
                 /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
