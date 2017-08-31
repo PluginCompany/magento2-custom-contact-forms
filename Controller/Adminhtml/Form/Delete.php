@@ -25,7 +25,7 @@ class Delete extends \PluginCompany\ContactForms\Controller\Adminhtml\Form
         if ($id) {
             try {
                 // init model and delete
-                $this->formRepository->getById($id);
+                $this->formRepository->deleteById($id);
                 // display success message
                 $this->messageManager->addSuccessMessage(__('You deleted the Form.'));
                 // go to grid

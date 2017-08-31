@@ -25,8 +25,7 @@ class Delete extends \PluginCompany\ContactForms\Controller\Adminhtml\Entry
         if ($id) {
             try {
                 // init model and delete
-                $model = $this->entryRepository->getById($id);
-                $model->delete();
+                $model = $this->entryRepository->deleteById($id);
                 // display success message
                 $this->messageManager->addSuccessMessage(__('You deleted the Entry.'));
                 // go to grid

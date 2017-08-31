@@ -37,8 +37,8 @@ class Edit extends \PluginCompany\ContactForms\Controller\Adminhtml\Form
     public function execute()
     {
         $id = $this->getRequest()->getParam('form_id');
+        $model = $this->formRepository->getByIdOrNew($id);
         if ($id) {
-            $model = $this->formRepository->getByIdOrNew($id);
             if (!$model->getId()) {
                 $this->messageManager->addErrorMessage(__('This Form no longer exists.'));
                 /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */

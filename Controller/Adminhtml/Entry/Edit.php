@@ -39,8 +39,8 @@ class Edit extends \PluginCompany\ContactForms\Controller\Adminhtml\Entry
         $id = $this->getRequest()->getParam('entry_id');
 
         // 2. Initial checking
+        $model = $this->entryRepository->getByIdOrNew($id);
         if ($id) {
-            $model = $this->entryRepository->getByIdOrNew($id);
             if (!$model->getId()) {
                 $this->messageManager->addErrorMessage(__('This Entry no longer exists.'));
                 /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
