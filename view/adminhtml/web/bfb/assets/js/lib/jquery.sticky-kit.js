@@ -48,6 +48,7 @@ require(['jquery2'], function($){
                 fixed = false;
                 bottomed = false;
                 spacer = manual_spacer != null ? manual_spacer && elm.closest(manual_spacer) : $("<div />");
+                spacer.css('max-width', '400px');
                 if (spacer) {
                     // spacer.css('position', elm.css('position'));
                 }
