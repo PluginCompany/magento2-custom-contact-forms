@@ -26,6 +26,8 @@ class Mailer extends TransportBuilder
             $this->throwNoEntryLoadedException();
         }
 
+        $this->initMailData();
+
         $entry = $this->getEntry();
 
         $this->mailData
@@ -96,8 +98,6 @@ class Mailer extends TransportBuilder
         }
 
         $this->initMailData();
-
-//        $this->resetMailData();
 
         $entry = $this->getEntry();
 

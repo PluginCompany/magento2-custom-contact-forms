@@ -16,8 +16,14 @@ The MIT license in `LICENSE` covers the code written by Plugin Company. This ext
 | `view/adminhtml/web/bfb/assets/js/lib/jquery.sticky-kit.js`<br>`view/adminhtml/web/js/lib/jquery.sticky-kit.js` | Sticky-kit | 1.1.2 | WTFPL |
 | `view/adminhtml/web/js/formbuilder.js` | Form builder bundle (build of bfb incl. jQuery 1.11.3, Underscore 1.4.4, Backbone, RequireJS text 2.0.5, Bootstrap JS) | n/a | MIT / Apache-2.0 (bundled components) |
 | `view/adminhtml/web/css/lib/bootstrap-3.0.0/` | Bootstrap (admin copy) | 3.0.0 | Apache-2.0 |
-| `view/adminhtml/web/dfields/dist/bower_components/fontawesome/` | Font Awesome | 4.4.0 | CSS: MIT; font files: OFL-1.1 |
-| `view/adminhtml/web/dfields/dist/js/`<br>`view/adminhtml/web/dfields/dist/require.js` | Dependent fields bundle (build incl. jQuery 2.1.4, Select2 4.0.0, RequireJS 2.1.14, easing-js, Robert Penner easing equations) | n/a | MIT; easing equations BSD-3-Clause |
+| `view/adminhtml/web/dfields/src/js/lib/ractive-legacy.js` | Ractive.js (legacy build) | 0.7.3 | MIT |
+| `view/adminhtml/web/dfields/src/js/decorators/` | ractive-decorators-select2 / ractive-decorators-sortable (adapted; no header in files) | n/a | MIT (upstream) |
+| `view/adminhtml/web/dfields/src/js/loaders/rvc.js` | amd-loader / rvc loader (Guy Bedford, adapted) | n/a | MIT |
+| `view/adminhtml/web/dfields/src/bower_components/bootstrap/` | Bootstrap (dependent fields UI) | 3.3.5 | MIT |
+| `view/adminhtml/web/dfields/src/bower_components/bootswatch-dist/` | Bootswatch dist (Bootstrap theme build) | 3.3.4 | MIT |
+| `view/adminhtml/web/dfields/src/bower_components/fontawesome/` | Font Awesome | 4.4.0 | CSS: MIT; font files: OFL-1.1 |
+| `view/adminhtml/web/dfields/src/bower_components/select2/` | Select2 (includes almond) | 4.0.0 | MIT |
+| `view/adminhtml/web/dfields/src/bower_components/select2-bootstrap-theme/` | Select2 Bootstrap Theme | 0.1.0-beta.4 | MIT |
 | `view/base/web/js/lib/dropzone/` | Dropzone | 5.1.1 | MIT |
 | `view/base/web/lib/require-css/` | require-css | 0.1.10 | MIT |
 | `view/frontend/web/js/lib/alertify/` | AlertifyJS | 1.10.0 | GPL-3.0 (per file header) |

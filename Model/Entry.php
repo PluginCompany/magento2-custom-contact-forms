@@ -324,10 +324,11 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
 
     public function getCustomerNotification()
     {
-        return $this->getFilteredSubmissionFieldValue(
+        $html = $this->getFilteredSubmissionFieldValue(
             'customer_notification',
             'customer_mail_content'
         );
+        return $this->addSubmissionTableToString($html);
     }
 
     public function getAdminEmail()

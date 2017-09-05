@@ -6,7 +6,7 @@
 		<css src="PluginCompany_ContactForms::css/lib/bootstrap-3.0.0/dist/css/bootstrap.css"/>
 		<css src="PluginCompany_ContactForms::css/shared.css"/>
 		<css src="PluginCompany_ContactForms::bfb/assets/css/custom.css"/>
-		<css src="PluginCompany_ContactForms::dfields/dist/styles-wrapped.css"/>
+		<css src="PluginCompany_ContactForms::dfields/src/styles-wrapped.css"/>
 	</head>
 	<body>
 		<referenceContainer name="content">

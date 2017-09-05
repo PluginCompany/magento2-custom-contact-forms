@@ -123,9 +123,9 @@ define([
         },
         getBtnBaseEm: function() {
             if(this.showLinkAsButton()){
-                return $('<btn><span /></btn>')
+                return $('<button><span /></button>')
                     .attr('type', 'button')
-                    .addClass('action primary');
+                    .addClass('action primary pccf-popup-btn');
                 ;
             }
             else{
