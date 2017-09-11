@@ -17,7 +17,6 @@ define([
     _,
     ko
 ) {
-    var thisObj;
     return Abstract.extend({
         defaults: {
             elementTmpl: 'PluginCompany_ContactForms/form/element/frontEndUrls',
@@ -36,8 +35,6 @@ define([
         },
 
         initialize: function () {
-            thisObj = this;
-            window.theshit = this;
             this.isUrlKeyUnchanged = ko.observable(1);
             this._super();
             this
@@ -90,9 +87,10 @@ define([
                 return false;
             }
             var urls = [];
+            var that = this;
             $.each(this.baseUrls, function(k, v){
                 urls.push(
-                    {'url': v + thisObj.getUrlKeyWithSuffix()}
+                    {'url': v + that.getUrlKeyWithSuffix()}
                 )
             })
             return urls;
@@ -101,8 +99,9 @@ define([
           return this.urlKey + this.suffix;
         },
         initListeners: function() {
+            var that = this;
             this.on('urlKey', function(urlKey){
-                thisObj.updateUrls();
+                that.updateUrls();
             })
             return this;
         },

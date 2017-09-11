@@ -693,7 +693,6 @@
         'use strict';
 
         return function( options ) {
-            console.log(options)
             var urlArray = window.location.href.split( '/' );
             urlArray[urlArray.length-1]='';
 

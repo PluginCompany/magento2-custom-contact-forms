@@ -215,4 +215,6 @@
     min-height:700px;
 }
 
-
+.radio, .checkbox {
+    display: block !important;
+}

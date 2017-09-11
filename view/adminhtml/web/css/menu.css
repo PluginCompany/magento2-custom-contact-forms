@@ -1,0 +1,16 @@
+.item-cforms-top > strong:after {
+    content: "\e900";
+    display: inline-block;
+    font-family: plugincompany;
+    color: #90857c;
+    font-size: 1em;
+    vertical-align: top;
+    font-weight: 500;
+    float: right;
+}
+
+@media(max-width:1024px){
+    .item-groupswitch-menu-title > strong:after {
+        margin-right:-20px;
+    }
+}
