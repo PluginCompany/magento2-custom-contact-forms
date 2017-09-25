@@ -55,7 +55,9 @@ The following files are copies or adaptations of Magento Open Source files and k
 - `Block/Adminhtml/Form/Widget/Chooser.php`
 - `Controller/Adminhtml/Form/Widget/Chooser.php`
 - `etc/widget.xsd`
+- `etc/widget_2.2.xsd`
 - `etc/widget_file.xsd`
+- `etc/widget_file_2.2.xsd`
 - `view/adminhtml/web/js/form/element/iframe.js`
 - `view/frontend/layout/contactforms_form_view.xml`
 

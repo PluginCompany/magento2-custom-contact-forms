@@ -7,27 +7,64 @@
  */
 namespace PluginCompany\ContactForms\Model\Widget;
 
+use Magento\Framework\App\ProductMetadataInterface;
+use Magento\Framework\Module\Dir\Reader;
+use Magento\Widget\Model\Config\SchemaLocator;
+
 class SchemaLocatorPlugin
 {
-    public function afterGetSchema(\Magento\Widget\Model\Config\SchemaLocator $subject, $result)
+
+    /** @var ProductMetadataInterface */
+    protected $productMetaData;
+
+    /** @var Reader */
+    protected $dirReader;
+
+    /**
+     * SchemaLocatorPlugin constructor.
+     * @param ProductMetadataInterface $productMetaData
+     * @param Reader $dirReader
+     */
+    public function __construct(
+        ProductMetadataInterface $productMetaData,
+        Reader $dirReader
+    ) {
+        $this->productMetaData = $productMetaData;
+        $this->dirReader = $dirReader;
+        return $this;
+    }
+    public function afterGetSchema(SchemaLocator $subject, $result)
     {
-        $fileName = $this->getEtcDir() . '/widget.xsd';
-        return $fileName;
+        if(!$this->isMagento22plus()){
+            return $this->getEtcDirFile('widget.xsd');
+        }
+        return $this->getEtcDirFile('widget_2.2.xsd');
     }
 
-    public function afterGetPerFileSchema(\Magento\Widget\Model\Config\SchemaLocator $subject, $result)
+    public function afterGetPerFileSchema(SchemaLocator $subject, $result)
     {
-        $fileName = $this->getEtcDir() . '/widget_file.xsd';
-        return $fileName;
+        if(!$this->isMagento22plus()){
+            return $this->getEtcDirFile('widget_file.xsd');
+        }
+        return $this->getEtcDirFile('widget_file_2.2.xsd');
+    }
+
+    private function isMagento22plus()
+    {
+        return version_compare(
+            $this->productMetaData->getVersion(),
+            '2.2',
+            '>='
+        );
+    }
+
+    private function getEtcDirFile($fileName)
+    {
+        return $this->getEtcDir() . '/' . $fileName;
     }
 
     private function getEtcDir()
     {
-        /** @var \Magento\Framework\ObjectManagerInterface $om */
-        $om = \Magento\Framework\App\ObjectManager::getInstance();
-        /** @var \Magento\Framework\Module\Dir\Reader $reader */
-        $reader = $om->get('Magento\Framework\Module\Dir\Reader');
-        $etcDir = $reader->getModuleDir('etc', 'PluginCompany_ContactForms');
-        return $etcDir;
+        return $this->dirReader->getModuleDir('etc', 'PluginCompany_ContactForms');
     }
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" ?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-	<preference for="PluginCompany\Form\Api\FormRepositoryInterface" type="PluginCompany\ContactForms\Model\FormRepository"/>
-	<preference for="PluginCompany\Form\Api\Data\FormInterface" type="PluginCompany\Form\Model\Form"/>
-	<preference for="PluginCompany\Form\Api\Data\FormSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+	<preference for="PluginCompany\ContactForms\Api\FormRepositoryInterface" type="PluginCompany\ContactForms\Model\FormRepository"/>
+	<preference for="PluginCompany\ContactForms\Api\Data\FormInterface" type="PluginCompany\Form\Model\Form"/>
+	<preference for="PluginCompany\ContactForms\Api\Data\FormSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
 	<virtualType name="PluginCompany\ContactForms\Model\ResourceModel\Form\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
 		<arguments>
 			<argument name="mainTable" xsi:type="string">plugincompany_contactforms_form</argument>
