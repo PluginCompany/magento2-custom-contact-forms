@@ -7,6 +7,7 @@
  */
 namespace PluginCompany\ContactForms\Model;
 
+use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Store\Api\Data\StoreInterface;
 use PluginCompany\ContactForms\Model\lib\Visualcaptcha\Captcha;
 use PluginCompany\ContactForms\Model\lib\Visualcaptcha\Session;
@@ -16,16 +17,23 @@ class VisualCaptchaSession
     private $session;
     private $captcha;
     private $namespace;
+
     private $store;
+
+    /** @var CustomerSession */
+    protected $customerSession;
 
     /**
      * @param StoreInterface $store
+     * @param CustomerSession $customerSession
      */
     public function __construct(
-        StoreInterface $store
+        StoreInterface $store,
+        CustomerSession $customerSession
     )
     {
         $this->store = $store;
+        $this->customerSession = $customerSession;
         return $this;
     }
 
@@ -55,7 +63,10 @@ class VisualCaptchaSession
 
     private function initSession()
     {
-        $this->session = new Session(['namespace' => $this->namespace]);
+        $this->session = new Session(
+            ['namespace' => $this->namespace],
+            $this->customerSession
+        );
         return $this;
     }
 

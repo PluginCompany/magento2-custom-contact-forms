@@ -34,9 +34,8 @@ class AdminEditDataProvider extends \Magento\Ui\DataProvider\AbstractDataProvide
      * @param DataPersistorInterface $dataPersistor
      * @param StoreManagerInterface $storeManager
      * @param ScopeConfigInterface $configScopeConfigInterface
-     * @internal param array $meta
-     * @internal param array $data
-     * @internal param CollectionFactory $blockCollectionFactory
+     * @param array $meta
+     * @param array $data
      */
     public function __construct(
         $name,

@@ -76,5 +76,3 @@ Class Colorpicker extends \Magento\Backend\Block\Template
         return $js;
     }
 }
-
-?>

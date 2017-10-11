@@ -350,7 +350,6 @@ class Submit extends Action
 
     /**
      * checks whether the submitted captcha text is OK by validating with Google reCaptcha
-     * @param $form
      * @return bool
      */
     public function isReCaptchaOk()

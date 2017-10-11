@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2014-2026 Plugin Company
  *
@@ -20,8 +21,9 @@ class Image extends AbstractCaptcha
             $index,
             $retina
         ) ) {
-            echo 'pass?';
+            $this->getResponse()->setContent(
+                'pass?'
+            );
         }
-        exit;
     }
 }

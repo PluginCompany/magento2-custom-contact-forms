@@ -13,8 +13,9 @@ class Audio extends AbstractCaptcha
     {
         $captcha = $this->getCaptcha();
         if ( ! $captcha->streamAudio( array(), 'mp3') ) {
-            echo 'pass?';
+            $this->getResponse()->setContent(
+                'pass?'
+            );
         }
-        exit;
     }
 }

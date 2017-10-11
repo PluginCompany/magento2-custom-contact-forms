@@ -162,7 +162,7 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
 
     public function setSubmissionParams($params)
     {
-        $params = new DataObject($this->utf8encodeArray($params));
+        $params = new DataObject($params);
         $this->setUploadDir($params->getUploadDir());
         $this->removeUnneededParams($params);
         $this->submissionParams = $params;
@@ -182,15 +182,6 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
     public function getSubmissionParams()
     {
         return $this->submissionParams;
-    }
-
-    private function utf8encodeArray($params)
-    {
-        foreach($params as $k => $v)
-        {
-            $params[$k] = utf8_encode($v);
-        }
-        return $params;
     }
 
     private function initFilterParams()

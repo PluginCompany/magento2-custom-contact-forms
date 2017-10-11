@@ -58,8 +58,6 @@ class AbstractCaptcha extends Action
     {
         try {
             $this->runExecute();
-        } catch (LocalizedException $e) {
-            $this->processError($e);
         } catch (Exception $e) {
             $this->processError($e);
         }
@@ -84,6 +82,7 @@ class AbstractCaptcha extends Action
     /**
      * Create json response
      *
+     * @param string $response
      * @return \Magento\Framework\Controller\ResultInterface
      */
     public function jsonResponse($response = '')
@@ -99,7 +98,7 @@ class AbstractCaptcha extends Action
             ->critical($e);
         $this->sendJsonResponseMessage(
             'error',
-            'ello'
+            'An error occured'
         );
 
         return $this;
