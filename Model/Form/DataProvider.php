@@ -58,6 +58,8 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
         }
         $items = $this->collection->getItems();
         foreach ($items as $model) {
+            /** @var $model \PluginCompany\ContactForms\Model\Form */
+            $model->getResource()->afterLoad($model);
             $model->afterLoad();
             $this->loadedData[$model->getId()] = $model->getData();
         }

@@ -67,6 +67,8 @@ class AdminEditDataProvider extends \Magento\Ui\DataProvider\AbstractDataProvide
         }
         $items = $this->collection->getItems();
         foreach ($items as $model) {
+            /** @var $model \PluginCompany\ContactForms\Model\Form */
+            $model->getResource()->afterLoad($model);
             $model->afterLoad();
             $model->setFormPageStoreBaseUrls($this->getFormPageBaseUrls());
             $model->setFormPageUrlSuffix($this->getUrlSuffix());

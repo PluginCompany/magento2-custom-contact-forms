@@ -530,4 +530,17 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
         return $this->directoryList->getPath('media');
     }
 
+    /**
+     * Object after load processing. Implemented as public interface for supporting objects after load in collections
+     *
+     * @return $this
+     */
+    public function afterLoad()
+    {
+        $this->getResource()->afterLoad($this);
+        $this->_afterLoad();
+        $this->updateStoredData();
+        return $this;
+    }
+
 }
