@@ -51,7 +51,6 @@ class Mailer extends TransportBuilder
             ->setReplyTo(null)
         ;
         $this->sendMail();
-        //TODO error handling
 
         return $this;
     }
@@ -118,8 +117,9 @@ class Mailer extends TransportBuilder
                 $entry->getAdminSenderName()
             )->setFromEmail(
                 $entry->getAdminSenderEmail()
+            )->setReplyTo(
+                $entry->getAdminReplyToEmail()
             )
-            ->setReplyTo(null)
         ;
         $this->sendMail();
 

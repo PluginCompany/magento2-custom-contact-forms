@@ -26,4 +26,7 @@
     <type name="Magento\Widget\Model\Config\SchemaLocator">
         <plugin name="rewrite_widget_xsd" type="PluginCompany\ContactForms\Model\Widget\SchemaLocatorPlugin" sortOrder="1" />
     </type>
+    <type name="Magento\Framework\View\Asset\Minification">
+        <plugin sortOrder="1" name="pluginCompanyContactFormsMinification" type="PluginCompany\ContactForms\Plugin\View\Asset\MinificationPlugin"/>
+    </type>
 </config>

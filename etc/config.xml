@@ -15,19 +15,5 @@
         <enable>1</enable>
       </admin_notification>
     </plugincompany_contactforms>
-    <dev>
-      <css>
-        <minify_exclude>
-          .*backend.*PluginCompany_ContactForms.*
-          .*frontend.*PluginCompany_ContactForms.*
-        </minify_exclude>
-      </css>
-      <js>
-        <minify_exclude>
-          .*frontend.*PluginCompany_ContactForms.*lib.*
-          .*frontend.*PluginCompany_ContactForms.*form.*
-        </minify_exclude>
-      </js>
-    </dev>
   </default>
 </config>
