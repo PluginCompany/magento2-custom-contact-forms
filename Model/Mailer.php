@@ -8,9 +8,7 @@
 namespace PluginCompany\ContactForms\Model;
 
 use Magento\Email\Model\TemplateFactory;
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\DataObject;
-use Magento\Framework\Event\ManagerInterface;
 use Magento\Store\Model\ScopeInterface;
 use \Magento\Framework\Mail\Template\TransportBuilder;
 
@@ -36,7 +34,7 @@ class Mailer extends TransportBuilder
             )->setToName(
                 $entry->getCustomerName()
             )->setBcc(
-                explode(',', $entry->getCustomerBcc())
+                ($entry->getCustomerBcc() ? explode(',', $entry->getCustomerBcc()) : null)
             )->setBody(
                 $this->getBodyPrefix() .
                 $entry->getCustomerNotification() .
@@ -106,7 +104,7 @@ class Mailer extends TransportBuilder
             )->setToName(
                 null
             )->setBcc(
-                explode(',', $entry->getAdminBcc())
+                ($entry->getAdminBcc() ? explode(',', $entry->getAdminBcc()) : null)
             )->setBody(
                 $this->getBodyPrefix() .
                 $entry->getAdminNotification() .
@@ -188,9 +186,12 @@ class Mailer extends TransportBuilder
             ->setSubject($mailData->getSubject())
             ->setFrom($mailData->getFromEmail(), $mailData->getFromName())
             ->setReplyTo($mailData->getReplyTo())
-            ->addBcc($this->getBcc())
             ->addTo($this->getToEmail(), $mailData->getToName())
         ;
+        //bcc needs to be checked for SendGrid extension compatibility
+        if($this->getBcc()){
+            $message->addBcc($this->getBcc());
+        }
         $this->getTransport()->sendMessage();
         return $this;
     }
