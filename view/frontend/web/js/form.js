@@ -436,7 +436,7 @@ define([
                     }
                     //logic for checkboxes/radio
                     if (element.is(':checkbox') || element.is(':radio')) {
-                        errorPlacement = element.closest('.form-group').find('div.checkbox, div.radio').last();
+                        errorPlacement = element.closest('.form-group').find('div.checkbox, div.radio, .checkbox-inline, .radio-inline').last();
                     }
                     errorPlacement.after(error);
                 }
