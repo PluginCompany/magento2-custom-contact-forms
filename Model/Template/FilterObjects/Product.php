@@ -7,18 +7,34 @@
  */
 namespace PluginCompany\ContactForms\Model\Template\FilterObjects;
 
-use Magento\Product\Model\Session;
-use Magento\Framework\Registry;
+use Magento\Catalog\Model\ProductRepository;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\DataObject;
+use Magento\Framework\Registry;
 
 class Product extends DataObject
 {
-    private $registry;
     private $product;
+    /**
+     * @var \Magento\Framework\App\Request\Http
+     */
+    private $request;
+    /**
+     * @var ProductRepository
+     */
+    private $productRepository;
+    /**
+     * @var Registry
+     */
+    private $registry;
 
     public function __construct(
+        RequestInterface $request,
+        ProductRepository $productRepository,
         Registry $registry
     ){
+        $this->request = $request;
+        $this->productRepository = $productRepository;
         $this->registry = $registry;
         return $this;
     }
@@ -79,11 +95,70 @@ class Product extends DataObject
 
     public function initProduct()
     {
-        $product = $this->registry->registry('product');
-        if (!$product || !$product->getId()) {
-            $product = new DataObject();
+        $product = $this->retrieveProduct();
+        if($product) {
+            return $this->setProduct($product);
         }
+        return $this->setProduct(new DataObject());
+    }
+
+    private function retrieveProduct()
+    {
+        if($this->getProductFromRegistry()) {
+            return $this->getProductFromRegistry();
+        }
+        if($this->getProductIdFromRequest()){
+            return $this->getProductBasedOnRequest();
+        }
+        return false;
+    }
+
+    private function getProductFromRegistry()
+    {
+        $product = $this->registry->registry('product');
+        if ($product && $product->getId()) {
+            return $product;
+        }
+        return false;
+    }
+
+    private function getProductBasedOnRequest()
+    {
+        $productId = $this->getProductIdFromRequest();
+        if ($productId) {
+            return $this->getProductFromRepository($productId);
+        }
+        return false;
+    }
+
+    private function setProduct($product)
+    {
         $this->product = $product;
         return $this;
+    }
+
+    private function getProductIdFromRequest()
+    {
+        $handles = $this->getRequestHandles();
+        foreach($handles as $handle){
+            if(stristr($handle, 'catalog_product_view_id_')){
+                return str_replace('catalog_product_view_id_', '', $handle);
+            }
+        }
+        return false;
+    }
+
+    private function getRequestHandles()
+    {
+        $handles = json_decode($this->request->getQueryValue('handles'));
+        if(!empty($handles)){
+            return $handles;
+        }
+        return [];
+    }
+
+    private function getProductFromRepository($productId)
+    {
+        return $this->productRepository->getById($productId);
     }
 }

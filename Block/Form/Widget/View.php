@@ -18,6 +18,7 @@ class View extends Template implements BlockInterface
 
     private $formRepository;
     private $filter;
+    protected $_isScopePrivate = true;
 
     /**
      * Constructor
@@ -32,7 +33,6 @@ class View extends Template implements BlockInterface
         \PluginCompany\ContactForms\Model\Template\Filter $filter,
         array $data = []
     ) {
-        $this->_isScopePrivate = true;
         $this->formRepository = $formRepository;
         $this->filter = $filter;
         parent::__construct($context, $data);
@@ -44,7 +44,8 @@ class View extends Template implements BlockInterface
      * @return \PluginCompany\ContactForms\Block\Form\Widget\View
      * @author Milan Simek
      */
-    protected function _beforeToHtml() {
+    protected function _beforeToHtml()
+    {
         parent::_beforeToHtml();
         $formId = $this->getData('form_id');
         if ($formId) {
