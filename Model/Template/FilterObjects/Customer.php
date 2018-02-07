@@ -7,7 +7,7 @@
  */
 namespace PluginCompany\ContactForms\Model\Template\FilterObjects;
 
-use Magento\Customer\Model\Session;
+use Magento\Customer\Model\SessionFactory;
 use Magento\Framework\Registry;
 use Magento\Framework\DataObject;
 use Magento\Sales\Model\Order\Config;
@@ -17,7 +17,7 @@ use PluginCompany\ContactForms\Helper\Data;
 
 class Customer extends DataObject
 {
-    private $customerSession;
+    private $customerSessionFactory;
     private $registry;
     private $customer;
     private $orders;
@@ -40,14 +40,14 @@ class Customer extends DataObject
     private $orderConfig;
 
     public function __construct(
-        Session $customerSession,
+        SessionFactory $customerSessionFactory,
         Registry $registry,
         OrderCollectionFactory $orderCollectionFactory,
         InvoiceCollectionFactory $invoiceCollectionFactory,
         Config $orderConfig,
         Data $helper
     ){
-        $this->customerSession = $customerSession;
+        $this->customerSessionFactory = $customerSessionFactory;
         $this->orderCollectionFactory = $orderCollectionFactory;
         $this->invoiceCollectionFactory = $invoiceCollectionFactory;
         $this->orderConfig = $orderConfig;
@@ -126,7 +126,7 @@ class Customer extends DataObject
 
     public function getCustomerSession()
     {
-        return $this->customerSession;
+        return $this->customerSessionFactory->create();
     }
 
     public function getFormatHelper()
