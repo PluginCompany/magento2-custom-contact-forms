@@ -53,7 +53,7 @@ class EntryActions extends \Magento\Ui\Component\Listing\Columns\Column
                                     'entry_id' => $item['entity_id']
                                 ]
                             ),
-                            'label' => __('Edit')
+                            'label' => __('View')
                         ],
                         'delete' => [
                             'href' => $this->urlBuilder->getUrl(

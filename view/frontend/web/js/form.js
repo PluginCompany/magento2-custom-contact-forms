@@ -798,6 +798,9 @@ define([
         getDropzoneConfig: function(em) {
             var maxFiles = em.parent().attr('max_files');
             var maxFileSize = em.parent().attr('max_filesize');
+            if(maxFileSize > this.config.maxUploadSize){
+                maxFileSize = this.config.maxUploadSize;
+            }
             var allowedExt = em.parent().attr('allowed_ext').replace(/\,/g,',.');
             var uploadElementNumber = this.form.find('.fs-upload-target').index(em);
             var defaultMessage = em.attr('upload_text');
