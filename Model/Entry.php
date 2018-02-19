@@ -503,6 +503,16 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
         return $this;
     }
 
+    public function getAllUploadedFilePaths()
+    {
+        $paths = [];
+        foreach($this->getAllUploads() as $upload)
+        {
+            $paths[] = $this->getUploadBaseDir() . $this->getUploadDir() . '/' . $upload['text'];
+        }
+        return $paths;
+    }
+
     public function getAllUploads()
     {
         if(!$this->getUploadDir()){

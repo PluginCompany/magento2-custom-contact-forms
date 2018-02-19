@@ -16,6 +16,7 @@ class Mailer extends TransportBuilder
 {
 
     private $mailData;
+    /** @var  \PluginCompany\ContactForms\Model\Entry */
     private $entry;
 
     public function sendCustomerNotification()
@@ -60,9 +61,9 @@ class Mailer extends TransportBuilder
 
     private function initMailData()
     {
-        if(empty($this->mailData)){
-            $this->mailData = new DataObject();
-        }
+//        if(empty($this->mailData)){
+        $this->mailData = new DataObject();
+//        }
         return $this;
     }
 
@@ -117,6 +118,8 @@ class Mailer extends TransportBuilder
                 $entry->getAdminSenderEmail()
             )->setReplyTo(
                 $entry->getAdminReplyToEmail()
+            )->setAttachments(
+                $entry->getAllUploadedFilePaths()
             )
         ;
         $this->sendMail();
@@ -192,8 +195,35 @@ class Mailer extends TransportBuilder
         if($this->getBcc()){
             $message->addBcc($this->getBcc());
         }
+        $this->addAttachmentsToMessage($message, $mailData->getAttachments());
         $this->getTransport()->sendMessage();
         return $this;
+    }
+
+    private function addAttachmentsToMessage($message, $paths)
+    {
+        if(!is_array($paths)){
+            return $this;
+        }
+        foreach($paths as $filePath) {
+            if (!file_exists($filePath)) {
+                continue;
+            }
+            $message->createAttachment(
+                file_get_contents($filePath),
+                finfo_file(finfo_open(FILEINFO_MIME_TYPE), $filePath),
+                \Zend_Mime::DISPOSITION_ATTACHMENT,
+                \Zend_Mime::ENCODING_BASE64,
+                $this->getFileNameFromPath($filePath)
+            );
+        }
+        return $this;
+    }
+
+    private function getFileNameFromPath($path)
+    {
+        $parts = explode('/', $path);
+        return array_pop($parts);
     }
 
     public function getToEmail()
