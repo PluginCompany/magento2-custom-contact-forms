@@ -1445,3 +1445,17 @@ div.pccf.pc_is_page {
     right:auto;
     left:2%!important;
 }
+
+.pccf .filelists {
+    display:none;
+}
+
+input.dropzone-validate
+{
+    height:0px;
+    visibility:hidden;
+    border:none;
+    padding:0!important;
+    margin:0!important;
+    display:block;
+}

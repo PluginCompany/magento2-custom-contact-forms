@@ -783,15 +783,16 @@ define([
         },
         renderDropZoneElements: function() {
             var uploadEm = this.form.find('.fs-upload-target');
-            uploadEm
-                .attr('upload_text', uploadEm.text())
-                .text('')
-                .addClass('dropzone');
             this.dropZoneEms = [];
             uploadEm.each(_.bind(function(k, em){
+                $(em)
+                    .attr('upload_text', $(em).text())
+                    .text('')
+                    .addClass('dropzone');
                 var dropZone = new this.dropZone(em, this.getDropzoneConfig(uploadEm));
                 this.dropZoneEms.push(dropZone);
             }, this))
+            this.addDropZoneValidationFields();
             this.attachDropZoneEventListeners();
             return this;
         },
@@ -801,7 +802,7 @@ define([
             if(maxFileSize > this.config.maxUploadSize){
                 maxFileSize = this.config.maxUploadSize;
             }
-            var allowedExt = em.parent().attr('allowed_ext').replace(/\,/g,',.');
+            var allowedExt = '.' + em.parent().attr('allowed_ext').replace(/\,/g,',.');
             var uploadElementNumber = this.form.find('.fs-upload-target').index(em);
             var defaultMessage = em.attr('upload_text');
             return {
@@ -813,11 +814,27 @@ define([
                 dictDefaultMessage: defaultMessage
             };
         },
+        addDropZoneValidationFields: function() {
+            $.each(this.dropZoneEms,function(k,dropZoneEm){
+                var em = $(dropZoneEm['element']);
+                if(!em.closest('.form-group').hasClass('required-control')){
+                    return;
+                }
+                $('<input class="dropzone-validate required-entry" />')
+                    .insertAfter(
+                        $(dropZoneEm['element'])
+                    );
+            })
+        },
         attachDropZoneEventListeners: function() {
             var self = this;
             $.each(this.dropZoneEms,function(k,dropZoneEm){
                 dropZoneEm.on('removedfile', function(file){
                     self.removeUploadedFile(file);
+                    self.updateDropZoneFileUploadCount();
+                })
+                dropZoneEm.on('success', function(file){
+                    self.updateDropZoneFileUploadCount();
                 })
             });
             return this;
@@ -834,6 +851,13 @@ define([
             }).done(function (data) {
                 console.log(data);
             });
+        },
+        updateDropZoneFileUploadCount: function() {
+            this.form.find('.dropzone-validate').each(function() {
+                var uploads = $(this).closest('.pcc_upload').find('.dz-success').length;
+                if(!uploads) uploads = '';
+                $(this).val(uploads);
+            })
         },
         initCaptcha: function() {
             if(this.hasReCaptcha()){
@@ -920,7 +944,6 @@ define([
                         }
                     }
             );
-            console.log(captchaEl);
             var captcha = captchaEl.data( 'captcha' );
             this.form.closest('.pccf').data('vcaptcha', captcha);
             return this;

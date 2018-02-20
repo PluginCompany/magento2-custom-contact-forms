@@ -549,7 +549,9 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
     {
         $this->getResource()->afterLoad($this);
         $this->_afterLoad();
-        $this->updateStoredData();
+        if(is_callable([$this, 'updateStoredData'])){
+            $this->updateStoredData();
+        }
         return $this;
     }
 
