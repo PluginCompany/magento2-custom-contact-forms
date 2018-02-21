@@ -14,16 +14,14 @@ use Magento\Framework\View\Element\BlockFactory;
 use PluginCompany\ContactForms\Api\Data\EntryInterface;
 use Magento\Framework\DataObject;
 use Magento\Framework\Data\Collection\AbstractDb;
-use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use Magento\Store\Model\StoreManagerInterface;
 use PluginCompany\ContactForms\Model\Entry as ModelEntry;
-use PluginCompany\ContactForms\Model\FormRepository;
-use PluginCompany\ContactForms\Model\Mailer;
 use PluginCompany\ContactForms\Model\Template\Filter;
+use Magento\Framework\App\ProductMetadataInterface;
 
 class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInterface
 {
@@ -66,6 +64,10 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
     private $blockFactory;
     private $ioFile;
     private $directoryList;
+    /**
+     * @var ProductMetadataInterface
+     */
+    private $productMetadata;
 
 
     /**
@@ -76,6 +78,23 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
         $this->_init('PluginCompany\ContactForms\Model\ResourceModel\Entry');
     }
 
+    /**
+     * Entry constructor.
+     * @param Context $context
+     * @param Registry $registry
+     * @param DateTime $date
+     * @param StoreManagerInterface $storeManagerInterface
+     * @param \PluginCompany\ContactForms\Model\FormRepository $formRepository
+     * @param \PluginCompany\ContactForms\Model\Mailer $mailer
+     * @param Filter $filter
+     * @param BlockFactory $blockFactory
+     * @param DirectoryList $directoryList
+     * @param File $ioFile
+     * @param ProductMetadataInterface $productMetadata
+     * @param AbstractResource|null $resource
+     * @param AbstractDb|null $resourceCollection
+     * @param array $data
+     */
     public function __construct(Context $context,
         Registry $registry,
         DateTime $date,
@@ -86,6 +105,7 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
         BlockFactory $blockFactory,
         DirectoryList $directoryList,
         File $ioFile,
+        ProductMetadataInterface $productMetadata,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = [])
@@ -98,6 +118,7 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
         $this->blockFactory = $blockFactory;
         $this->ioFile = $ioFile;
         $this->directoryList = $directoryList;
+        $this->productMetadata = $productMetadata;
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
     }
 
@@ -549,10 +570,15 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
     {
         $this->getResource()->afterLoad($this);
         $this->_afterLoad();
-        if(is_callable([$this, 'updateStoredData'])){
+        if($this->isVersionUnder22()){
             $this->updateStoredData();
         }
         return $this;
+    }
+
+    private function isVersionUnder22()
+    {
+        return version_compare($this->productMetadata->getVersion(), '2.2', '<');
     }
 
 }
