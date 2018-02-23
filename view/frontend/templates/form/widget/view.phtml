@@ -16,7 +16,7 @@
 $form = $this->getCurrentForm();
 if ($form) {
     ?>
-<div data-mage-init='{"PluginCompany_ContactForms/js/<?php echo $this->getShowFormAs(); ?>": <?php echo $this->getJsConfigJson(); ?>}'>
+<div class="pc-contact-form-<?php echo $form->getId(); ?>">
     <div style="<?php echo $this->getWrapperStyles(); ?>">
         <div id="pccf_form_<?php echo $form->getId() ?>"
              class="<?php echo $this->getCssClasses(); ?>"
@@ -44,6 +44,15 @@ if ($form) {
         </div>
     </div>
 </div>
+
+
+<script type="text/x-magento-init">
+{
+    ".pc-contact-form-<?php echo $form->getId(); ?>": {
+        "PluginCompany_ContactForms/js/<?php echo $this->getShowFormAs(); ?>": <?php echo $this->getJsConfigJson(); ?>
+    }
+}
+</script>
 
 <?php if(trim($form->getCustomCss())){ ?>
     <style type="text/css">
