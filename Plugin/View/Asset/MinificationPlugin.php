@@ -29,7 +29,8 @@ class MinificationPlugin
     {
         $excludes = [
             '.*frontend.*PluginCompany_ContactForms.*lib.*',
-            '.*frontend.*PluginCompany_ContactForms.*form.*'
+            '.*frontend.*PluginCompany_ContactForms.*form.*',
+            '.*backend.*PluginCompany_ContactForms.*CodeMirror.*',
         ];
         return array_merge($this->result, $excludes);
     }
