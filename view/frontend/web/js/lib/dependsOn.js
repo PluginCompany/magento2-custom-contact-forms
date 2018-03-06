@@ -612,8 +612,7 @@
 			this.$subject.removeClass( this.settings.toggleClass );
 		}
 
-		// User callback
-		this.settings.onDisable.call(this.triggeredDependency, this.triggeredEvent);
+		this.settings.onDisable.call(this.triggeredDependency, this.triggeredEvent, this.$subject);
 	};
 
 

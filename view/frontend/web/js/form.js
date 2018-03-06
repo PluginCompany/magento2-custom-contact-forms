@@ -669,9 +669,15 @@ define([
                         onEnable: function(){
                             form.trigger( "dependentFieldChanged", [form, self]);
                         },
-                        onDisable: function(){
+                        onDisable: function(event, subject){
+                            subject
+                                .trigger("change")
+                                .find('input,select,textarea')
+                                .trigger("change")
+                            ;
                             form.trigger( "dependendFieldChanged", [form, self]);
-                        }
+                        },
+                        valueOnDisable: em.val()
                     });
                 }
             });

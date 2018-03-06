@@ -511,7 +511,7 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
 
     private function processEmailNotificationError($e)
     {
-        //todo
+        $this->_logger->critical($e->getMessage());
     }
 
     private function sendAdminNotificationEmail()
