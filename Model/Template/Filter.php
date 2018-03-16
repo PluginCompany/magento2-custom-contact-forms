@@ -8,6 +8,7 @@
 namespace PluginCompany\ContactForms\Model\Template;
 
 use Magento\Cms\Model\Template\Filter as CmsFilter;
+use Magento\Email\Model\Template as EmailTemplate;
 use Magento\Framework\Registry;
 use Magento\Framework\DataObject;
 use PluginCompany\ContactForms\Model\Template\FilterObjects\Customer;
@@ -25,12 +26,17 @@ class Filter
         CmsFilter $filter,
         Registry $registry,
         Customer $customer,
-        Product $product
+        Product $product,
+        EmailTemplate $emailTemplate
     ){
         $this->filter = $filter;
         $this->customer = $customer;
         $this->product = $product;
         $this->registry = $registry;
+
+        $this->filter->setTemplateProcessor([$emailTemplate, 'getTemplateContent']);
+        $this->filter->setDesignParams($emailTemplate->getDesignParams());
+
         return $this;
     }
 

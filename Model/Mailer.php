@@ -7,7 +7,6 @@
  */
 namespace PluginCompany\ContactForms\Model;
 
-use Magento\Email\Model\TemplateFactory;
 use Magento\Framework\DataObject;
 use Magento\Store\Model\ScopeInterface;
 use \Magento\Framework\Mail\Template\TransportBuilder;
@@ -37,9 +36,7 @@ class Mailer extends TransportBuilder
             )->setBcc(
                 ($entry->getCustomerBcc() ? explode(',', $entry->getCustomerBcc()) : null)
             )->setBody(
-                $this->getBodyPrefix() .
-                $entry->getCustomerNotification() .
-                $this->getBodySuffix()
+                $entry->getCustomerNotification()
             )->setSubject(
                 $entry->getCustomerSubject()
             )->setFromName(
@@ -78,17 +75,6 @@ class Mailer extends TransportBuilder
         return $this;
     }
 
-    private function getBodyPrefix()
-    {
-        return '<html><body style="font-family:calibri,arial,helvetica,sans-serif;font-size:11pt">';
-    }
-
-    private function getBodySuffix()
-    {
-        return '</body></html>';
-    }
-
-
     public function sendAdminNotification()
     {
         if(!$this->getEntry()){
@@ -107,9 +93,7 @@ class Mailer extends TransportBuilder
             )->setBcc(
                 ($entry->getAdminBcc() ? explode(',', $entry->getAdminBcc()) : null)
             )->setBody(
-                $this->getBodyPrefix() .
-                $entry->getAdminNotification() .
-                $this->getBodySuffix()
+                $entry->getAdminNotification()
             )->setSubject(
                 $entry->getAdminSubject()
             )->setFromName(
@@ -141,10 +125,6 @@ class Mailer extends TransportBuilder
         $params['comment_text'] = nl2br($comment);
         $params['customer_name'] = $entry->getCustomerName();
 
-        //general wrapper for font style
-        $bodyPrefix = '<html><body style="font-family:calibri,arial,helvetica,sans-serif;font-size:11pt">';
-        $bodySuffix = '</body></html>';
-
         $mailData = [];
 
         //use name or else firstname and lastname as recipient title
@@ -152,7 +132,7 @@ class Mailer extends TransportBuilder
         $mailData['to_email'] = $entry->getCustomerEmail();
         $mailData['from_name'] = $form->getMailVar('customer_from_name');
         $mailData['from_email'] = $form->getMailVar('customer_from_email');
-        $mailData['body'] = $bodyPrefix . $this->_getCommentTemplate($entry->getStoreId()) . $bodySuffix;
+        $mailData['body'] = $this->_getCommentTemplate($entry->getStoreId());
         $mailData['subject'] = $this->_getCommentNotificationSubject($entry->getStoreId());
         $mailData['bcc'] = $form->getMailVar('customer_mail_bcc');
 
