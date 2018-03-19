@@ -62,29 +62,49 @@ define([
             return this;
         },
         render: function() {
-            window.pcform = this;
-            require(['css!' + this.getThemePath()], _.bind(function(){
-                this
-                    .addFormIdInput()
-                    .applyRtl()
-                    .initPages()
-                    .renderSplitColumns()
-                    .hideLoader()
-                    .addUniqueIdentifier()
-                    .changeFormElementType()
-                    .renderCustomerOrderInvoiceOptions()
-                    .initValidator()
-                    .initAjaxForm()
-                    .initDependentFields()
-                    .initDateElements()
-                    .initUploadElements()
-                    .initCaptcha()
-                    .runPageloadJs()
-                ;
-            }, this))
+            $.when(this.loadTheme())
+                 .then(this.renderForm)
+            ;
+            return this;
+        },
+        loadTheme: function() {
+            var dfd = $.Deferred();
+
+            if(!this.getThemePath()) {
+                dfd.resolveWith(this);
+            }
+            else {
+                require(['css!' + this.getThemePath()], _.bind(function(){
+                    dfd.resolveWith(this);
+                }, this))
+            }
+
+            return dfd.promise();
+        },
+        renderForm: function() {
+            this
+                .addFormIdInput()
+                .applyRtl()
+                .initPages()
+                .renderSplitColumns()
+                .hideLoader()
+                .addUniqueIdentifier()
+                .changeFormElementType()
+                .renderCustomerOrderInvoiceOptions()
+                .initValidator()
+                .initAjaxForm()
+                .initDependentFields()
+                .initDateElements()
+                .initUploadElements()
+                .initCaptcha()
+                .runPageloadJs()
+            ;
             return this;
         },
         getThemePath: function() {
+            if(this.config.theme == 'notheme'){
+                return false;
+            }
             return this.moduleName + '/css/themes/' + this.config.theme;
         },
         addFormIdInput: function() {
