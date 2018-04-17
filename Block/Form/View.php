@@ -21,7 +21,7 @@ use Magento\Framework\View\Element\Template;
 class View
     extends Template {
     private $filterProvider;
-    protected $_isScopePrivate = true;
+
 
     public function __construct(
         \Magento\Framework\View\Element\Template\Context  $context,

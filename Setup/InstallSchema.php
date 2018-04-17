@@ -13,10 +13,13 @@ use Magento\Framework\Setup\SchemaSetupInterface;
 
 class InstallSchema implements InstallSchemaInterface
 {
+    /**
+     * @var SchemaSetupInterface
+     */
     private $_setup;
 
     /**
-     * Installs DB schema for CMS Revisions extension
+     * Installs DB schema for Contact Forms extension
      *
      * @param SchemaSetupInterface $setup
      * @param ModuleContextInterface $context

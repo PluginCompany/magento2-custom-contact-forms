@@ -18,7 +18,6 @@ class View extends Template implements BlockInterface
 
     private $formRepository;
     private $filter;
-    protected $_isScopePrivate = true;
 
     /**
      * Constructor

@@ -1,10 +1,16 @@
 <?php
 namespace PluginCompany\ContactForms\Controller;
 
-use Magento\Framework\App\ActionInterface;
+use Magento\Framework\App\ActionFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\RequestInterface;
-use PluginCompany\ContactForms\Model\FormRepository;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\DataObject;
+use Magento\Framework\Event\ManagerInterface;
+use Magento\Framework\UrlInterface;
+use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\StoreManagerInterface;
+use PluginCompany\ContactForms\Model\FormFactory;
 
 /**
  * Contact Form Controller Router
@@ -12,21 +18,21 @@ use PluginCompany\ContactForms\Model\FormRepository;
 class Router implements \Magento\Framework\App\RouterInterface
 {
     /**
-     * @var \Magento\Framework\App\ActionFactory
+     * @var ActionFactory
      */
     protected $actionFactory;
 
     /**
      * Event manager
      *
-     * @var \Magento\Framework\Event\ManagerInterface
+     * @var ManagerInterface
      */
     protected $_eventManager;
 
     /**
      * Store manager
      *
-     * @var \Magento\Store\Model\StoreManagerInterface
+     * @var StoreManagerInterface
      */
     protected $_storeManager;
 
@@ -47,14 +53,14 @@ class Router implements \Magento\Framework\App\RouterInterface
     /**
      * Url
      *
-     * @var \Magento\Framework\UrlInterface
+     * @var UrlInterface
      */
     protected $_url;
 
     /**
      * Response
      *
-     * @var \Magento\Framework\App\ResponseInterface
+     * @var ResponseInterface
      */
     protected $_response;
 
@@ -63,21 +69,21 @@ class Router implements \Magento\Framework\App\RouterInterface
     private $formFactory;
 
     /**
-     * @param \Magento\Framework\App\ActionFactory $actionFactory
-     * @param \Magento\Framework\Event\ManagerInterface $eventManager
-     * @param \Magento\Framework\UrlInterface $url
-     * @param \PluginCompany\ContactForms\Model\FormFactory $formFactory,
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Magento\Framework\App\ResponseInterface $response
+     * @param ActionFactory $actionFactory
+     * @param ManagerInterface $eventManager
+     * @param UrlInterface $url
+     * @param FormFactory $formFactory,
+     * @param StoreManagerInterface $storeManager
+     * @param ResponseInterface $response
      * @param ScopeConfigInterface $configScopeConfigInterface
      */
     public function __construct(
-        \Magento\Framework\App\ActionFactory $actionFactory,
-        \Magento\Framework\Event\ManagerInterface $eventManager,
-        \Magento\Framework\UrlInterface $url,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Framework\App\ResponseInterface $response,
-        \PluginCompany\ContactForms\Model\FormFactory $formFactory,
+        ActionFactory $actionFactory,
+        ManagerInterface $eventManager,
+        UrlInterface $url,
+        StoreManagerInterface $storeManager,
+        ResponseInterface $response,
+        FormFactory $formFactory,
         ScopeConfigInterface $configScopeConfigInterface
     )
     {
@@ -93,12 +99,11 @@ class Router implements \Magento\Framework\App\RouterInterface
     /**
      * Validate and Match Cms Page and modify request
      *
-     * @param \Magento\Framework\App\RequestInterface $request
+     * @param RequestInterface $request
      * @return bool
      */
-    public function match(\Magento\Framework\App\RequestInterface $request)
+    public function match(RequestInterface $request)
     {
-        $identifier = trim($request->getPathInfo(), '/');
         $this->identifier = explode('/',trim($request->getPathInfo(), '/'));
 
         if(!$this->isCorrectPrefixUsed()){
@@ -109,7 +114,7 @@ class Router implements \Magento\Framework\App\RouterInterface
             return null;
         }
 
-        $condition = new \Magento\Framework\DataObject(['identifier' => $this->identifier, 'continue' => true]);
+        $condition = new DataObject(['identifier' => $this->identifier, 'continue' => true]);
         $this->_eventManager->dispatch(
             'plugincompany_contactforms_controller_router_match_before',
             ['router' => $this, 'condition' => $condition]
@@ -168,7 +173,7 @@ class Router implements \Magento\Framework\App\RouterInterface
 
     public function getStoreConfig($value)
     {
-        return $this->scopeConfig->getValue($value, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->getValue($value, ScopeInterface::SCOPE_STORE);
     }
 
     public function isPathDepthCorrect()
