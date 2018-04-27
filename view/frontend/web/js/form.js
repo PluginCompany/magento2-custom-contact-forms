@@ -234,7 +234,7 @@ define([
                 }
 
                 var validated = true;
-                $(element).parents('.formpage').find('input,select,textarea').each(function () {
+                $(element).parents('.formpage').find('input:visible,select:visible,textarea:visible').each(function () {
                     if(!$(this).valid()){
                         validated = false;
                     }

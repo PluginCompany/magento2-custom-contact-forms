@@ -8,21 +8,6 @@
 		<item name="js_config" xsi:type="array">
 			<item name="provider" xsi:type="string">plugincompany_entry_index.plugincompany_entry_grid_data_source</item>
 			<item name="deps" xsi:type="string">plugincompany_entry_index.plugincompany_entry_grid_data_source</item>
-			<item name="imports" xsi:type="array">
-				<item name="blabla" xsi:type="string">${ $.provider }:data.entity_id</item>
-			</item>
-			<item name="exports" xsi:type="array">
-				<item name="blabla" xsi:type="string">${ $.provider }:data.entity_id</item>
-			</item>
-		</item>
-        <item name="config" xsi:type="array">
-			<item name="imports" xsi:type="array">
-				<item name="blabla" xsi:type="string">${ $.provider }:data.entity_id</item>
-			</item>
-			<item name="exports" xsi:type="array">
-				<item name="blabla" xsi:type="string">${ $.provider }:data.entity_id</item>
-			</item>
-
 		</item>
 		<item name="spinner" xsi:type="string">plugincompany_entry_columns</item>
 	</argument>

@@ -96,7 +96,13 @@ define([
             return urls;
         },
         getUrlKeyWithSuffix: function() {
-          return this.urlKey + this.suffix;
+          return this.urlKey + this.getSuffix();
+        },
+        getSuffix: function() {
+            if(typeof this.suffix == "undefined"){
+                return '';
+            }
+            return this.suffix;
         },
         initListeners: function() {
             var that = this;
