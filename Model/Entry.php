@@ -240,9 +240,14 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
     {
         $params = [];
         foreach($this->getSubmissionParams()->getData() as $key => $param){
-            $params[$key] = $this->filterVar($param);
+            $params[$this->getFieldLabel($key)] = $this->filterVar($param);
         }
         return $params;
+    }
+
+    private function getFieldLabel($key)
+    {
+        return $this->getForm()->getFieldLabel($key);
     }
 
     private function initFormIdFromParams()

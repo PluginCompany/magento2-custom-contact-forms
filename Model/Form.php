@@ -408,6 +408,28 @@ class Form extends AbstractModel implements FormInterface
         return $uploadElements;
     }
 
+    /**
+     * @param string $fieldId
+     * @return string
+     */
+    public function getFieldLabel($fieldId)
+    {
+        foreach($this->getFormElements() as $field)
+        {
+            if(!isset($field['fields']['id']['value'])) {
+                continue;
+            }
+            if(!isset($field['fields']['label']['value'])) {
+                continue;
+            }
+            if($fieldId == $field['fields']['id']['value']) {
+                return $field['fields']['label']['value'];
+            }
+        }
+        return ucfirst(str_replace('_', ' ', $fieldId));
+    }
+
+
     public function getFormElements()
     {
         return json_decode($this->getContactFormJson(),true);
