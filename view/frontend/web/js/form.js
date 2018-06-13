@@ -681,9 +681,13 @@ define([
                     }
                 });
                 if(!$.isEmptyObject(dependencies)){
+                    console.log(fValue);
                     var em = form.find('label[for=' + fValue.name + increment + ']').parent();
                     if(!em.length){
                         em = form.find('#' + fValue.name + increment).closest('.row');
+                    }
+                    if(!em.length){
+                        em = form.find('label[for=' + fValue.name + '_start' + increment + '], label[for=' + fValue.name + '_end' + increment + ']').parent();
                     }
                     em.dependsOn(dependencies,{
                         onEnable: function(){
