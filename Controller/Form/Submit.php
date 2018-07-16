@@ -289,6 +289,9 @@ class Submit extends Action
 
     public function getFormId()
     {
+        if(!empty($this->cleanParams['form_id'])) {
+            return $this->cleanParams['form_id'];
+        }
         return $this->getEntryWithSubmissionData()->getFormId();
     }
 

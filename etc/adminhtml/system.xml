@@ -89,6 +89,11 @@
           <label>Notification subject</label>
           <comment>Subject of the admin notification e-mail.</comment>
         </field>
+        <field id="include_uploads" translate="label" sortOrder="70" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Include uploaded files as attachments</label>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+          <comment>When enabled, uploaded files will be attached to the admin notification e-mail. </comment>
+        </field>
       </group>
     </section>
   </system>

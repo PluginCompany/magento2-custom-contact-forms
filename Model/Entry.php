@@ -10,6 +10,7 @@ namespace PluginCompany\ContactForms\Model;
 
 use Magento\Framework\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem\Io\File;
+use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\BlockFactory;
 use PluginCompany\ContactForms\Api\Data\EntryInterface;
 use Magento\Framework\DataObject;
@@ -69,6 +70,12 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
      */
     private $productMetadata;
 
+    private $uploadedFileUrls = [];
+    /**
+     * @var UrlInterface
+     */
+    private $urlBuilder;
+
 
     /**
      * @return void
@@ -91,6 +98,7 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
      * @param DirectoryList $directoryList
      * @param File $ioFile
      * @param ProductMetadataInterface $productMetadata
+     * @param UrlInterface $urlBuilder
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
@@ -106,6 +114,7 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
         DirectoryList $directoryList,
         File $ioFile,
         ProductMetadataInterface $productMetadata,
+        UrlInterface $urlBuilder,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = [])
@@ -119,6 +128,7 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
         $this->ioFile = $ioFile;
         $this->directoryList = $directoryList;
         $this->productMetadata = $productMetadata;
+        $this->urlBuilder = $urlBuilder;
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
     }
 
@@ -210,10 +220,49 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
         $variables = [];
         $variables['submission'] = $this->getSubmissionParams();
         $variables['submission_overview'] = '##submission_overview##';
+        $variables['uploaded_file_links'] = '##uploaded_file_links##';
         $variables = array_merge($variables, $this->getSubmissionParams()->toArray());
         $this->filter
             ->setVariables($variables);
         return $this;
+    }
+
+    public function getUploadedFileUrls()
+    {
+        if(!$this->uploadedFileUrls) {
+            $this->initUploadedFileUrls();
+        }
+        return $this->uploadedFileUrls;
+    }
+
+    public function initUploadedFileUrls()
+    {
+        $uploads = [];
+        foreach($this->getAllUploads() as $file){
+            $uploads[] = [
+                'title' => $file['text'],
+                'url' => $this->getFileUrl($file['text'])
+            ];
+        }
+        $this->uploadedFileUrls = $uploads;
+        $this->setData('uploaded_files', $uploads);
+        return $this;
+    }
+
+    private function getFileUrl($fileName)
+    {
+        return $this->urlBuilder
+                ->getBaseUrl(['_type' =>'media'])
+            . 'contactforms/uploads/'
+            . $this->getUploadDir()
+            . '/' . $fileName;
+    }
+
+    public function addHtmlFilterVariables($html)
+    {
+        $html = $this->addSubmissionTableToString($html);
+        $html = $this->addFileUploadsToString($html);
+        return $html;
     }
 
     public function addSubmissionTableToString($html)
@@ -248,6 +297,26 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
     private function getFieldLabel($key)
     {
         return $this->getForm()->getFieldLabel($key);
+    }
+
+    public function addFileUploadsToString($html)
+    {
+        $links = $this->getUploadedFileLinksHtml();
+        return str_replace(
+            '##uploaded_file_links##',
+            $links,
+            $html
+        );
+    }
+
+    public function getUploadedFileLinksHtml()
+    {
+        return $this->blockFactory
+            ->createBlock('Magento\Framework\View\Element\Template')
+            ->setTemplate('PluginCompany_ContactForms::email/uploaded_file_links.phtml')
+            ->setUploadedFileUrls($this->getUploadedFileUrls())
+            ->toHtml()
+            ;
     }
 
     private function initFormIdFromParams()
@@ -345,7 +414,7 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
             'customer_notification',
             'customer_mail_content'
         );
-        return $this->addSubmissionTableToString($html);
+        return $this->addHtmlFilterVariables($html);
     }
 
     public function getAdminEmail()
@@ -387,7 +456,7 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
             'admin_notification',
             'admin_notification_content'
         );
-        return $this->addSubmissionTableToString($html);
+        return $this->addHtmlFilterVariables($html);
     }
 
     public function getAdminSubject()

@@ -7,6 +7,7 @@
  */
 namespace PluginCompany\ContactForms\Model;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\DataObject;
 use Magento\Store\Model\ScopeInterface;
 use \Magento\Framework\Mail\Template\TransportBuilder;
@@ -103,12 +104,27 @@ class Mailer extends TransportBuilder
             )->setReplyTo(
                 $entry->getAdminReplyToEmail()
             )->setAttachments(
-                $entry->getAllUploadedFilePaths()
+                $this->getAttachments()
             )
         ;
         $this->sendMail();
 
         return $this;
+    }
+
+    public function getAttachments()
+    {
+        if(!$this->attachmentsAllowed()) {
+            return [];
+        }
+        return $this->getEntry()->getAllUploadedFilePaths();
+    }
+
+    public function attachmentsAllowed()
+    {
+        /** @var \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig */
+        $scopeConfig = $this->objectManager->create('\Magento\Framework\App\Config\ScopeConfigInterface');
+        return $scopeConfig->isSetFlag('plugincompany_contactforms/admin_notification/include_uploads', 'store');
     }
 
     /**

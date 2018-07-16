@@ -13,6 +13,7 @@
       </customer_notification>
       <admin_notification>
         <enable>1</enable>
+        <include_uploads>1</include_uploads>
       </admin_notification>
     </plugincompany_contactforms>
   </default>

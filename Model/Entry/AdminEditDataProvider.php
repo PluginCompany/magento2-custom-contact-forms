@@ -5,10 +5,10 @@
  * This file is part of Custom Contact Forms for Magento 2, released under the MIT License.
  * See the LICENSE file in the project root.
  */
-
 namespace PluginCompany\ContactForms\Model\Entry;
 
 use Magento\Framework\App\Request\DataPersistorInterface;
+use PluginCompany\ContactForms\Model\Entry;
 use PluginCompany\ContactForms\Model\ResourceModel\Entry\CollectionFactory;
 
 class AdminEditDataProvider extends DataProvider
@@ -16,11 +16,8 @@ class AdminEditDataProvider extends DataProvider
 
     protected $loadedData;
     protected $dataPersistor;
-
     protected $collection;
-
     private $urlBuilder;
-
 
     /**
      * Constructor
@@ -105,26 +102,10 @@ class AdminEditDataProvider extends DataProvider
         return $this;
     }
 
-    public function initFileUploads($entry)
+    public function initFileUploads(Entry $entry)
     {
-        $uploads = [];
-        foreach($entry->getAllUploads() as $file){
-            $uploads[] = [
-                'title' => $file['text'],
-                'url' => $this->getFileUrl($file['text'], $entry)
-            ];
-        }
-        $entry->setUploadedFiles($uploads);
+        $entry->initUploadedFileUrls();
         return $this;
-    }
-
-    private function getFileUrl($fileName, $entry)
-    {
-        return $this->urlBuilder
-                ->getBaseUrl(['_type' =>'media'])
-            . 'contactforms/uploads/'
-            . $entry->getUploadDir()
-            . '/' . $fileName;
     }
 
 }
