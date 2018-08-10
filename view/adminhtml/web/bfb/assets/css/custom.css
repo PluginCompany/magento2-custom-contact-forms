@@ -176,6 +176,9 @@
     font-family: monospace;
 }
 
+#build {
+}
+
 .pccf .form-group.formpage .col-md-6{
     font-size: 1.4em;
     text-align: center;
@@ -218,3 +221,4 @@
 .radio, .checkbox {
     display: block !important;
 }
+

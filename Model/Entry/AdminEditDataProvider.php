@@ -96,6 +96,9 @@ class AdminEditDataProvider extends DataProvider
 
     public function initFormTitle($entry)
     {
+        if(!$entry->getForm()){
+            return $this;
+        }
         $entry->setFormTitle(
             $entry->getForm()->getTitle()
         );

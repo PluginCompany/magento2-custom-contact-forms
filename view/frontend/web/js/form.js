@@ -649,39 +649,33 @@ define([
                         case 'dropdown':
                         case 'multiple':
                             var selector = '#' + dValue.field + increment;
-                            var deps = {};
                             var values = dValue.value;
                             values = [values];
-                            deps[dValue.condition] = values;
-                            dependencies[selector] = deps;
                             break;
                         case 'text':
                             var selector = '#' + dValue.field + increment;
-                            var deps = {};
                             var values = dValue.value.split(';;');
-                            deps[dValue.condition] = values;
-                            dependencies[selector] = deps;
                             break;
                         case 'checkboxes':
                             var selector = self.getDfieldSelectorForCheckboxOrRadio(dValue.field);
-                            var deps = {};
                             var values = dValue.value;
                             values = [values];
-                            deps[dValue.condition] = values;
-                            dependencies[selector] = deps;
                             break;
                         case 'radios':
                             var selector = self.getDfieldSelectorForCheckboxOrRadio(dValue.field);
-                            var deps = {};
                             var values = dValue.value;
                             values = [values];
-                            deps[dValue.condition] = values;
-                            dependencies[selector] = deps;
                             break;
+                        default:
+                            return true;
                     }
+                    var deps = {};
+                    deps[dValue.condition] = values;
+                    deps['enabled'] = true;
+                    dependencies[selector] = deps;
                 });
+
                 if(!$.isEmptyObject(dependencies)){
-                    console.log(fValue);
                     var em = form.find('label[for=' + fValue.name + increment + ']').parent();
                     if(!em.length){
                         em = form.find('#' + fValue.name + increment).closest('.row');
@@ -690,18 +684,22 @@ define([
                         em = form.find('label[for=' + fValue.name + '_start' + increment + '], label[for=' + fValue.name + '_end' + increment + ']').parent();
                     }
                     em.dependsOn(dependencies,{
-                        onEnable: function(){
+                        onEnable: function(event, subject){
+                            subject
+                                .find('input,select,textarea')
+                                .removeProp('disabled')
+                                .trigger("change")
+                            ;
                             form.trigger( "dependentFieldChanged", [form, self]);
                         },
                         onDisable: function(event, subject){
                             subject
-                                .trigger("change")
                                 .find('input,select,textarea')
+                                .prop('disabled', 'disabled')
                                 .trigger("change")
                             ;
                             form.trigger( "dependendFieldChanged", [form, self]);
-                        },
-                        valueOnDisable: em.val()
+                        }
                     });
                 }
             });

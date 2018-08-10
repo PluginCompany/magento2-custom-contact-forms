@@ -541,7 +541,7 @@
 		}
 
 		// User callback
-		this.settings.onEnable.call(this.triggeredDependency, this.triggeredEvent);
+		this.settings.onEnable.call(this.triggeredDependency, this.triggeredEvent, this.$subject);
 	};
 
 	/**

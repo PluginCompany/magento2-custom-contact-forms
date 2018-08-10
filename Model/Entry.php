@@ -144,7 +144,7 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
                 return null;
             }
             else {
-                $form = $this->formRepository->getById($this->getFormId());
+                $form = $this->formRepository->getByIdOrNew($this->getFormId());
                 if ($form->getId()) {
                     $this->setData('_parent_form', $form);
                 }

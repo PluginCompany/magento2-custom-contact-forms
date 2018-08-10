@@ -17,12 +17,6 @@
 				<item name="class" xsi:type="string">primary</item>
 				<item name="url" xsi:type="string">*/*/new</item>
 			</item>
-			<!--<item name="add2" xsi:type="array">
-				<item name="name" xsi:type="string">add2</item>
-				<item name="label" translate="true" xsi:type="string">Add new Formbuilder</item>
-				<item name="class" xsi:type="string">primary</item>
-				<item name="url" xsi:type="string">*/*/formbuilder</item>
-			</item>-->
 		</item>
 	</argument>
 	<dataSource name="plugincompany_form_grid_data_source">
@@ -52,6 +46,27 @@
 		<columnsControls name="columns_controls"/>
 		<filters name="listing_filters"/>
 		<paging name="listing_paging"/>
+		<massaction name="listing_massaction">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="selectProvider" xsi:type="string">plugincompany_form_index.plugincompany_form_index.plugincompany_form_columns.ids</item>
+					<item name="indexField" xsi:type="string">entity_id</item>
+				</item>
+			</argument>
+			<action name="delete">
+				<argument name="data" xsi:type="array">
+					<item name="config" xsi:type="array">
+						<item name="type" xsi:type="string">delete</item>
+						<item name="label" xsi:type="string" translate="true">Delete</item>
+						<item name="url" xsi:type="url" path="*/*/massDelete"/>
+						<item name="confirm" xsi:type="array">
+							<item name="title" xsi:type="string" translate="true">Delete items</item>
+							<item name="message" xsi:type="string" translate="true">Are you sure you want to delete selected items?</item>
+						</item>
+					</item>
+				</argument>
+			</action>
+		</massaction>
 	</listingToolbar>
 	<columns name="plugincompany_form_columns">
 		<argument name="data" xsi:type="array">

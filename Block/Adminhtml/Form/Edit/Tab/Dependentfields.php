@@ -37,7 +37,11 @@ class Dependentfields extends \Magento\Framework\View\Element\Template
 
     private function getFormId()
     {
-        return $this->request->getParam('form_id');
+        $id = $this->request->getParam('form_id');
+        if(!$id) {
+            $id = $this->request->getParam('copy_form_id');
+        }
+        return $id;
     }
 
     /**

@@ -76,7 +76,7 @@ class ParentFormLink extends Column
 
     private function getFormTitle($formId)
     {
-        $form = $this->formRepo->getById($formId);
+        $form = $this->formRepo->getByIdOrNew($formId);
         return $form->getTitle();
     }
 }

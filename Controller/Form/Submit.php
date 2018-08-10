@@ -40,6 +40,7 @@ class Submit extends Action
     private $cleanParams;
     private $customerSession;
     private $visualCaptcha;
+    private $lastRecaptchaFrontendData;
 
     /**
      * Constructor
@@ -226,6 +227,9 @@ class Submit extends Action
     private function prepareCleanParams()
     {
         foreach($this->getParams() as $k => $param){
+            if($this->isVisualCaptchaParam($k)) {
+                continue;
+            }
             $this->cleanParams[$k] = $this->cleanParam($param);
         }
         $this
@@ -239,6 +243,28 @@ class Submit extends Action
     {
         return $this->getRequest()->getParams();
     }
+
+    private function isVisualCaptchaParam($key)
+    {
+        if(!$this->getVisualCaptcha()) {
+            return false;
+        }
+        if($key == $this->getVisualCaptchaNamespace()) {
+            return true;
+        }
+        if($key == 'vcaptcha_namespace') {
+            return true;
+        }
+        $frontend = $this->lastRecaptchaFrontendData;
+        if(isset($frontend['imageFieldName']) && $frontend['imageFieldName'] == $key) {
+            return true;
+        }
+        if(isset($frontend['audioFieldName']) && $frontend['audioFieldName'] == $key) {
+            return true;
+        }
+        return false;
+    }
+
 
     private function addFormUrlToParams()
     {
@@ -421,6 +447,7 @@ class Submit extends Action
     {
         $captcha = $this->getVisualCaptcha();
         $frontendData = $captcha->getFrontendData();
+        $this->lastRecaptchaFrontendData = $frontendData;
         $params = Array();
 
         $return = 'error';

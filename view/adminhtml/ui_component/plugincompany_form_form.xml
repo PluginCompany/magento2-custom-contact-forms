@@ -12,6 +12,7 @@
 		</item>
 		<item name="template" xsi:type="string">templates/form/collapsible</item>
 		<item name="buttons" xsi:type="array">
+			<item name="copy" xsi:type="string">PluginCompany\ContactForms\Block\Adminhtml\Form\Edit\CopyButton</item>
 			<item name="back" xsi:type="string">PluginCompany\ContactForms\Block\Adminhtml\Form\Edit\BackButton</item>
 			<item name="delete" xsi:type="string">PluginCompany\ContactForms\Block\Adminhtml\Form\Edit\DeleteButton</item>
 			<item name="save" xsi:type="string">PluginCompany\ContactForms\Block\Adminhtml\Form\Edit\SaveButton</item>

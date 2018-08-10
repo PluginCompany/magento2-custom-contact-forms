@@ -1173,9 +1173,13 @@
 }
 
 .pccf .help-block {
-    font-size:0.9em;
+    font-size:0.8em;
     padding-left:12px;
-    /*background: url(../../../../skin/adminhtml/default/default/images/note_bg.gif) 1px 4px no-repeat;*/
+    background: url(../img/note_bg.gif) 1px 4px no-repeat;
+}
+
+.popover .help-block {
+    margin-bottom:5px!important;
 }
 
 div.pccf .hidden {
