@@ -687,7 +687,7 @@ define([
                         onEnable: function(event, subject){
                             subject
                                 .find('input,select,textarea')
-                                .removeProp('disabled')
+                                .prop('disabled', false)
                                 .trigger("change")
                             ;
                             form.trigger( "dependentFieldChanged", [form, self]);
