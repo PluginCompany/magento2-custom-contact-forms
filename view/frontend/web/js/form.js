@@ -21,7 +21,8 @@ define([
     'PluginCompany_ContactForms/js/lib/jquery.form',
     'css!PluginCompany_ContactForms/css/shared',
     'css!PluginCompany_ContactForms/css/animate.min',
-    'Magento_Ui/js/modal/modal'
+    'Magento_Ui/js/modal/modal',
+    'mage/translate'
 ], function (_, $, utils, Class, loader) {
     'use strict';
 
@@ -832,14 +833,27 @@ define([
             }
             var allowedExt = '.' + em.parent().attr('allowed_ext').replace(/\,/g,',.');
             var uploadElementNumber = this.form.find('.fs-upload-target').index(em);
-            var defaultMessage = em.attr('upload_text');
+            var defaultMessage = em.attr('upload_text').trim();
+            if(defaultMessage == 'Drag and drop files or click to select') {
+                defaultMessage = $.mage.__('Drag and drop files or click to select');
+            }
             return {
                 url: this.config.uploadUrl + 'upload_element_index/' + uploadElementNumber,
                 addRemoveLinks: true,
                 maxFiles: maxFiles,
                 maxFilesize: maxFileSize,
                 acceptedFiles: allowedExt,
-                dictDefaultMessage: defaultMessage
+                dictDefaultMessage: defaultMessage,
+                dictFallbackMessage: $.mage.__("Your browser does not support drag'n'drop file uploads."),
+                dictFallbackText: $.mage.__("Please use the fallback form below to upload your files like in the olden days."),
+                dictFileTooBig: $.mage.__("File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB."),
+                dictInvalidFileType: $.mage.__("You can't upload files of this type."),
+                dictResponseError: $.mage.__("Server responded with {{statusCode}} code."),
+                dictCancelUpload: $.mage.__("Cancel upload"),
+                dictUploadCanceled: $.mage.__("Upload canceled."),
+                dictCancelUploadConfirmation: $.mage.__("Are you sure you want to cancel this upload?"),
+                dictRemoveFile: $.mage.__("Remove file"),
+                dictMaxFilesExceeded: $.mage.__("You can not upload any more files.")
             };
         },
         addDropZoneValidationFields: function() {
