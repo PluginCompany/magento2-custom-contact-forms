@@ -10,6 +10,14 @@
 			<item name="deps" xsi:type="string">plugincompany_entry_index.plugincompany_entry_grid_data_source</item>
 		</item>
 		<item name="spinner" xsi:type="string">plugincompany_entry_columns</item>
+		<item name="buttons" xsi:type="array">
+			<item name="add" xsi:type="array">
+				<item name="name" xsi:type="string">add</item>
+				<item name="label" translate="true" xsi:type="string">Hidden Button Workaround</item>
+				<item name="class" xsi:type="string">hidden primary</item>
+				<item name="url" xsi:type="string">*/*/new</item>
+			</item>
+		</item>
 	</argument>
 	<dataSource name="plugincompany_entry_grid_data_source">
 		<argument name="dataProvider" xsi:type="configurableObject">
