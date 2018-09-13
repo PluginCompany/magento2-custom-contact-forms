@@ -15,6 +15,7 @@ use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\View\Result\PageFactory;
 use Magento\Framework\Json\Helper\Data;
+use Magento\Newsletter\Model\SubscriberFactory;
 use PluginCompany\ContactForms\Model\EntryFactory;
 use PluginCompany\ContactForms\Model\EntryRepository;
 use PluginCompany\ContactForms\Model\FormRepository;
@@ -41,6 +42,10 @@ class Submit extends Action
     private $customerSession;
     private $visualCaptcha;
     private $lastRecaptchaFrontendData;
+    /**
+     * @var SubscriberFactory
+     */
+    private $subscriberFactory;
 
     /**
      * Constructor
@@ -50,11 +55,11 @@ class Submit extends Action
      * @param EntryFactory $entryFactory
      * @param EntryRepository $entryRepository
      * @param FormRepository $formRepository
-     * @param LoggerInterface $logger
      * @param \Magento\Framework\Json\Helper\Data $jsonHelper
      * @param \Magento\Framework\App\Helper\Context $contextHelper
      * @param Session $customerSession
      * @param VisualCaptchaSession $vCaptcha
+     * @param SubscriberFactory $subscriberFactory
      */
     public function __construct(
         Context $context,
@@ -65,7 +70,8 @@ class Submit extends Action
         Data $jsonHelper,
         ContextHelper $contextHelper,
         Session $customerSession,
-        VisualCaptchaSession $vCaptcha
+        VisualCaptchaSession $vCaptcha,
+        SubscriberFactory $subscriberFactory
     ) {
         $this->resultPageFactory = $resultPageFactory;
         $this->entryFactory = $entryFactory;
@@ -76,6 +82,7 @@ class Submit extends Action
         $this->contextHelper = $contextHelper;
         $this->customerSession = $customerSession;
         $this->visualCaptcha = $vCaptcha;
+        $this->subscriberFactory = $subscriberFactory;
         parent::__construct($context);
     }
 
@@ -115,6 +122,9 @@ class Submit extends Action
         }
         if($this->shouldSaveEntry()){
             $this->saveEntry();
+        }
+        if($this->shouldSubscribeNewsletter()){
+            $this->subscribeNewsletter();
         }
         return $this->sendJsonResponseMessage('success', $this->getSuccessMessage());
     }
@@ -311,6 +321,21 @@ class Submit extends Action
     private function getUploadDirSessionDataKey()
     {
         return 'contactforms_upload_dir_' . $this->getFormId();
+    }
+
+    public function shouldSubscribeNewsletter()
+    {
+        $params = $this->getCleanParameters();
+        return isset($params['newsletter']);
+    }
+
+    public function subscribeNewsletter()
+    {
+        $this->subscriberFactory->create()
+            ->subscribe(
+                $this->getEntryWithSubmissionData()->getCustomerEmail()
+            );
+        return $this;
     }
 
     public function getFormId()
