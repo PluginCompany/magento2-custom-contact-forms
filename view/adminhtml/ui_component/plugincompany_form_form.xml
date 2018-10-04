@@ -90,7 +90,7 @@
 				<item name="collapsible" xsi:type="boolean">false</item>
 			</item>
 		</argument>
-		<container name="dfields" >
+		<container name="dfields">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array"></item>
 			</argument>
@@ -1066,6 +1066,70 @@
 				</item>
 			</argument>
 		</field>
+	</fieldset>
+    <fieldset name="general_translation">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string">General Translations</item>
+                <item name="collapsible" xsi:type="boolean">true</item>
+                <item name="template" xsi:type="string">PluginCompany_ContactForms/form/component/preloadFieldset</item>
+            </item>
+        </argument>
+        <container name="translation_container">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array"></item>
+            </argument>
+            <field name="translation">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="dataType" xsi:type="string">text</item>
+                        <item name="label" translate="true" xsi:type="string">General Translations</item>
+                        <item name="notice" xsi:type="string" translate="true">notice</item>
+                        <item name="formElement" xsi:type="string">hidden</item>
+                        <item name="source" xsi:type="string">Form</item>
+                        <item name="dataScope" xsi:type="string">general_translation</item>
+                        <item name="validation" xsi:type="array">
+                            <item name="required-entry" xsi:type="boolean">false</item>
+                        </item>
+                    </item>
+                </argument>
+            </field>
+            <htmlContent name="html_content">
+                <argument name="block" xsi:type="object">PluginCompany\ContactForms\Block\Adminhtml\Form\Edit\Tab\GeneralTranslation</argument>
+            </htmlContent>
+        </container>
+    </fieldset>
+	<fieldset name="fields_translation">
+		<argument name="data" xsi:type="array">
+			<item name="config" xsi:type="array">
+				<item name="label" xsi:type="string">Form Field Translations</item>
+				<item name="collapsible" xsi:type="boolean">true</item>
+                <item name="template" xsi:type="string">PluginCompany_ContactForms/form/component/preloadFieldset</item>
+			</item>
+		</argument>
+		<container name="translation_container">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array"></item>
+			</argument>
+			<field name="translation">
+				<argument name="data" xsi:type="array">
+					<item name="config" xsi:type="array">
+						<item name="dataType" xsi:type="string">text</item>
+						<item name="label" translate="true" xsi:type="string">Form Field Translations</item>
+						<item name="notice" xsi:type="string" translate="true">notice</item>
+						<item name="formElement" xsi:type="string">hidden</item>
+						<item name="source" xsi:type="string">Form</item>
+						<item name="dataScope" xsi:type="string">translation</item>
+						<item name="validation" xsi:type="array">
+							<item name="required-entry" xsi:type="boolean">false</item>
+						</item>
+					</item>
+				</argument>
+			</field>
+			<htmlContent name="html_content">
+				<argument name="block" xsi:type="object">PluginCompany\ContactForms\Block\Adminhtml\Form\Edit\Tab\Translation</argument>
+			</htmlContent>
+		</container>
 	</fieldset>
 	<fieldset name="form_submissions">
 		<argument name="data" xsi:type="array">

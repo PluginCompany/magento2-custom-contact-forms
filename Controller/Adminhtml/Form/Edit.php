@@ -66,7 +66,7 @@ class Edit extends \PluginCompany\ContactForms\Controller\Adminhtml\Form
             $id ? __('Edit Form') : __('New Form'),
             $id ? __('Edit Form') : __('New Form')
         );
-        $resultPage->getConfig()->getTitle()->prepend(__('Forms'));
+        $resultPage->getConfig()->getTitle()->prepend(__('Custom Contact Forms'));
         $resultPage->getConfig()->getTitle()->prepend($model->getId() ? $model->getTitle() : __('New Form'));
         return $resultPage;
     }

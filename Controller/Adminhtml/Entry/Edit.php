@@ -42,7 +42,7 @@ class Edit extends \PluginCompany\ContactForms\Controller\Adminhtml\Entry
         $model = $this->entryRepository->getByIdOrNew($id);
         if ($id) {
             if (!$model->getId()) {
-                $this->messageManager->addErrorMessage(__('This Entry no longer exists.'));
+                $this->messageManager->addErrorMessage(__('This Form Submission no longer exists.'));
                 /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
                 $resultRedirect = $this->resultRedirectFactory->create();
                 return $resultRedirect->setPath('*/*/');
@@ -54,11 +54,11 @@ class Edit extends \PluginCompany\ContactForms\Controller\Adminhtml\Entry
         /** @var \Magento\Backend\Model\View\Result\Page $resultPage */
         $resultPage = $this->resultPageFactory->create();
         $this->initPage($resultPage)->addBreadcrumb(
-            $id ? __('Edit Entry') : __('New Entry'),
-            $id ? __('Edit Entry') : __('New Entry')
+            $id ? __('Edit Form Submission') : __('New Form Submission'),
+            $id ? __('Edit Form Submission') : __('New Form Submission')
         );
-        $resultPage->getConfig()->getTitle()->prepend(__('Entrys'));
-        $resultPage->getConfig()->getTitle()->prepend($model->getId() ? $model->getTitle() : __('New Entry'));
+        $resultPage->getConfig()->getTitle()->prepend(__('Form Submission Details'));
+//        $resultPage->getConfig()->getTitle()->prepend($model->getId() ? $model->getTitle() : __('New Form Submission'));
         return $resultPage;
     }
 }

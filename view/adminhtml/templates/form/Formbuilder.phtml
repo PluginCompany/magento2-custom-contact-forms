@@ -53,8 +53,9 @@
 
 <script>
     require([
-        'PluginCompany_ContactForms/bfb/assets/js/main-built'
-    ], function(formbuilder) {
+        'PluginCompany_ContactForms/bfb/assets/js/main-built',
+        'underscore'
+    ], function(formbuilder, _) {
         setTimeout(function(){
             updateFormBuilderInputs();
         },100);
@@ -65,10 +66,13 @@
     function updateFormBuilderInputs()
     {
         var jsons = window.formBuilder.builder.collection;
-        var html = jQuery('#render').val();
+        var html = window.formBuilder.builder.renderForm({
+            text: _.map(window.formBuilder.builder.collection.renderAllClean(), function(e){return e.html()}).join("\n")
+        })
+        jQuery('#render').val(html);
         require('uiRegistry')
             .get('plugincompany_form_form.plugincompany_form_form.form_builder.contact_form_html')
-            .value(html);
+            .value(jQuery('#render').val());
         require('uiRegistry')
             .get('plugincompany_form_form.plugincompany_form_form.form_builder.contact_form_json')
             .value(JSON.stringify(jsons));

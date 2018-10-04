@@ -1,0 +1,22 @@
+<?php
+/**
+ * Copyright (c) 2014-2026 Plugin Company
+ *
+ * This file is part of Custom Contact Forms for Magento 2, released under the MIT License.
+ * See the LICENSE file in the project root.
+ */
+?>
+<formfieldstranslation></formfieldstranslation>
+
+<script>
+    window.TranslationJSON = <?php echo $block->getTranslationJSON(); ?>;
+    window.StoreViews = <?php echo $block->getStoreviewsJson(); ?>;
+</script>
+<script>
+    require([
+            'PluginCompany_ContactForms/translation/js/fields'
+        ], function(Translation) {
+            return {}
+        }
+    );
+</script>

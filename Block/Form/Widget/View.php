@@ -10,37 +10,50 @@ namespace PluginCompany\ContactForms\Block\Form\Widget;
 
 use Magento\Framework\View\Element\Template;
 use Magento\Widget\Block\BlockInterface;
+use PluginCompany\ContactForms\Helper\FormHtmlTranslator;
+use PluginCompany\ContactForms\Model\Form;
+use PluginCompany\ContactForms\Model\FormRepository;
+use PluginCompany\ContactForms\Model\Template\Filter;
 
 class View extends Template implements BlockInterface
 {
 
     protected $_template = "form/widget/view.phtml";
-
     private $formRepository;
     private $filter;
+    /**
+     * @var FormHtmlTranslator
+     */
+    private $translator;
 
     /**
      * Constructor
      *
      * @param Template\Context $context
+     * @param FormRepository $formRepository
+     * @param Filter $filter
+     * @param FormHtmlTranslator $translator
      * @param array $data
      */
     public function __construct
     (
         Template\Context $context,
-        \PluginCompany\ContactForms\Model\FormRepository $formRepository,
-        \PluginCompany\ContactForms\Model\Template\Filter $filter,
+        FormRepository $formRepository,
+        Filter $filter,
+        FormHtmlTranslator $translator,
         array $data = []
     ) {
+        parent::__construct($context, $data);
         $this->formRepository = $formRepository;
         $this->filter = $filter;
-        parent::__construct($context, $data);
+        $this->translator = $translator;
     }
 
     /**
      * Prepare form widget
      * @access protected
      * @return \PluginCompany\ContactForms\Block\Form\Widget\View
+     * @throws \Magento\Framework\Exception\LocalizedException
      * @author Milan Simek
      */
     protected function _beforeToHtml()
@@ -51,12 +64,19 @@ class View extends Template implements BlockInterface
             $form =
                 $this->formRepository
                     ->getById($formId)
-                    ->setStoreId($this->_storeManager->getStore()->getId());
+                    ->setStoreId($this->getCurrentStoreId());
             if ($form->getStatus()) {
                 $this->setCurrentForm($form);
             }
         }
         return $this;
+    }
+
+    protected function _afterToHtml($html)
+    {
+        return $this->translator
+            ->loadTranslationJson($this->getCurrentForm()->getGeneralTranslation())
+            ->translateFormTitle($html);
     }
 
     public function getJsConfigJson()
@@ -128,6 +148,11 @@ class View extends Template implements BlockInterface
         $formHtml = str_replace(['<captcha></captcha>','<legend></legend>'],[$captcha,''], $this->getCurrentForm()->getContactFormHtml());
         $formHtml = preg_replace('/<legend>(.*?)<\/legend>/','',$formHtml);
         $formHtml = str_replace('col-lg-6 visualcaptcha', 'col-lg-8 visualcaptcha', $formHtml);
+
+        $this->translator
+            ->loadTranslationJson($this->getCurrentForm()->getTranslation());
+        $formHtml = $this->translator->translate($formHtml);
+
         $formHtml = $this->getFilter()->filter($formHtml);
         return $formHtml;
     }
@@ -207,6 +232,20 @@ class View extends Template implements BlockInterface
         } else {
             return round($size);
         }
+    }
+
+
+    private function getCurrentStoreId()
+    {
+        return $this->_storeManager->getStore()->getId();
+    }
+
+    /**
+     * @return Form
+     */
+    public function getCurrentForm()
+    {
+        return $this->getData('current_form');
     }
 
 

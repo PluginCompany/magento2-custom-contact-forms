@@ -16,6 +16,7 @@ The MIT license in `LICENSE` covers the code written by Plugin Company. This ext
 | `view/adminhtml/web/bfb/assets/js/lib/jquery.sticky-kit.js`<br>`view/adminhtml/web/js/lib/jquery.sticky-kit.js` | Sticky-kit | 1.1.2 | WTFPL |
 | `view/adminhtml/web/js/formbuilder.js` | Form builder bundle (build of bfb incl. jQuery 1.11.3, Underscore 1.4.4, Backbone, RequireJS text 2.0.5, Bootstrap JS) | n/a | MIT / Apache-2.0 (bundled components) |
 | `view/adminhtml/web/css/lib/bootstrap-3.0.0/` | Bootstrap (admin copy) | 3.0.0 | Apache-2.0 |
+| `view/adminhtml/web/js/lib/ractive-1.0.js` | Ractive.js | 1.0.0 | MIT |
 | `view/adminhtml/web/dfields/src/js/lib/ractive-legacy.js` | Ractive.js (legacy build) | 0.7.3 | MIT |
 | `view/adminhtml/web/dfields/src/js/decorators/` | ractive-decorators-select2 / ractive-decorators-sortable (adapted; no header in files) | n/a | MIT (upstream) |
 | `view/adminhtml/web/dfields/src/js/loaders/rvc.js` | amd-loader / rvc loader (Guy Bedford, adapted) | n/a | MIT |
@@ -58,7 +59,9 @@ The following files are copies or adaptations of Magento Open Source files and k
 - `etc/widget_2.2.xsd`
 - `etc/widget_file.xsd`
 - `etc/widget_file_2.2.xsd`
+- `view/adminhtml/web/js/form/components/preloadFieldset.js`
 - `view/adminhtml/web/js/form/element/iframe.js`
+- `view/adminhtml/web/template/form/component/preloadFieldset.html`
 - `view/frontend/layout/contactforms_form_view.xml`
 
 ## License notes

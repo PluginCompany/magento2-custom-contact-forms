@@ -16,6 +16,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\View\Result\PageFactory;
 use Magento\Framework\Json\Helper\Data;
 use Magento\Newsletter\Model\SubscriberFactory;
+use PluginCompany\ContactForms\Helper\FormHtmlTranslator;
 use PluginCompany\ContactForms\Model\EntryFactory;
 use PluginCompany\ContactForms\Model\EntryRepository;
 use PluginCompany\ContactForms\Model\FormRepository;
@@ -46,6 +47,10 @@ class Submit extends Action
      * @var SubscriberFactory
      */
     private $subscriberFactory;
+    /**
+     * @var FormHtmlTranslator
+     */
+    private $translator;
 
     /**
      * Constructor
@@ -60,6 +65,7 @@ class Submit extends Action
      * @param Session $customerSession
      * @param VisualCaptchaSession $vCaptcha
      * @param SubscriberFactory $subscriberFactory
+     * @param FormHtmlTranslator $translator
      */
     public function __construct(
         Context $context,
@@ -71,7 +77,8 @@ class Submit extends Action
         ContextHelper $contextHelper,
         Session $customerSession,
         VisualCaptchaSession $vCaptcha,
-        SubscriberFactory $subscriberFactory
+        SubscriberFactory $subscriberFactory,
+        FormHtmlTranslator $translator
     ) {
         $this->resultPageFactory = $resultPageFactory;
         $this->entryFactory = $entryFactory;
@@ -83,6 +90,7 @@ class Submit extends Action
         $this->customerSession = $customerSession;
         $this->visualCaptcha = $vCaptcha;
         $this->subscriberFactory = $subscriberFactory;
+        $this->translator = $translator;
         parent::__construct($context);
     }
 
@@ -394,7 +402,18 @@ class Submit extends Action
 
     public function getSuccessMessage()
     {
+        $this->initTranslator();
+        if($this->translator->getTranslatedSuccessMessage()) {
+            return $this->translator->getTranslatedSuccessMessage();
+        }
         return $this->getForm()->getFrontendSuccessMessage();
+    }
+
+    public function initTranslator()
+    {
+        $this->translator
+            ->loadTranslationJson($this->getForm()->getGeneralTranslation());
+        return $this;
     }
 
     public function isCaptchaOk()

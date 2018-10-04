@@ -1176,6 +1176,7 @@
     font-size:0.8em;
     padding-left:12px;
     background: url(../img/note_bg.gif) 1px 4px no-repeat;
+    margin-bottom:0px!important;
 }
 
 .popover .help-block {
@@ -1463,4 +1464,13 @@ input.dropzone-validate
     padding:0!important;
     margin:0!important;
     display:block;
+}
+.pccf .newsletter-checkbox {
+    padding-top: 12px;
+}
+.pccf .newsletter-checkbox .help-block {
+    line-height: 1em;
+    vertical-align: text-top!important;
+    background:none;
+    padding-left:4px;
 }

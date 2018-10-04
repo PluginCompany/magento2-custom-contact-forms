@@ -32,6 +32,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         $this->setup = $setup;
         $setup->startSetup();
         $this->increaseFormHtmlAndJSONFieldsLength();
+        $this->addTranslationField();
         $setup->endSetup();
     }
 
@@ -57,6 +58,30 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 ]
             )
         ;
+    }
+
+    private function addTranslationField()
+    {
+        $this->setup->getConnection()
+            ->addColumn(
+                $this->setup->getTable('plugincompany_contactforms_form'),
+                'translation',
+                [
+                    'type' => Table::TYPE_TEXT,
+                    'comment' => 'Fields Translation',
+                    'length' => '2m'
+                ]
+            );
+        $this->setup->getConnection()
+            ->addColumn(
+                $this->setup->getTable('plugincompany_contactforms_form'),
+                'general_translation',
+                [
+                    'type' => Table::TYPE_TEXT,
+                    'comment' => 'General Translation',
+                    'length' => '2m'
+                ]
+            );
     }
 }
 

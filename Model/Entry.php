@@ -20,6 +20,7 @@ use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use Magento\Store\Model\StoreManagerInterface;
+use PluginCompany\ContactForms\Helper\EntryTranslator;
 use PluginCompany\ContactForms\Model\Entry as ModelEntry;
 use PluginCompany\ContactForms\Model\Template\Filter;
 use Magento\Framework\App\ProductMetadataInterface;
@@ -75,6 +76,10 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
      * @var UrlInterface
      */
     private $urlBuilder;
+    /**
+     * @var EntryTranslator
+     */
+    private $translator;
 
 
     /**
@@ -99,6 +104,7 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
      * @param File $ioFile
      * @param ProductMetadataInterface $productMetadata
      * @param UrlInterface $urlBuilder
+     * @param EntryTranslator $translator
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
@@ -115,6 +121,7 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
         File $ioFile,
         ProductMetadataInterface $productMetadata,
         UrlInterface $urlBuilder,
+        EntryTranslator $translator,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = [])
@@ -129,6 +136,7 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
         $this->directoryList = $directoryList;
         $this->productMetadata = $productMetadata;
         $this->urlBuilder = $urlBuilder;
+        $this->translator = $translator;
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
     }
 
@@ -296,7 +304,28 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
 
     private function getFieldLabel($key)
     {
-        return $this->getForm()->getFieldLabel($key);
+        return $this->getTranslator()
+            ->translateLabel($key, $this->getForm()->getFieldLabel($key));
+    }
+
+    private function getTranslator()
+    {
+        if(!$this->translator->getFieldTranslations()) {
+            $this->initTranslator();
+        }
+        return $this->translator;
+    }
+
+    private function initTranslator()
+    {
+        $this->translator
+            ->loadGeneralTranslationJson(
+                $this->getForm()->getGeneralTranslation()
+            )
+            ->loadFieldTranslationJson(
+                $this->getForm()->getTranslation()
+            );
+        return $this;
     }
 
     public function addFileUploadsToString($html)
@@ -345,17 +374,16 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
 
     private function getCustomerNameFromSubmission()
     {
-        if ($val = $this->getForm()->getCustomerToName()) {
-            return $this->filterVar($val);
+        if ($this->getTranslatedFieldValueFromForm('customer_to_name')) {
+            return $this->filterVar($this->getTranslatedFieldValueFromForm('customer_to_name'));
         }
         $params = $this->getSubmissionParams();
-        if ($val = $params->getName()) {
-            return $val;
+        if ($params->getName()) {
+            return $params->getName();
         }
         if($params->getFirstname()) {
             return $params->getFirstname() . ' ' . $params->getLastname();
         }
-
     }
 
     public function getCustomerEmail()
@@ -369,11 +397,10 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
     private function initCustomerEmail()
     {
         $email = $this->getSubmissionParams()->getEmail();
-        if ($val = $this->getForm()->getCustomerToEmail()) {
-            $email = $this->filterVar($val);
+        if ($this->getTranslatedFieldValueFromForm('customer_to_email')) {
+            $email = $this->filterVar($this->getTranslatedFieldValueFromForm('customer_to_email'));
         }
-        $this->setCustomerEmail($email);
-        return $this;
+        return $this->setCustomerEmail($email);
     }
 
     public function getCustomerBcc()
@@ -504,12 +531,17 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
 
     private function initSubmissionParameterFromForm($key, $formKey)
     {
-        $this->setData($key,
-            $this->filterVar(
-                $this->getForm()->{$this->getCamelCaseGetString($formKey)}()
-            )
-        );
-        return $this;
+        $value = $this->getTranslatedFieldValueFromForm($formKey);
+        return $this->setData($key, $this->filterVar($value));
+    }
+
+    private function getTranslatedFieldValueFromForm($key)
+    {
+        $value = $this->getTranslator()->getGeneralFieldTranslation($key);
+        if(!$value) {
+            $value = $this->getForm()->{$this->getCamelCaseGetString($key)}();
+        }
+        return $value;
     }
 
     private function getCamelCaseGetString($string)

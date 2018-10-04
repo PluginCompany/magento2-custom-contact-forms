@@ -35,11 +35,12 @@ class View
 
     public function toHtml()
     {
-        return $this->filterProvider
+        $html = $this->filterProvider
             ->getBlockFilter()
             ->filter(
                 '{{widget type="PluginCompany\ContactForms\Block\Form\Widget\View" form_id="' . $this->getFormId() . '" show_form_as="form" is_page="1"}}'
             );
+        return $html;
     }
 
     public function getFormId()
