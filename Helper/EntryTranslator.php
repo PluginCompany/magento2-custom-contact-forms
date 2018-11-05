@@ -55,6 +55,9 @@ class EntryTranslator extends AbstractHelper
 
     private function getFieldTranslation($fieldId, $fieldType)
     {
+        if(empty($this->fieldTranslations)){
+            return '';
+        }
         foreach($this->fieldTranslations as $translation) {
             if($translation['id'] == $fieldId && $translation['fieldType'] == $fieldType) {
                 return $this->getTranslationForCurrentStore($translation);
