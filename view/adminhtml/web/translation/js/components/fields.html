@@ -74,6 +74,7 @@
                 formbuilderFields: [],
                 storeViews: window.StoreViews,
                 formatValue: function(value, fieldType) {
+                    // console.log(value);
                     if(Array.isArray(value)) {
                         value = value.join("\n");
                     }
@@ -239,7 +240,8 @@
             var value = field.value;
             if(field.type == 'textarea-split' && typeof parentField.empty != "undefined" && parentField.empty.value) {
                 if(value[0] !== parentField.empty.value) {
-                    value = value.slice().unshift(parentField.empty.value);
+                    value = value.slice();
+                    value.unshift(parentField.empty.value);
                 }
             }
             return value;

@@ -47,7 +47,11 @@ class Mailer extends TransportBuilder
             )
             ->setReplyTo(null)
         ;
-        $this->sendMail();
+        try {
+            $this->sendMail();
+        }catch(\Throwable $e) {
+            echo $e->getMessage();exit;
+        }
 
         return $this;
     }
@@ -184,9 +188,11 @@ class Mailer extends TransportBuilder
             ->setBody($mailData->getBody())
             ->setSubject($mailData->getSubject())
             ->setFrom($mailData->getFromEmail(), $mailData->getFromName())
-            ->setReplyTo($mailData->getReplyTo())
             ->addTo($this->getToEmail(), $mailData->getToName())
         ;
+        if($mailData->getReplyTo()) {
+            $message->setReplyTo($mailData->getReplyTo());
+        }
         //bcc needs to be checked for SendGrid extension compatibility
         if($this->getBcc()){
             $message->addBcc($this->getBcc());
@@ -257,7 +263,7 @@ class Mailer extends TransportBuilder
             $this->message
                 ->setBodyHtml($this->mailData->getBody());
         }catch(\Exception $e){
-            $bla = 1;
+            throw new \Exception($e);
         }
         return $this;
     }
