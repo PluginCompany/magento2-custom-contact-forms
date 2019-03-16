@@ -831,7 +831,12 @@ define([
             if(maxFileSize > this.config.maxUploadSize){
                 maxFileSize = this.config.maxUploadSize;
             }
-            var allowedExt = '.' + em.parent().attr('allowed_ext').replace(/\,/g,',.');
+            var allowedExt = em.parent().attr('allowed_ext');
+            if(!allowedExt) {
+                allowedExt = null;
+            }else {
+                allowedExt = '.' + allowedExt.replace(/\,/g,',.');
+            }
             var uploadElementNumber = this.form.find('.fs-upload-target').index(em);
             var defaultMessage = em.attr('upload_text').trim();
             if(defaultMessage == 'Drag and drop files or click to select') {

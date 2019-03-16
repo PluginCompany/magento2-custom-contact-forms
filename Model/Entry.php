@@ -551,7 +551,15 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
 
     private function filterVar($value)
     {
+        $value = $this->fixTemplateHeaderAndFooter($value);
         return $this->filter->filter($value);
+    }
+
+    private function fixTemplateHeaderAndFooter($value)
+    {
+        $value = preg_replace("/(<p.*?>)(.*?header_template.*)(<\/p>)/", "$2", $value);
+        $value = preg_replace("/(<p.*?>)(.*?footer_template.*)(<\/p>)/", "$2", $value);
+        return $value;
     }
 
 

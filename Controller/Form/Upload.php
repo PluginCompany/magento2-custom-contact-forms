@@ -159,13 +159,18 @@ class Upload extends Action
             ->create(['fileId' => $this->fileId])
             ->setAllowCreateFolders(true)
             ->setAllowedExtensions($this->getAllowedExtensions())
-            ->addValidateCallback('checkfilesize', $this, 'validateFileSize');
+            ->addValidateCallback('checkfilesize', $this, 'validateFileSize')
+            ;
     }
 
     public function getAllowedExtensions()
     {
         $uploadElement = $this->getUploadElement();
-        return explode(',',$uploadElement['fields']['extensions']['value']);
+        $extensions = $uploadElement['fields']['extensions']['value'];
+        if(empty($extensions)) {
+            return null;
+        }
+        return explode(',',$extensions);
     }
 
     public function getUploadElement()

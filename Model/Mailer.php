@@ -7,14 +7,12 @@
  */
 namespace PluginCompany\ContactForms\Model;
 
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\DataObject;
 use Magento\Store\Model\ScopeInterface;
-use \Magento\Framework\Mail\Template\TransportBuilder;
+use Magento\Framework\Mail\Template\TransportBuilder;
 
 class Mailer extends TransportBuilder
 {
-
     private $mailData;
     /** @var  \PluginCompany\ContactForms\Model\Entry */
     private $entry;
@@ -63,9 +61,7 @@ class Mailer extends TransportBuilder
 
     private function initMailData()
     {
-//        if(empty($this->mailData)){
         $this->mailData = new DataObject();
-//        }
         return $this;
     }
 
@@ -184,8 +180,11 @@ class Mailer extends TransportBuilder
     {
         $mailData = $this->mailData;
         $message = $this->message;
+
+        $this->setBodyHtmlToMessage();
+        $this->addAttachmentsToMessage();
+
         $message
-            ->setBody($mailData->getBody())
             ->setSubject($mailData->getSubject())
             ->setFrom($mailData->getFromEmail(), $mailData->getFromName())
             ->addTo($this->getToEmail(), $mailData->getToName())
@@ -197,13 +196,29 @@ class Mailer extends TransportBuilder
         if($this->getBcc()){
             $message->addBcc($this->getBcc());
         }
-        $this->addAttachmentsToMessage($message, $mailData->getAttachments());
         $this->getTransport()->sendMessage();
         return $this;
     }
 
-    private function addAttachmentsToMessage($message, $paths)
+    private function setBodyHtmlToMessage()
     {
+        if($this->isMagento23Plus()) {
+            $this->message->setBodyHtml($this->mailData->getBody());
+            return $this;
+        }
+        $this->message
+            ->setMessageType('text/html')
+            ->setBody($this->mailData->getBody());
+        return $this;
+    }
+
+    /**
+     * @param $paths
+     * @return $this
+     */
+    private function addAttachmentsToMessage()
+    {
+        $paths = $this->mailData->getAttachments();
         if(!is_array($paths)){
             return $this;
         }
@@ -211,14 +226,43 @@ class Mailer extends TransportBuilder
             if (!file_exists($filePath)) {
                 continue;
             }
-            $message->createAttachment(
-                file_get_contents($filePath),
-                finfo_file(finfo_open(FILEINFO_MIME_TYPE), $filePath),
-                \Zend_Mime::DISPOSITION_ATTACHMENT,
-                \Zend_Mime::ENCODING_BASE64,
-                $this->getFileNameFromPath($filePath)
-            );
+            $this->addAttachment($filePath);
         }
+        return $this;
+    }
+
+    private function addAttachment($filePath)
+    {
+        if($this->isMagento23Plus()) {
+            return $this->addAttachment23Plus($filePath);
+        }
+        return $this->addAttachment23Below($filePath);
+    }
+
+    private function addAttachment23Plus($filePath)
+    {
+        $mp = new \Zend\Mime\Part(file_get_contents($filePath));
+        $mp->type = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $filePath);
+        $mp->encoding = \Zend\Mime\Mime::ENCODING_BASE64;
+        $mp->disposition = \Zend\Mime\Mime::DISPOSITION_ATTACHMENT;
+        $mp->filename = $this->getFileNameFromPath($filePath);
+
+        $body = $this->message->getBody();
+        $body->addPart($mp);
+        $this->message->setBodyHtml($body);
+
+        return $this;
+    }
+
+    private function addAttachment23Below($filePath)
+    {
+        $this->message->createAttachment(
+            file_get_contents($filePath),
+            finfo_file(finfo_open(FILEINFO_MIME_TYPE), $filePath),
+            \Zend_Mime::DISPOSITION_ATTACHMENT,
+            \Zend_Mime::ENCODING_BASE64,
+            $this->getFileNameFromPath($filePath)
+        );
         return $this;
     }
 
@@ -250,21 +294,8 @@ class Mailer extends TransportBuilder
         return $mail;
     }
 
-    /**
-     * Prepare message
-     *
-     * @return $this
-     */
     protected function prepareMessage()
     {
-        try{
-            $this->message
-                ->setMessageType('text/html');
-            $this->message
-                ->setBodyHtml($this->mailData->getBody());
-        }catch(\Exception $e){
-            throw new \Exception($e);
-        }
         return $this;
     }
 
@@ -276,6 +307,25 @@ class Mailer extends TransportBuilder
     protected function _getCommentNotificationSubject($storeId)
     {
         return $this->_configScopeConfigInterface->getValue('plugincompany_contactforms/customer_notification/comment_subject', ScopeInterface::SCOPE_STORE,$storeId);
+    }
+
+    private function isMagento23Plus()
+    {
+        return version_compare($this->getMagentoVersion(), '2.3.0') >= 0;
+    }
+
+    private function getMagentoVersion()
+    {
+        return $this->getProductMetaData()->getVersion();
+    }
+
+    /**
+     * @return \Magento\Framework\App\ProductMetadataInterface
+     */
+    private function getProductMetaData()
+    {
+        /** @var \Magento\Framework\App\ProductMetadataInterface $metaData */
+        return $this->objectManager->create('\Magento\Framework\App\ProductMetadataInterface');
     }
 
 }

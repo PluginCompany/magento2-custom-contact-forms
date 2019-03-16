@@ -47,7 +47,6 @@ The MIT license in `LICENSE` covers the code written by Plugin Company. This ext
 | `view/frontend/web/css/themes/` | Bootswatch themes / Bootstrap default theme | 3.2.0 | MIT |
 | `view/frontend/web/css/fonts/glyphicons-halflings-regular` | Glyphicons Halflings (distributed with Bootstrap 3) | n/a | MIT (via Bootstrap) |
 | `view/frontend/web/css/iconfont/` | "pccontact" icon font generated with Fontello | n/a | unknown (icon source set not recorded) |
-| `view/frontend/web/js/form/upload.js` | Formstone (core + upload; bundled in upload.js) | n/a | MIT |
 
 ## Code derived from Magento Open Source
 

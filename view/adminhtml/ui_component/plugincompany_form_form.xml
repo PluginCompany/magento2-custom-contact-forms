@@ -526,6 +526,10 @@
 					<item name="validation" xsi:type="array">
 						<item name="required-entry" xsi:type="boolean">false</item>
 					</item>
+                    <item name="wysiwygConfigData" xsi:type="array">
+                        <item name="is_pagebuilder_enabled" xsi:type="boolean">false</item>
+                        <item name="pagebuilder_button" xsi:type="boolean">false</item>
+                    </item>
 				</item>
 			</argument>
 		</field>
@@ -805,6 +809,10 @@
 					<item name="validation" xsi:type="array">
 						<item name="required-entry" xsi:type="boolean">false</item>
 					</item>
+                    <item name="wysiwygConfigData" xsi:type="array">
+                        <item name="is_pagebuilder_enabled" xsi:type="boolean">false</item>
+                        <item name="pagebuilder_button" xsi:type="boolean">false</item>
+                    </item>
 				</item>
 			</argument>
 		</field>
@@ -1039,6 +1047,10 @@
 					<item name="validation" xsi:type="array">
 						<item name="required-entry" xsi:type="boolean">false</item>
 					</item>
+                    <item name="wysiwygConfigData" xsi:type="array">
+                        <item name="is_pagebuilder_enabled" xsi:type="boolean">false</item>
+                        <item name="pagebuilder_button" xsi:type="boolean">false</item>
+                    </item>
 				</item>
 			</argument>
 		</field>
