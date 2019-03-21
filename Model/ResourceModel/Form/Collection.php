@@ -23,4 +23,14 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
             'PluginCompany\ContactForms\Model\ResourceModel\Form'
         );
     }
+
+    /**
+     * Convert collection items to select options array
+     *
+     * @return array
+     */
+    public function toOptionArray()
+    {
+        return $this->_toOptionArray('entity_id', 'title');
+    }
 }

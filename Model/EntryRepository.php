@@ -24,7 +24,7 @@ use PluginCompany\ContactForms\Model\ResourceModel\Entry\CollectionFactory as En
 class EntryRepository implements EntryRepositoryInterface
 {
 
-    protected $EntryCollectionFactory;
+    protected $entryCollectionFactory;
 
     protected $dataObjectProcessor;
 
@@ -38,7 +38,7 @@ class EntryRepository implements EntryRepositoryInterface
 
     protected $resource;
 
-    protected $EntryFactory;
+    protected $entryFactory;
 
 
     /**
@@ -173,5 +173,15 @@ class EntryRepository implements EntryRepositoryInterface
     public function deleteById($entryId)
     {
         return $this->delete($this->getById($entryId));
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllIds()
+    {
+        /** @var \PluginCompany\ContactForms\Model\ResourceModel\Entry\Collection $collection */
+        $collection = $this->entryCollectionFactory->create();
+        return $collection->getAllIds();
     }
 }

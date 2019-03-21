@@ -26,7 +26,7 @@ class FormRepository implements FormRepositoryInterface
 
     protected $dataObjectProcessor;
 
-    protected $FormFactory;
+    protected $formFactory;
 
     protected $dataFormFactory;
 
@@ -38,7 +38,7 @@ class FormRepository implements FormRepositoryInterface
 
     protected $resource;
 
-    protected $FormCollectionFactory;
+    protected $formCollectionFactory;
 
 
     /**
@@ -188,4 +188,15 @@ class FormRepository implements FormRepositoryInterface
             ;
         return $this->getById($id);
     }
+
+    /**
+     * @return array
+     */
+    public function getAllIds()
+    {
+        /** @var \PluginCompany\ContactForms\Model\ResourceModel\Form\Collection $collection */
+        $collection = $this->formCollectionFactory->create();
+        return $collection->getAllIds();
+    }
+
 }

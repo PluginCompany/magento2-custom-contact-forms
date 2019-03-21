@@ -1156,7 +1156,7 @@
 					<item name="component" xsi:type="string">PluginCompany_ContactForms/js/form/components/insertEntryListing</item>
 					<item name="autoRender" xsi:type="boolean">true</item>
 					<item name="behaviourType" xsi:type="string">simple</item>
-					<item name="ns" xsi:type="string">plugincompany_entry_index</item>
+					<item name="ns" xsi:type="string">plugincompany_form_entries</item>
                     <item name="imports" xsi:type="array">
 						<item name="form_id" xsi:type="string">${ $.provider }:data.entity_id</item>
 					</item>
