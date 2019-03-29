@@ -46,9 +46,9 @@ define([
         moduleName: 'PluginCompany_ContactForms',
         scrollToTopAfterSubmit: true,
         initialize: function(config, node) {
-            this.initConfig(config);
             this.em = $(node);
             this.form = this.em.find('.pccform');
+            this.initConfig(config);
             return this.render();
         },
         initObservable: function () {

@@ -100,6 +100,7 @@ define([
     return Form.extend({
         scrollToTopAfterSubmit: false,
         render: function(){
+            window.thisform = this;
             this
                 .initPopupEm()
                 .initButton()

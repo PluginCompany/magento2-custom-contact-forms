@@ -21,13 +21,18 @@ class Filter
     private $registry;
     private $customer;
     private $product;
+    /**
+     * @var PrivateContentFilter
+     */
+    private $privateContentFilter;
 
     public function __construct(
         CmsFilter $filter,
         Registry $registry,
         Customer $customer,
         Product $product,
-        EmailTemplate $emailTemplate
+        EmailTemplate $emailTemplate,
+        PrivateContentFilter $privateContentFilter
     ){
         $this->filter = $filter;
         $this->customer = $customer;
@@ -36,8 +41,7 @@ class Filter
 
         $this->filter->setTemplateProcessor([$emailTemplate, 'getTemplateContent']);
         $this->filter->setDesignParams($emailTemplate->getDesignParams());
-
-        return $this;
+        $this->privateContentFilter = $privateContentFilter;
     }
 
     public function initFrontEndVariables()
@@ -123,6 +127,11 @@ class Filter
         $this->filter
             ->setVariables($variables);
         return $this;
+    }
+
+    public function rewriteDefaultCustomerValuesToKo($string)
+    {
+        return $this->privateContentFilter->rewriteDefaultCustomerValuesToKo($string);
     }
 
     public function filter($string)

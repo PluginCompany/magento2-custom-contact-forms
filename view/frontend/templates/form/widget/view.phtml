@@ -16,8 +16,8 @@
 $form = $this->getCurrentForm();
 if ($form) {
     ?>
-<div class="pc-contact-form-<?php echo $form->getId(); ?>">
-    <div style="<?php echo $this->getWrapperStyles(); ?>">
+<div class="<?= $this->getUniqueComponentClassName() ?>" >
+    <div style="<?php echo $this->getWrapperStyles(); ?>" data-bind="scope: 'PCContactFormData'" >
         <div id="pccf_form_<?php echo $form->getId() ?>"
              class="<?php echo $this->getCssClasses(); ?>"
              style="<?php echo $this->getStyles(); ?>;">
@@ -34,7 +34,7 @@ if ($form) {
                         <legend style="text-align:center"><?php echo $form->getFrontendTitle();?></legend>
                     <?php } ?>
                     <div class="messages"></div>
-                    <div class="form-horizontal pccform" method="post" action="<?php echo $this->getSubmitUrl();?>" data-mage-init='{"validation":{}}'>
+                    <div class="form-horizontal pccform" method="post" action="<?php echo $this->getSubmitUrl();?>" data-mage-init='{"validation":{}}' >
                         <?php echo $this->getFormHtml(); ?>
                     </div>
                     <?php if ($form->isPanel()) { ?>
@@ -48,9 +48,19 @@ if ($form) {
 
 <script type="text/x-magento-init">
 {
-    ".pc-contact-form-<?php echo $form->getId(); ?>": {
+    ".<?= $this->getUniqueComponentClassName() ?>": {
         "PluginCompany_ContactForms/js/<?php echo $this->getShowFormAs(); ?>": <?php echo $this->getJsConfigJson(); ?>
+    },
+    "*":  {
+    "Magento_Ui/js/core/app": {
+        "components": {
+            "PCContactFormData": {
+                "component": "PluginCompany_ContactForms/js/data/customer"
+            }
+        }
     }
+}
+
 }
 </script>
 

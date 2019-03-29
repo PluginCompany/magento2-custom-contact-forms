@@ -153,6 +153,7 @@ class View extends Template implements BlockInterface
             ->loadTranslationJson($this->getCurrentForm()->getTranslation());
         $formHtml = $this->translator->translate($formHtml);
 
+        $formHtml = $this->getFilter()->rewriteDefaultCustomerValuesToKo($formHtml);
         $formHtml = $this->getFilter()->filter($formHtml);
         return $formHtml;
     }
@@ -246,6 +247,11 @@ class View extends Template implements BlockInterface
     public function getCurrentForm()
     {
         return $this->getData('current_form');
+    }
+
+    public function getUniqueComponentClassName()
+    {
+        return 'pc_' . str_replace('\\', '_', $this->_nameInLayout);
     }
 
 

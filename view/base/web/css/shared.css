@@ -1040,6 +1040,7 @@
     content: " *";
     color: #fc4c5e;
     margin-right: -7px;
+    display:inline-block;
 }
 
 .pccf .nav-wizard > li:not(:last-child) > a:after,
