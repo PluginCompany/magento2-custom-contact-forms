@@ -5,3 +5,7 @@
     line-height:1.8em;
     min-height: 45px;
 }
+.htmlBoxSandbox {
+    width:100%;
+    min-height:400px;
+}

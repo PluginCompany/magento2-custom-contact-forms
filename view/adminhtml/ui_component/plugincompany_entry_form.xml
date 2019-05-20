@@ -197,6 +197,7 @@
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="component" xsi:type="string">PluginCompany_ContactForms/js/form/element/htmlBox</item>
+                    <item name="elementTmpl" xsi:type="string">PluginCompany_ContactForms/form/element/htmlBoxSandbox</item>
 					<item name="template" xsi:type="string">ui/form/field</item>
 					<item name="dataType" xsi:type="string">text</item>
 					<item name="label" translate="true" xsi:type="string">Notification Content</item>
@@ -244,6 +245,7 @@
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="component" xsi:type="string">PluginCompany_ContactForms/js/form/element/htmlBox</item>
+                    <item name="elementTmpl" xsi:type="string">PluginCompany_ContactForms/form/element/htmlBoxSandbox</item>
 					<item name="template" xsi:type="string">ui/form/field</item>
 					<item name="dataType" xsi:type="string">text</item>
 					<item name="label" translate="true" xsi:type="string">Notification Content</item>
