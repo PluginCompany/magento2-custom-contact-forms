@@ -13,11 +13,14 @@
  * @package     PluginCompany_ContactForms
  * @author      Milan Simek
  */
+/**
+ * @var $this \PluginCompany\ContactForms\Block\Form\Widget\View
+ */
 $form = $this->getCurrentForm();
 if ($form) {
     ?>
 <div class="<?= $this->getUniqueComponentClassName() ?>" >
-    <div style="<?php echo $this->getWrapperStyles(); ?>" data-bind="scope: 'PCContactFormData'" >
+    <div class="pccf-customer-data-scope" style="<?php echo $this->getWrapperStyles(); ?>" data-bind="scope: 'PCContactFormData'" >
         <div id="pccf_form_<?php echo $form->getId() ?>"
              class="<?php echo $this->getCssClasses(); ?>"
              style="<?php echo $this->getStyles(); ?>;">
@@ -50,19 +53,24 @@ if ($form) {
 {
     ".<?= $this->getUniqueComponentClassName() ?>": {
         "PluginCompany_ContactForms/js/<?php echo $this->getShowFormAs(); ?>": <?php echo $this->getJsConfigJson(); ?>
-    },
-    "*":  {
-    "Magento_Ui/js/core/app": {
-        "components": {
-            "PCContactFormData": {
-                "component": "PluginCompany_ContactForms/js/data/customer"
-            }
-        }
     }
 }
-
-}
 </script>
+<?php if($this->isCustomerLoggedIn()) { ?>
+    <script type="text/x-magento-init">
+        {
+            ".pccf-customer-data-scope":  {
+                "Magento_Ui/js/core/app": {
+                    "components": {
+                        "PCContactFormData": {
+                            "component": "PluginCompany_ContactForms/js/data/customer"
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+<?php } ?>
 
 <?php if(trim($form->getCustomCss())){ ?>
     <style type="text/css">

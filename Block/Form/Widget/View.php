@@ -8,6 +8,7 @@
 
 namespace PluginCompany\ContactForms\Block\Form\Widget;
 
+use Magento\Framework\App\Http\Context as HttpContext;
 use Magento\Framework\View\Element\Template;
 use Magento\Widget\Block\BlockInterface;
 use PluginCompany\ContactForms\Helper\FormHtmlTranslator;
@@ -25,6 +26,10 @@ class View extends Template implements BlockInterface
      * @var FormHtmlTranslator
      */
     private $translator;
+    /**
+     * @var HttpContext
+     */
+    private $httpContext;
 
     /**
      * Constructor
@@ -33,6 +38,7 @@ class View extends Template implements BlockInterface
      * @param FormRepository $formRepository
      * @param Filter $filter
      * @param FormHtmlTranslator $translator
+     * @param HttpContext $httpContext
      * @param array $data
      */
     public function __construct
@@ -41,12 +47,14 @@ class View extends Template implements BlockInterface
         FormRepository $formRepository,
         Filter $filter,
         FormHtmlTranslator $translator,
+        HttpContext $httpContext,
         array $data = []
     ) {
         parent::__construct($context, $data);
         $this->formRepository = $formRepository;
         $this->filter = $filter;
         $this->translator = $translator;
+        $this->httpContext = $httpContext;
     }
 
     /**
@@ -162,6 +170,11 @@ class View extends Template implements BlockInterface
     {
         $this->filter->initFrontEndVariables();
         return $this->filter;
+    }
+
+    public function isCustomerLoggedIn()
+    {
+        return $this->httpContext->getValue('customer_logged_in');
     }
 
     public function getSubmitUrl()
