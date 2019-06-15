@@ -8,6 +8,7 @@
 namespace PluginCompany\ContactForms\Model\Template;
 
 use Magento\Customer\Helper\Session\CurrentCustomer;
+use Magento\PageCache\Model\Config;
 
 class PrivateContentFilter
 {
@@ -16,17 +17,27 @@ class PrivateContentFilter
      * @var CurrentCustomer
      */
     private $currentCustomer;
-
-    public function __construct(CurrentCustomer $currentCustomer)
-    {
-        $this->currentCustomer = $currentCustomer;
-    }
+    /**
+     * @var Config
+     */
+    private $pageCacheConfig;
 
     private $html;
+
+    public function __construct(
+        CurrentCustomer $currentCustomer,
+        Config $pageCacheConfig
+    ) {
+        $this->currentCustomer = $currentCustomer;
+        $this->pageCacheConfig = $pageCacheConfig;
+    }
 
     public function rewriteDefaultCustomerValuesToKo($html)
     {
         if(!$this->currentCustomer->getCustomerId()) {
+            return $html;
+        }
+        if(!$this->pageCacheConfig->isEnabled()) {
             return $html;
         }
 
