@@ -31,12 +31,17 @@
         </field>
         <field id="recaptcha_key" translate="label" sortOrder="60" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>ReCaptcha site key</label>
-          <comment>Your Google ReCaptcha site key, which can be obtained &lt;a target="_blank" href="https://www.google.com/recaptcha/admin"&gt;here&lt;/a&gt;.</comment>
+          <comment>Your Google ReCaptcha V2 site key, which can be obtained &lt;a target="_blank" href="https://www.google.com/recaptcha/admin"&gt;here&lt;/a&gt;.</comment>
         </field>
         <field id="recaptcha_private_key" translate="label" sortOrder="70" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>ReCaptcha secret key</label>
-          <comment>Your Google ReCaptcha secret key, which can be obtained &lt;a target="_blank" href="https://www.google.com/recaptcha/admin"&gt;here&lt;/a&gt;.</comment>
+          <comment>Your Google ReCaptcha V2 secret key, which can be obtained &lt;a target="_blank" href="https://www.google.com/recaptcha/admin"&gt;here&lt;/a&gt;.</comment>
         </field>
+          <field id="invisible_recaptcha" translate="label" sortOrder="80" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+              <label>Use invisible ReCaptcha</label>
+              <comment>When enabling this, please make sure that the API key you're using is configured to use invisble ReCaptcha V2</comment>
+              <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+          </field>
       </group>
       <group id="customer_notification" translate="label" sortOrder="1" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Default Customer Notification Settings</label>

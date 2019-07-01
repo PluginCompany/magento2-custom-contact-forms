@@ -289,7 +289,10 @@ class Mailer extends TransportBuilder
     private function explodeIfCommaDelimited($mail)
     {
         if(!is_array($mail) && stristr($mail,',')){
-            return explode(',', $mail);
+            $mail = explode(',', $mail);
+        }
+        if(is_array($mail)) {
+            $mail = array_map('trim', $mail);
         }
         return $mail;
     }

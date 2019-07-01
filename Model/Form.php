@@ -9,9 +9,7 @@
 namespace PluginCompany\ContactForms\Model;
 
 use PluginCompany\ContactForms\Api\Data\FormInterface;
-use Magento\Cms\Helper\Data as HelperData;
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\Data\Collection as DataCollection;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
@@ -21,8 +19,6 @@ use Magento\Framework\DataObject;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use Magento\Store\Model\ScopeInterface;
-use PluginCompany\ContactForms\Model\Entry\Collection as EntryCollection;
-use PluginCompany\ContactForms\Model\Form as ModelForm;
 use PluginCompany\ContactForms\Model\ResourceModel\Entry\Collection;
 
 class Form extends AbstractModel implements FormInterface
@@ -389,7 +385,7 @@ class Form extends AbstractModel implements FormInterface
 
     private function getStoreConfig($value)
     {
-        return $this->scopeConfig->getValue($value, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->getValue($value, ScopeInterface::SCOPE_STORE);
     }
 
     public function hasUploadField()

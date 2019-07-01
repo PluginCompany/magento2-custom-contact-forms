@@ -11,6 +11,7 @@ namespace PluginCompany\ContactForms\Block\Form\Widget;
 use Magento\Framework\App\Http\Context as HttpContext;
 use Magento\Framework\View\Element\Template;
 use Magento\Widget\Block\BlockInterface;
+use PluginCompany\ContactForms\Helper\ConditionsTranslator;
 use PluginCompany\ContactForms\Helper\FormHtmlTranslator;
 use PluginCompany\ContactForms\Model\Form;
 use PluginCompany\ContactForms\Model\FormRepository;
@@ -30,6 +31,10 @@ class View extends Template implements BlockInterface
      * @var HttpContext
      */
     private $httpContext;
+    /**
+     * @var ConditionsTranslator
+     */
+    private $conditionsTranslator;
 
     /**
      * Constructor
@@ -38,6 +43,7 @@ class View extends Template implements BlockInterface
      * @param FormRepository $formRepository
      * @param Filter $filter
      * @param FormHtmlTranslator $translator
+     * @param ConditionsTranslator $conditionsTranslator
      * @param HttpContext $httpContext
      * @param array $data
      */
@@ -47,6 +53,7 @@ class View extends Template implements BlockInterface
         FormRepository $formRepository,
         Filter $filter,
         FormHtmlTranslator $translator,
+        ConditionsTranslator $conditionsTranslator,
         HttpContext $httpContext,
         array $data = []
     ) {
@@ -55,6 +62,7 @@ class View extends Template implements BlockInterface
         $this->filter = $filter;
         $this->translator = $translator;
         $this->httpContext = $httpContext;
+        $this->conditionsTranslator = $conditionsTranslator;
     }
 
     /**
@@ -104,9 +112,10 @@ class View extends Template implements BlockInterface
             'hasVCaptcha' => $form->hasVisualCaptcha(),
             'visualCaptcha' => $this->getVisualCaptchaConfig(),
             'hasReCaptcha' => $form->hasReCaptcha(),
+            'invisibleReCaptcha' => $this->_scopeConfig->isSetFlag('plugincompany_contactforms/form/invisible_recaptcha'),
             'hasUploadField' => $form->hasUploadField(),
             'hasDependendFields' => !empty(json_decode($form->getDependentFields())),
-            'dependentFields' => $form->getDependentFields(),
+            'dependentFields' => $this->getTranslatedDependentFields(),
             'submitJs' => $form->getArbitraryJs(),
             'beforeSubmitJs' => $form->getBeforesubmitJs(),
             'pageloadJs' => $form->getPageloadJs(),
@@ -208,6 +217,16 @@ class View extends Template implements BlockInterface
     public function getVisualCaptchaImgUrl()
     {
         return $this->getViewFileUrl('PluginCompany_ContactForms::js/lib/visualcaptcha/img') . '/';
+    }
+
+    public function getTranslatedDependentFields()
+    {
+        $form = $this->getCurrentForm();
+        return $this->conditionsTranslator
+            ->loadConditionsJson($form->getDependentFields())
+            ->loadTranslationJson($form->getTranslation())
+            ->getTranslatedConditionsJson()
+            ;
     }
 
     public function getEscapedData()

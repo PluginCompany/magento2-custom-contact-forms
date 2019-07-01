@@ -103,11 +103,12 @@
 
         // Loop through list of accepted values. Break when we find a match.
         for ( i; i < length; i += 1 ) {
-            if ( typeof(dependencyValue) === 'array' || typeof(dependencyValue) === 'object' ) {
+            if ( Array.isArray(dependencyValue) || typeof(dependencyValue) === 'object' && dependencyValue !== null) {
 
                 // If `dependencyValue` is an array then check to see if arrays match
-                if ( $(dependencyValue).not($(checkAgainst[i])).length === 0 &&
-                    $(checkAgainst[i]).not(dependencyValue).length === 0 ) {
+                if ( dependencyValue.length && $(dependencyValue).not($(checkAgainst[i])).length === 0 &&
+                    $(checkAgainst[i]).not(dependencyValue).length === 0
+                ) {
                     match = true;
                     break;
                 }
@@ -116,7 +117,14 @@
                     match = true;
                     break;
                 }
+                if ( Array.isArray(checkAgainst[i]) && checkAgainst[i][0] === dependencyValue ) {
+                    match = true;
+                    break;
+                }
             }
+        }
+        if ( Array.isArray(dependencyValue) && $(dependencyValue).not($(checkAgainst)).length === 0 && $(checkAgainst).not(dependencyValue).length === 0) {
+            match = true;
         }
 
         return match;
@@ -144,8 +152,6 @@
             checkAgainst = checkAgainst[0];
         }
 
-        // console.log('depval', dependencyValue);
-        // console.log('checka', checkAgainst);
         // Loop through list of blacklisted values. Break when we find a match.
         for ( i; i < length; i += 1 ) {
             if ( Array.isArray(dependencyValue)) {

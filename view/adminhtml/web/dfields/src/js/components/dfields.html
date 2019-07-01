@@ -110,7 +110,19 @@
                 //observe changes in dependent fields
                 // add field type to object
                 // + set default value
+                // this.observe( 'fields', function ( newValue, oldValue, keypath ) {
+                //     console.log('fields changed');
+                //     console.log('newvalue', newValue);
+                //     console.log('oldvalue', oldValue);
+                // });
                 this.observe( 'list.*.dependencies.*.field', function ( newValue, oldValue, keypath ) {
+                    if(typeof oldValue !== 'undefined' && typeof this.get('fields.' + oldValue) === 'undefined'){
+                        //remove dependency since field is removed
+                        var dependencyKeyPath = keypath.slice(0, -8);
+                        var keyPathIndex = keypath.slice(-7, -6);
+                        this.splice(dependencyKeyPath, keyPathIndex, 1);
+                        return;
+                    }
                     if(typeof newValue == "undefined") return;
                     var dep = this.get(keypath.substr(0,keypath.length-6));
                     if(typeof dep.field != "undefined"){
@@ -169,14 +181,18 @@
 
                 //update input element
                 this.observe('list',function(){
+                    // $('#save, #save_and_continue').prop('disabled', true);
                     setTimeout(function(){
                         updateDfieldInput(JSON.stringify(dfields.get('list')));
                     },10);
+                    // setTimeout(function() {
+                    // $('#save, #save_and_continue').prop('disabled', false);
+                    // }, 300)
                 });
             },
             updateFieldsFromBuilder: function() {
                 var jsons = window.formBuilder.builder.collection;
-                this.setFormData(jsons,false);
+                this.setFormData(jsons);
             },
             //set form data, retrieved from form builder
             setFormData: function(data){
@@ -231,20 +247,21 @@
                             case "Multiple Checkboxes Inline":
                             case "Multiple Checkboxes":
                                 type = 'checkboxes';
-                                options = _.values(field.checkboxes.value);
+                                // options = dfields.cleanArray(field.checkboxes.value);
+                                options = field.checkboxes.value;
                                 break;
                             case "Multiple Radios":
                             case "Multiple Radios Inline":
                                 type = 'radios';
-                                options = _.values(field.radios.value);
+                                options = dfields.cleanArray(field.radios.value);
                                 break;
                             case "Select Basic":
                                 type = 'dropdown';
-                                options = _.values(field.options.value);
+                                options = dfields.cleanArray(field.options.value);
                                 break;
                             case "Select Multiple":
                                 type = 'multiple';
-                                options = _.values(field.options.value);
+                                options = dfields.cleanArray(field.options.value);
                                 break;
                             case "Paragraph text":
                                 type = 'paragraphtext';
@@ -287,6 +304,9 @@
                     ;
                 });
             },
+            cleanArray: function(arr) {
+                return _.values(JSON.parse(JSON.stringify(arr)));
+            },
             //clean removed fields from list
             cleanFields: function() {
                 var dfields = this;
@@ -295,7 +315,7 @@
                         var exists = _.find(dfields.get('fieldList'),function(fieldName){
                             return listItem.name == fieldName;
                         });
-                        if(typeof exists == "undefined"){
+                        if(typeof exists === "undefined"){
                             return false;
                         }
                         return listItem;
@@ -308,14 +328,15 @@
             cleanDependencies: function(){
                 var dfields = this;
                 return new Ractive.Promise(function(fulfil,reject){
-                    var list = dfields.get('list');
                     _.each(dfields.get('list'),function(v,k){
                         _.each(v.dependencies,function(dependency,key){
+                            // console.log(dependency);
                             var exists = _.find(dfields.get('fields'),function(data,fname){
-                                return fname == dependency.field;
+                                return fname === dependency.field;
                             });
-                            if(typeof exists == "undefined"){
-                                dfields.get('list')[k].dependencies.splice(key,1);
+                            // console.log('exists', exists);
+                            if(typeof exists === "undefined"){
+                                dfields.get('list.' + k + '.dependencies').splice(key,1);
                             }
                         });
                     });

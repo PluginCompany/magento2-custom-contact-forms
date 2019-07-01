@@ -931,10 +931,17 @@ define([
         renderReCaptchaElements: function() {
             this.form.find('.g-recaptcha').each(_.bind(function (k, em) {
                 try {
-                    $(em).before('<div class="g-recaptcha" />');
+                    if(this.config.invisibleReCaptcha) {
+                        $(em).before('<div class="g-recaptcha" data-size="invisible" data-badge="inline"/>');
+                    }else{
+                        $(em).before('<div class="g-recaptcha" />');
+                    }
                     var newCaptcha = $(em).prev();
                     $(em).remove();
                     grecaptcha.render(newCaptcha[0], {sitekey: this.config.recaptchaKey})
+                    setTimeout(function(){
+                        grecaptcha.execute();
+                    },1000)
                 } catch (err) {
                     console.log(err);
                 }

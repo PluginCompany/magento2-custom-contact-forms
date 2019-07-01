@@ -53,8 +53,9 @@
             },
             options: function(){
                 var field = this.get('field');
-                if(typeof this.parent.parent.get('fields')[field].options != "undefined"){
-                    return this.parent.parent.get('fields')[field].options;
+                var options = this.get('fields.' + field + '.options');
+                if(typeof options != "undefined"){
+                    return options;
                 }
             },
             fieldType: function(){
