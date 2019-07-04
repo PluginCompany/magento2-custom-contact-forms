@@ -511,6 +511,11 @@ define([
                     form.trigger( "pccfBeforeSubmit", [form, self]);
                 },
                 beforeSerialize: function () {
+                    if(self.hasInvisibleReCaptcha() && !grecaptcha.getResponse(self.recaptchaWidgetId)) {
+                        window.formToSubmitAfterRecaptchaValidation = self;
+                        grecaptcha.execute(self.recaptchaWidgetId);
+                        return false;
+                    }
                     form.trigger( "pccfBeforeSerialize", [form, self]);
                     config.beforeSubmitJs();
                     form.find('.form-group[disabled="disabled"]').remove();
@@ -528,6 +533,9 @@ define([
                 }
             });
             return this;
+        },
+        submitFormAfterInvisibleReCaptchaValidation: function() {
+            $(window.formToSubmitAfterRecaptchaValidation.form).submit();
         },
         showResponseMessage: function(message) {
             if(typeof message == "object" && message != null){
@@ -918,30 +926,48 @@ define([
         hasReCaptcha: function() {
             return this.config.hasReCaptcha;
         },
+        hasInvisibleReCaptcha: function() {
+            return this.hasReCaptcha() && this.config.invisibleReCaptcha;
+        },
+        hasInvisibleReCaptchaNotInline: function() {
+            return this.hasInvisibleReCaptcha() && this.getInvisibleReCaptchaPosition() != 'inline';
+        },
+        getInvisibleReCaptchaPosition: function() {
+            return this.config.invisibleReCaptchaPosition;
+        },
         initReCaptcha: function() {
             if(typeof grecaptcha == "undefined"){
-                $('body').append("<script " + "src='https://www.google.com/recaptcha/api.js?onload=reCaptchaLoaded&render=explicit' async defer><\/script>");
+                $('body').append("<script " + "src='https://www.google.com/recaptcha/api.js?render=explicit' async defer><\/script>");
             }
-            window.reCaptchaLoaded = _.bind(function() {
-                this.renderReCaptchaElements();
-            }, this)
-
+            var initReCaptcha = setInterval(
+                function(){
+                    if(typeof grecaptcha == "undefined" || typeof grecaptcha.render == "undefined") {
+                        return;
+                    }
+                    clearInterval(initReCaptcha);
+                    this.renderReCaptchaElements();
+                }.bind(this),
+                100
+            )
             return this;
         },
         renderReCaptchaElements: function() {
             this.form.find('.g-recaptcha').each(_.bind(function (k, em) {
                 try {
-                    if(this.config.invisibleReCaptcha) {
-                        $(em).before('<div class="g-recaptcha" data-size="invisible" data-badge="inline"/>');
+                    if(this.hasInvisibleReCaptcha()) {
+                        $(em).before('<div class="g-recaptcha" data-size="invisible" data-badge="' + this.getInvisibleReCaptchaPosition() + '"/>');
                     }else{
                         $(em).before('<div class="g-recaptcha" />');
                     }
+                    if(this.hasInvisibleReCaptchaNotInline()) {
+                        $(em).closest('.form-group').addClass('recaptcha-not-inline');
+                    }
                     var newCaptcha = $(em).prev();
                     $(em).remove();
-                    grecaptcha.render(newCaptcha[0], {sitekey: this.config.recaptchaKey})
-                    setTimeout(function(){
-                        grecaptcha.execute();
-                    },1000)
+                    this.recaptchaWidgetId = grecaptcha.render( newCaptcha[0], {
+                            'sitekey': this.config.recaptchaKey,
+                            'callback':  this.submitFormAfterInvisibleReCaptchaValidation
+                        });
                 } catch (err) {
                     console.log(err);
                 }
@@ -957,7 +983,6 @@ define([
                 [
                     'PluginCompany_ContactForms/js/lib/visualcaptcha/js/visualcaptcha.jquery',
                     'css!PluginCompany_ContactForms/js/lib/visualcaptcha/css/visualcaptcha'
-
                 ],
                 _.bind(function() {
                     this.renderVisualCaptcha();

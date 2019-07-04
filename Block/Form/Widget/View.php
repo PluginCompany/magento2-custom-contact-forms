@@ -113,6 +113,7 @@ class View extends Template implements BlockInterface
             'visualCaptcha' => $this->getVisualCaptchaConfig(),
             'hasReCaptcha' => $form->hasReCaptcha(),
             'invisibleReCaptcha' => $this->_scopeConfig->isSetFlag('plugincompany_contactforms/form/invisible_recaptcha'),
+            'invisibleReCaptchaPosition' => $this->_scopeConfig->getValue('plugincompany_contactforms/form/recaptcha_position'),
             'hasUploadField' => $form->hasUploadField(),
             'hasDependendFields' => !empty(json_decode($form->getDependentFields())),
             'dependentFields' => $this->getTranslatedDependentFields(),

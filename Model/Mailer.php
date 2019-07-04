@@ -45,11 +45,7 @@ class Mailer extends TransportBuilder
             )
             ->setReplyTo(null)
         ;
-        try {
-            $this->sendMail();
-        }catch(\Throwable $e) {
-            echo $e->getMessage();exit;
-        }
+        $this->sendMail();
 
         return $this;
     }

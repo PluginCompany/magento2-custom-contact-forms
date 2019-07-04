@@ -136,6 +136,28 @@
 				</item>
 			</argument>
 		</field>
+        <field name="status">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="array">
+                    <item name="yes" xsi:type="array">
+                        <item name="label" xsi:type="string">Yes</item>
+                        <item name="value" xsi:type="number">1</item>
+                    </item>
+                    <item name="no" xsi:type="array">
+                        <item name="label" xsi:type="string">No</item>
+                        <item name="value" xsi:type="number">0</item>
+                    </item>
+                </item>
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Enabled</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="source" xsi:type="string">Form</item>
+                    <item name="dataScope" xsi:type="string">status</item>
+                    <item name="default" xsi:type="string">1</item>
+                </item>
+            </argument>
+        </field>
 		<field name="frontend_page">
 			<argument name="data" xsi:type="array">
 				<item name="options" xsi:type="array">
@@ -219,28 +241,6 @@
 						<item name="required-entry" xsi:type="boolean">false</item>
 					</item>
 					<item name="notice" xsi:type="string" translate="true">Custom prefix used for form submission reference IDs, for example RMA. Leave empty to use the form ID.</item>
-				</item>
-			</argument>
-		</field>
-		<field name="status">
-			<argument name="data" xsi:type="array">
-				<item name="options" xsi:type="array">
-					<item name="yes" xsi:type="array">
-						<item name="label" xsi:type="string">Yes</item>
-						<item name="value" xsi:type="number">1</item>
-					</item>
-					<item name="no" xsi:type="array">
-						<item name="label" xsi:type="string">No</item>
-						<item name="value" xsi:type="number">0</item>
-					</item>
-				</item>
-				<item name="config" xsi:type="array">
-					<item name="dataType" xsi:type="string">text</item>
-					<item name="label" xsi:type="string" translate="true">Enabled</item>
-					<item name="formElement" xsi:type="string">select</item>
-					<item name="source" xsi:type="string">Form</item>
-					<item name="dataScope" xsi:type="string">status</item>
-					<item name="default" xsi:type="string">1</item>
 				</item>
 			</argument>
 		</field>

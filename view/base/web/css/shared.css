@@ -1475,3 +1475,15 @@ input.dropzone-validate
     background:none;
     padding-left:4px;
 }
+div.pccf .form-group.recaptcha-not-inline {
+    margin:0!important;
+    padding:0!important;
+}
+div.pccf .form-group.recaptcha-not-inline label {
+    display:none!important;
+}
+.ajs-in .pccf .g-recaptcha,
+.ajs-out .pccf .g-recaptcha
+{
+    visibility:hidden;
+}

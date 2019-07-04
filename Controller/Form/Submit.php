@@ -106,6 +106,8 @@ class Submit extends Action
             $this->processError($e);
         } catch (\Exception $e) {
             $this->processError($e);
+        } catch (\Throwable $e) {
+            $this->processError($e);
         }
     }
 
