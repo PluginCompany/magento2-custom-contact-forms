@@ -1040,7 +1040,14 @@
     content: " *";
     color: #fc4c5e;
     margin-right: -7px;
+    width:7px;
     display:inline-block;
+}
+
+.pccf.rtl .required-control .control-label:after
+{
+    margin-right:0px;
+    margin-left:-7px;
 }
 
 .pccf .nav-wizard > li:not(:last-child) > a:after,

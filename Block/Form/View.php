@@ -16,7 +16,9 @@
 
 namespace PluginCompany\ContactForms\Block\Form;
 
+use Magento\Cms\Model\Template\FilterProvider;
 use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Element\Template\Context;
 
 class View
     extends Template {
@@ -24,8 +26,8 @@ class View
 
 
     public function __construct(
-        \Magento\Framework\View\Element\Template\Context  $context,
-        \Magento\Cms\Model\Template\FilterProvider $filterProvider,
+        Context  $context,
+        FilterProvider $filterProvider,
         array $data = []
     )
     {

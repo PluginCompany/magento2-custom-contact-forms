@@ -182,7 +182,7 @@
 						<item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
                         <item name="label" translate="true" xsi:type="string">Form Submission</item>
                         <item name="dataScope" xsi:type="string">fields</item>
-						<item name="fit" xsi:type="boolean">true</item>
+<!--						<item name="fit" xsi:type="boolean">true</item>-->
                     </item>
                 </argument>
 		</column>

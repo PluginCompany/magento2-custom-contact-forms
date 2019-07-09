@@ -198,7 +198,7 @@ class Mailer extends TransportBuilder
 
     private function setBodyHtmlToMessage()
     {
-        if($this->isMagento23Plus()) {
+        if($this->isMagento228Plus()) {
             $this->message->setBodyHtml($this->mailData->getBody());
             return $this;
         }
@@ -229,13 +229,13 @@ class Mailer extends TransportBuilder
 
     private function addAttachment($filePath)
     {
-        if($this->isMagento23Plus()) {
-            return $this->addAttachment23Plus($filePath);
+        if($this->isMagento228Plus()) {
+            return $this->addAttachment228Plus($filePath);
         }
-        return $this->addAttachment23Below($filePath);
+        return $this->addAttachment228Below($filePath);
     }
 
-    private function addAttachment23Plus($filePath)
+    private function addAttachment228Plus($filePath)
     {
         $mp = new \Zend\Mime\Part(file_get_contents($filePath));
         $mp->type = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $filePath);
@@ -250,7 +250,7 @@ class Mailer extends TransportBuilder
         return $this;
     }
 
-    private function addAttachment23Below($filePath)
+    private function addAttachment228Below($filePath)
     {
         $this->message->createAttachment(
             file_get_contents($filePath),
@@ -308,9 +308,9 @@ class Mailer extends TransportBuilder
         return $this->_configScopeConfigInterface->getValue('plugincompany_contactforms/customer_notification/comment_subject', ScopeInterface::SCOPE_STORE,$storeId);
     }
 
-    private function isMagento23Plus()
+    private function isMagento228Plus()
     {
-        return version_compare($this->getMagentoVersion(), '2.3.0') >= 0;
+        return version_compare($this->getMagentoVersion(), '2.2.8') >= 0;
     }
 
     private function getMagentoVersion()

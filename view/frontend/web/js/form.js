@@ -857,6 +857,7 @@ define([
                 maxFilesize: maxFileSize,
                 acceptedFiles: allowedExt,
                 dictDefaultMessage: defaultMessage,
+                parallelUploads: 20,
                 dictFallbackMessage: $.mage.__("Your browser does not support drag'n'drop file uploads."),
                 dictFallbackText: $.mage.__("Please use the fallback form below to upload your files like in the olden days."),
                 dictFileTooBig: $.mage.__("File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB."),

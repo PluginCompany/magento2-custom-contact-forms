@@ -16,6 +16,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\View\Result\PageFactory;
 use Magento\Framework\Json\Helper\Data;
 use Magento\Newsletter\Model\SubscriberFactory;
+use Magento\Widget\Model\Template\Filter;
 use PluginCompany\ContactForms\Helper\FormHtmlTranslator;
 use PluginCompany\ContactForms\Model\EntryFactory;
 use PluginCompany\ContactForms\Model\EntryRepository;
@@ -51,21 +52,26 @@ class Submit extends Action
      * @var FormHtmlTranslator
      */
     private $translator;
+    /**
+     * @var Filter
+     */
+    private $filter;
 
     /**
      * Constructor
      *
-     * @param \Magento\Framework\App\Action\Context $context
+     * @param Context $context
      * @param PageFactory $resultPageFactory
      * @param EntryFactory $entryFactory
      * @param EntryRepository $entryRepository
      * @param FormRepository $formRepository
-     * @param \Magento\Framework\Json\Helper\Data $jsonHelper
-     * @param \Magento\Framework\App\Helper\Context $contextHelper
+     * @param Data $jsonHelper
+     * @param ContextHelper $contextHelper
      * @param Session $customerSession
      * @param VisualCaptchaSession $vCaptcha
      * @param SubscriberFactory $subscriberFactory
      * @param FormHtmlTranslator $translator
+     * @param Filter $filter
      */
     public function __construct(
         Context $context,
@@ -78,7 +84,8 @@ class Submit extends Action
         Session $customerSession,
         VisualCaptchaSession $vCaptcha,
         SubscriberFactory $subscriberFactory,
-        FormHtmlTranslator $translator
+        FormHtmlTranslator $translator,
+        Filter $filter
     ) {
         $this->resultPageFactory = $resultPageFactory;
         $this->entryFactory = $entryFactory;
@@ -91,6 +98,7 @@ class Submit extends Action
         $this->visualCaptcha = $vCaptcha;
         $this->subscriberFactory = $subscriberFactory;
         $this->translator = $translator;
+        $this->filter = $filter;
         parent::__construct($context);
     }
 
@@ -406,9 +414,23 @@ class Submit extends Action
     {
         $this->initTranslator();
         if($this->translator->getTranslatedSuccessMessage()) {
-            return $this->translator->getTranslatedSuccessMessage();
+            return $this->filterContent(
+                $this->translator->getTranslatedSuccessMessage()
+            );
         }
-        return $this->getForm()->getFrontendSuccessMessage();
+        return $this->filterContent(
+            $this->getForm()->getFrontendSuccessMessage()
+        );
+    }
+
+    private function filterContent($content)
+    {
+        return $this->getFilter()->filter($content);
+    }
+
+    private function getFilter()
+    {
+        return $this->filter;
     }
 
     public function initTranslator()

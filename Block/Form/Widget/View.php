@@ -90,6 +90,9 @@ class View extends Template implements BlockInterface
 
     protected function _afterToHtml($html)
     {
+        if(!$this->getCurrentForm()) {
+            return $html;
+        }
         return $this->translator
             ->loadTranslationJson($this->getCurrentForm()->getGeneralTranslation())
             ->translateFormTitle($html);
