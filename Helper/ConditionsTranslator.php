@@ -35,6 +35,9 @@ class ConditionsTranslator extends AbstractHelper
     public function loadTranslationJson($json)
     {
         $this->translations = json_decode($json, true);
+        if(!is_array($this->translations)) {
+            $this->translations = [];
+        }
         $this->optionTranslations = null;
         return $this;
     }
@@ -43,6 +46,9 @@ class ConditionsTranslator extends AbstractHelper
     {
         $this->originalConditionsJson = $json;
         $this->conditions = json_decode($json, true);
+        if(!is_array($this->conditions)) {
+            $this->conditions = [];
+        }
         return $this;
     }
 
