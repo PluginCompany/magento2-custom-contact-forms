@@ -199,7 +199,7 @@ class Upload extends Action
 
     public function getUploadDir()
     {
-        if(!$this->getUploadDirFromSession()){
+        if(!$this->getUploadDirFromSession() || !$this->uploadDirMatchesUniqueFormInstanceId()){
             $this->initSessionUploadDir();
         }
         return $this->getUploadDirFromSession();
@@ -209,6 +209,16 @@ class Upload extends Action
     {
         return $this->customerSession
             ->getData($this->getUploadDirSessionDataKey());
+    }
+
+    private function uploadDirMatchesUniqueFormInstanceId()
+    {
+        return (bool) stristr($this->getUploadDirFromSession(), $this->getUniqueFormInstanceId());
+    }
+
+    private function getUniqueFormInstanceId()
+    {
+        return $this->getRequest()->getParam('unique_form_instance');
     }
 
     private function initSessionUploadDir()
@@ -248,8 +258,8 @@ class Upload extends Action
     {
         $session = $this->customerSession;
         $key = $session->getData($this->getSessionDataKeyForForm());
-        if(!$key){
-            $key = uniqid($this->getFormId() . '_');
+        if(!$key || !$this->uploadDirMatchesUniqueFormInstanceId()){
+            $key = uniqid($this->getFormId() . '_') . $this->getUniqueFormInstanceId();
             $session->setData($this->getSessionDataKeyForForm(), $key);
         }
         return $key;

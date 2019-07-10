@@ -851,13 +851,13 @@ define([
                 defaultMessage = $.mage.__('Drag and drop files or click to select');
             }
             return {
-                url: this.config.uploadUrl + 'upload_element_index/' + uploadElementNumber,
+                url: this.config.uploadUrl + 'upload_element_index/' + uploadElementNumber + '/unique_form_instance/' + this.uniqueIdentifier,
                 addRemoveLinks: true,
                 maxFiles: maxFiles,
                 maxFilesize: maxFileSize,
                 acceptedFiles: allowedExt,
                 dictDefaultMessage: defaultMessage,
-                parallelUploads: 20,
+                parallelUploads: 1,
                 dictFallbackMessage: $.mage.__("Your browser does not support drag'n'drop file uploads."),
                 dictFallbackText: $.mage.__("Please use the fallback form below to upload your files like in the olden days."),
                 dictFileTooBig: $.mage.__("File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB."),

@@ -1494,3 +1494,7 @@ div.pccf .form-group.recaptcha-not-inline label {
 {
     visibility:hidden;
 }
+
+.pccf.rtl select {
+    background-position: 0% 45%;
+}
