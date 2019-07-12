@@ -529,6 +529,7 @@
                     <item name="wysiwygConfigData" xsi:type="array">
                         <item name="is_pagebuilder_enabled" xsi:type="boolean">false</item>
                         <item name="pagebuilder_button" xsi:type="boolean">false</item>
+                        <item name="add_widgets" xsi:type="boolean">false</item>
                     </item>
 				</item>
 			</argument>
@@ -812,6 +813,7 @@
                     <item name="wysiwygConfigData" xsi:type="array">
                         <item name="is_pagebuilder_enabled" xsi:type="boolean">false</item>
                         <item name="pagebuilder_button" xsi:type="boolean">false</item>
+                        <item name="add_widgets" xsi:type="boolean">false</item>
                     </item>
 				</item>
 			</argument>
@@ -1050,6 +1052,7 @@
                     <item name="wysiwygConfigData" xsi:type="array">
                         <item name="is_pagebuilder_enabled" xsi:type="boolean">false</item>
                         <item name="pagebuilder_button" xsi:type="boolean">false</item>
+                        <item name="add_widgets" xsi:type="boolean">false</item>
                     </item>
 				</item>
 			</argument>

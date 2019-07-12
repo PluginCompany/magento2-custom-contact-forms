@@ -184,4 +184,12 @@ class EntryRepository implements EntryRepositoryInterface
         $collection = $this->entryCollectionFactory->create();
         return $collection->getAllIds();
     }
+
+    public function getAllIdsByFormId($formId)
+    {
+        /** @var \PluginCompany\ContactForms\Model\ResourceModel\Entry\Collection $collection */
+        $collection = $this->entryCollectionFactory->create();
+        $collection->addFieldToFilter('form_id', $formId);
+        return $collection->getAllIds();
+    }
 }

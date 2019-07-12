@@ -5,41 +5,65 @@
  * This file is part of Custom Contact Forms for Magento 2, released under the MIT License.
  * See the LICENSE file in the project root.
  */
-
 namespace PluginCompany\ContactForms\Controller\Adminhtml\Entry;
 
-class Delete extends \PluginCompany\ContactForms\Controller\Adminhtml\Entry
+use Magento\Framework\Controller\Result\Redirect;
+use Magento\Framework\Controller\ResultInterface;
+use PluginCompany\ContactForms\Controller\Adminhtml\Entry;
+
+class Delete extends Entry
 {
 
     /**
      * Delete action
      *
-     * @return \Magento\Framework\Controller\ResultInterface
+     * @return ResultInterface
      */
     public function execute()
     {
-        /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
-        $resultRedirect = $this->resultRedirectFactory->create();
-        // check if we know what should be deleted
-        $id = $this->getRequest()->getParam('entry_id');
-        if ($id) {
-            try {
-                // init model and delete
-                $model = $this->entryRepository->deleteById($id);
-                // display success message
-                $this->messageManager->addSuccessMessage(__('You deleted the Entry.'));
-                // go to grid
-                return $resultRedirect->setPath('*/*/');
-            } catch (\Exception $e) {
-                // display error message
-                $this->messageManager->addErrorMessage($e->getMessage());
-                // go back to edit form
-                return $resultRedirect->setPath('*/*/edit', ['entry_id' => $id]);
-            }
+        if (!$this->getEntryId()) {
+            $this->messageManager->addErrorMessage(__('We can\'t find a Entry to delete.'));
+            return $this->redirectToReferrer();
         }
-        // display error message
-        $this->messageManager->addErrorMessage(__('We can\'t find a Entry to delete.'));
-        // go to grid
-        return $resultRedirect->setPath('*/*/');
+        try {
+            $this->entryRepository->deleteById($this->getEntryId());
+            $this->messageManager->addSuccessMessage(__('You deleted the Entry.'));
+            return $this->redirectToReferrer();
+        } catch (\Exception $e) {
+            $this->messageManager->addErrorMessage($e->getMessage());
+            return $this->getResultRedirect()->setPath('*/*/edit', ['entry_id' => $this->getEntryId()]);
+        }
+    }
+
+    private function getEntryId()
+    {
+        return $this->getRequest()->getParam('entry_id');
+    }
+
+    private function redirectToReferrer()
+    {
+        if($this->getCurrentFormId()) {
+            return $this->getResultRedirect()
+                ->setPath(
+                    'plugincompany_contactforms/form/edit',
+                    [
+                        'form_id' => $this->getCurrentFormId()
+                    ]
+                );
+        }
+        return $this->getResultRedirect()->setPath('*/*/');
+    }
+
+    private function getCurrentFormId()
+    {
+        return $this->getRequest()->getParam('edit_form_id');
+    }
+
+    /**
+     * @return Redirect
+     */
+    private function getResultRedirect()
+    {
+        return $this->resultRedirectFactory->create();
     }
 }

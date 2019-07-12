@@ -52,7 +52,7 @@ class MassDelete extends Action
             ->deleteEntrysBasedOnPostData()
             ->addResultMessages()
         ;
-        return $this->redirectToListing();
+        return $this->redirectToReferringPage();
     }
 
     private function deleteEntrysBasedOnPostData()
@@ -84,7 +84,15 @@ class MassDelete extends Action
 
     private function getAllEntryIds()
     {
+        if($this->getFormId()) {
+            return $this->entryRepository->getAllIdsByFormId($this->getFormId());
+        }
         return $this->entryRepository->getAllIds();
+    }
+
+    private function getFormId()
+    {
+        return $this->getRequest()->getParam('form_id');
     }
 
     private function tryDeleteEntry($id)
@@ -130,8 +138,17 @@ class MassDelete extends Action
         return $this;
     }
 
-    private function redirectToListing()
+    private function redirectToReferringPage()
     {
+        if($this->getFormId()) {
+            return $this->createRedirect()
+                ->setPath(
+                    'plugincompany_contactforms/form/edit',
+                    [
+                        'form_id' => $this->getFormId()
+                    ]
+                );
+        }
         return $this->createRedirect()
             ->setPath('*/*/');
     }

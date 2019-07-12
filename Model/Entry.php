@@ -552,7 +552,7 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
     private function filterVar($value)
     {
         $value = $this->fixTemplateHeaderAndFooter($value);
-        return $this->filter->filter($value);
+        return $this->filter->filterForEmail($value);
     }
 
     private function fixTemplateHeaderAndFooter($value)

@@ -59,7 +59,8 @@ class EntryActions extends \Magento\Ui\Component\Listing\Columns\Column
                             'href' => $this->urlBuilder->getUrl(
                                 static::URL_PATH_DELETE,
                                 [
-                                    'entry_id' => $item['entity_id']
+                                    'entry_id' => $item['entity_id'],
+                                    'edit_form_id' => $this->context->getRequestParam('form_id')
                                 ]
                             ),
                             'label' => __('Delete'),

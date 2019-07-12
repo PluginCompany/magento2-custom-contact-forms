@@ -232,8 +232,13 @@
                     return data.content.value;
                 }
             } catch(err) {}
-
-            return data.name.value;
+            try{
+                return data.name.value;
+            }catch(err)  {}
+            try{
+                return data.title;
+            }catch(err)  {}
+            return;
         },
         getValueForField: function(field, parentField) {
             //empty item for dropdown

@@ -8,6 +8,7 @@
 namespace PluginCompany\ContactForms\Model\Template;
 
 use Magento\Cms\Model\Template\Filter as CmsFilter;
+use Magento\Email\Model\Template\Filter as EmailFilter;
 use Magento\Email\Model\Template as EmailTemplate;
 use Magento\Framework\Registry;
 use Magento\Framework\DataObject;
@@ -25,9 +26,24 @@ class Filter
      * @var PrivateContentFilter
      */
     private $privateContentFilter;
+    /**
+     * @var EmailFilter
+     */
+    private $emailFilter;
 
+    /**
+     * Filter constructor.
+     * @param CmsFilter $filter
+     * @param EmailFilter $emailFilter
+     * @param Registry $registry
+     * @param Customer $customer
+     * @param Product $product
+     * @param EmailTemplate $emailTemplate
+     * @param PrivateContentFilter $privateContentFilter
+     */
     public function __construct(
         CmsFilter $filter,
+        EmailFilter $emailFilter,
         Registry $registry,
         Customer $customer,
         Product $product,
@@ -35,12 +51,17 @@ class Filter
         PrivateContentFilter $privateContentFilter
     ){
         $this->filter = $filter;
+        $this->emailFilter = $emailFilter;
         $this->customer = $customer;
         $this->product = $product;
         $this->registry = $registry;
 
         $this->filter->setTemplateProcessor([$emailTemplate, 'getTemplateContent']);
         $this->filter->setDesignParams($emailTemplate->getDesignParams());
+
+        $this->emailFilter->setTemplateProcessor([$emailTemplate, 'getTemplateContent']);
+        $this->emailFilter->setDesignParams($emailTemplate->getDesignParams());
+
         $this->privateContentFilter = $privateContentFilter;
     }
 
@@ -126,6 +147,8 @@ class Filter
     {
         $this->filter
             ->setVariables($variables);
+        $this->emailFilter
+            ->setVariables($variables);
         return $this;
     }
 
@@ -142,6 +165,11 @@ class Filter
     public function getFilter()
     {
         return $this->filter;
+    }
+
+    public function filterForEmail($string)
+    {
+        return $this->emailFilter->filter($string);
     }
 
 }
