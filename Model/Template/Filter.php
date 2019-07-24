@@ -7,11 +7,13 @@
  */
 namespace PluginCompany\ContactForms\Model\Template;
 
+use Magento\Store\Model\StoreManagerInterface;
 use Magento\Cms\Model\Template\Filter as CmsFilter;
 use Magento\Email\Model\Template\Filter as EmailFilter;
 use Magento\Email\Model\Template as EmailTemplate;
 use Magento\Framework\Registry;
 use Magento\Framework\DataObject;
+use Magento\Store\Model\StoreManager;
 use PluginCompany\ContactForms\Model\Template\FilterObjects\Customer;
 use PluginCompany\ContactForms\Model\Template\FilterObjects\Product;
 
@@ -30,6 +32,10 @@ class Filter
      * @var EmailFilter
      */
     private $emailFilter;
+    /**
+     * @var StoreManager
+     */
+    private $storeManager;
 
     /**
      * Filter constructor.
@@ -38,6 +44,7 @@ class Filter
      * @param Registry $registry
      * @param Customer $customer
      * @param Product $product
+     * @param StoreManagerInterface $storeManager
      * @param EmailTemplate $emailTemplate
      * @param PrivateContentFilter $privateContentFilter
      */
@@ -47,6 +54,7 @@ class Filter
         Registry $registry,
         Customer $customer,
         Product $product,
+        StoreManagerInterface $storeManager,
         EmailTemplate $emailTemplate,
         PrivateContentFilter $privateContentFilter
     ){
@@ -63,6 +71,7 @@ class Filter
         $this->emailFilter->setDesignParams($emailTemplate->getDesignParams());
 
         $this->privateContentFilter = $privateContentFilter;
+        $this->storeManager = $storeManager;
     }
 
     public function initFrontEndVariables()
@@ -71,6 +80,7 @@ class Filter
             ->addCustomerVariables()
             ->addProductVariables()
             ->addCategoryVariables()
+            ->addStoreVariables()
         ;
         return $this;
     }
@@ -141,6 +151,19 @@ class Filter
         }
 
         return $category;
+    }
+
+    public function addStoreVariables()
+    {
+        $this->setVariables(
+            ['store' => $this->getCurrentStore()]
+        );
+        return $this;
+    }
+
+    public function getCurrentStore()
+    {
+        return $this->storeManager->getStore();
     }
 
     public function setVariables($variables)
