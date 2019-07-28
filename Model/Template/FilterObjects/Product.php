@@ -172,4 +172,9 @@ class Product extends DataObject
     {
         return strip_tags($this->getProduct()->getFormattedPrice());
     }
+
+    public function getFormattedPriceNoContainerAndSymbol()
+    {
+        return preg_replace("/[^[:digit:],.]/u", '', $this->getFormattedPriceWithoutContainer());
+    }
 }
