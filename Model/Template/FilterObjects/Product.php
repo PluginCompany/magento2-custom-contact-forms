@@ -14,6 +14,7 @@ use Magento\Framework\Registry;
 
 class Product extends DataObject
 {
+    /** @var \Magento\Catalog\Model\Product */
     private $product;
     /**
      * @var \Magento\Framework\App\Request\Http
@@ -157,8 +158,18 @@ class Product extends DataObject
         return [];
     }
 
+    /**
+     * @param $productId
+     * @return \Magento\Catalog\Model\Product
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     private function getProductFromRepository($productId)
     {
         return $this->productRepository->getById($productId);
+    }
+
+    public function getFormattedPriceWithoutContainer()
+    {
+        return strip_tags($this->getProduct()->getFormattedPrice());
     }
 }
