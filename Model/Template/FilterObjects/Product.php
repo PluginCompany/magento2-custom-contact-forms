@@ -7,9 +7,11 @@
  */
 namespace PluginCompany\ContactForms\Model\Template\FilterObjects;
 
+use Magento\Catalog\Helper\Data;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\DataObject;
+use Magento\Framework\Pricing\Helper\Data as PriceData;
 use Magento\Framework\Registry;
 
 class Product extends DataObject
@@ -28,16 +30,27 @@ class Product extends DataObject
      * @var Registry
      */
     private $registry;
+    /**
+     * @var Data
+     */
+    private $catalogHelper;
+    /**
+     * @var PriceData
+     */
+    private $priceHelper;
 
     public function __construct(
         RequestInterface $request,
         ProductRepository $productRepository,
-        Registry $registry
+        Registry $registry,
+        Data $catalogHelper,
+        PriceData $priceHelper
     ){
         $this->request = $request;
         $this->productRepository = $productRepository;
         $this->registry = $registry;
-        return $this;
+        $this->catalogHelper = $catalogHelper;
+        $this->priceHelper = $priceHelper;
     }
 
     public function __call($method, $args)
@@ -105,6 +118,9 @@ class Product extends DataObject
 
     private function retrieveProduct()
     {
+        if($this->getProductFromHelper()) {
+            return $this->getProductFromHelper();
+        }
         if($this->getProductFromRegistry()) {
             return $this->getProductFromRegistry();
         }
@@ -112,6 +128,11 @@ class Product extends DataObject
             return $this->getProductBasedOnRequest();
         }
         return false;
+    }
+
+    private function getProductFromHelper()
+    {
+        return $this->catalogHelper->getProduct();
     }
 
     private function getProductFromRegistry()
@@ -168,9 +189,22 @@ class Product extends DataObject
         return $this->productRepository->getById($productId);
     }
 
+    public function getFormattedPrice()
+    {
+        return $this->priceHelper->currency(
+            $this->getProduct()->getFinalPrice(),
+            true,
+            true
+        );
+    }
+
     public function getFormattedPriceWithoutContainer()
     {
-        return strip_tags($this->getProduct()->getFormattedPrice());
+        return $this->priceHelper->currency(
+            $this->getProduct()->getFinalPrice(),
+            true,
+            false
+        );
     }
 
     public function getFormattedPriceNoContainerAndSymbol()
