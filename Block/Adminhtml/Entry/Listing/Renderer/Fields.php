@@ -74,6 +74,9 @@ class Fields extends Column
     public function getSubmissionOverviewTable($fields)
     {
         $fields = json_decode($fields, true);
+        if(empty($fields) || !is_array($fields)) {
+            $fields = [];
+        }
         return $this->blockFactory
             ->createBlock('Magento\Framework\View\Element\Template')
             ->setTemplate('PluginCompany_ContactForms::entry/listing/submission_overview_table.phtml')

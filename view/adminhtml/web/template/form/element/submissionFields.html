@@ -1,4 +1,7 @@
-<table class="data-grid" afterRender="onElementRender">
+<div class="htmlBox" data-bind="ifnot: value">
+    <!-- ko i18n: 'No fields submitted' --><!-- /ko -->
+</div>
+<table class="data-grid" afterRender="onElementRender" data-bind="if: value">
     <thead>
     <tr>
         <th class="data-grid-th"><!-- ko i18n: 'Field ID' --><!-- /ko --></th>

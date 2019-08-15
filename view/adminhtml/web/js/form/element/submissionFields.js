@@ -21,6 +21,9 @@ define([
 
         initialize: function () {
             this._super();
+            if(!this.value()) {
+                return this;
+            }
             var fields = JSON.parse(this.value());
             var fieldArray = _.map(
                 _.pairs(fields),

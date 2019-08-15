@@ -22,6 +22,9 @@ define([
 
         initialize: function () {
             this._super();
+            if(!this.value().length) {
+                this.value(false);
+            };
             return this;
         },
 
