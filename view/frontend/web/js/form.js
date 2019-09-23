@@ -60,6 +60,7 @@ define([
             config.submitJs = Function(config.submitJs);
             config.pageloadJs = Function(config.pageloadJs);
             this.config = config;
+            this.config.form = this;
             return this;
         },
         render: function() {
