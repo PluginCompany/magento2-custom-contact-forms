@@ -49,7 +49,7 @@ class FormHtmlTranslator extends AbstractHelper
             if(empty($translation['translations']['store_' . $storeId])){
                 continue;
             }
-            if(!in_array($translation['fieldType'], ['prevtext', 'nexttext', 'pagetitle', 'label', 'label_start', 'label_end', 'placeholder', 'defaultval', 'radios', 'checkboxes', 'options', 'contents', 'helptext', 'content', 'droptext', 'buttonlabel'])) {
+            if(!in_array($translation['fieldType'], ['prevtext', 'nexttext', 'pagetitle', 'label', 'label_start', 'label_end', 'placeholder', 'defaultval', 'radios', 'checkboxes', 'options', 'contents', 'helptext', 'content', 'droptext', 'buttonlabel', 'emptyoption', 'notloggedintext'])) {
                 continue;
             }
             $translation = $this->prepareFieldForReplace($translation);
@@ -143,6 +143,23 @@ class FormHtmlTranslator extends AbstractHelper
             $newSelectTag = str_replace($oldTag, $newTag, $newSelectTag);
         }
         $this->html = str_replace($selectTag, $newSelectTag, $this->html);
+    }
+
+    private function replaceEmptyoption($id, $newText)
+    {
+        preg_match("/id=\"{$id}\".*?<\/select/", $this->html, $selectTag);
+        $selectTag = $selectTag[0];
+
+        $newSelectTag = $selectTag;
+        $newSelectTag = preg_replace('/(optionsCaption: \')(.*?)\'/', '${1}' . $newText . "'", $newSelectTag);
+        $newSelectTag = preg_replace('/(<option value="">)(.*?)(<\/option>)/', '${1}' . $newText . '${3}', $newSelectTag);
+
+        $this->html = str_replace($selectTag, $newSelectTag, $this->html);
+    }
+
+    private function replaceNotloggedintext($id, $newText)
+    {
+        $this->html = preg_replace('/(pc-not-logged-in-text" for="' . $id . '">)(.*?)(<\/div>)/', '${1}' . $newText . '${3}', $this->html);
     }
 
     /**

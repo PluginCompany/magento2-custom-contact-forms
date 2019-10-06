@@ -4,6 +4,9 @@ namespace PluginCompany\ContactForms\CustomerData;
 use Magento\Customer\CustomerData\SectionSourceInterface;
 use Magento\Customer\Helper\Session\CurrentCustomer;
 use Magento\Customer\Helper\View;
+use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
+use Magento\Sales\Model\ResourceModel\Order\Invoice\CollectionFactory as InvoiceCollectionFactory;
+use Magento\Sales\Model\Order\Config;
 
 /**
  * Customer section
@@ -24,17 +27,40 @@ class Customer implements SectionSourceInterface
      * @var \Magento\Customer\Model\Data\Customer
      */
     private $customerDataObject;
+    /**
+     * @var OrderCollectionFactory
+     */
+    private $orderCollectionFactory;
+    /**
+     * @var InvoiceCollectionFactory
+     */
+    private $invoiceCollectionFactory;
+    /**
+     * @var Config
+     */
+    private $orderConfig;
+
+    private $orders;
 
     /**
      * @param CurrentCustomer $currentCustomer
      * @param View $customerViewHelper
+     * @param OrderCollectionFactory $orderCollectionFactory
+     * @param InvoiceCollectionFactory $invoiceCollectionFactory
+     * @param Config $orderConfig
      */
     public function __construct(
         CurrentCustomer $currentCustomer,
-        View $customerViewHelper
+        View $customerViewHelper,
+        OrderCollectionFactory $orderCollectionFactory,
+        InvoiceCollectionFactory $invoiceCollectionFactory,
+        Config $orderConfig
     ) {
         $this->currentCustomer = $currentCustomer;
         $this->customerViewHelper = $customerViewHelper;
+        $this->orderCollectionFactory = $orderCollectionFactory;
+        $this->invoiceCollectionFactory = $invoiceCollectionFactory;
+        $this->orderConfig = $orderConfig;
     }
 
     /**
@@ -61,7 +87,9 @@ class Customer implements SectionSourceInterface
             'fullname' => $this->customerViewHelper->getCustomerName($this->customerDataObject),
             'firstname' => $this->customerDataObject->getFirstname(),
             'name' => $this->customerDataObject->getFirstname(),
-            'websiteId' => $this->customerDataObject->getWebsiteId()
+            'websiteId' => $this->customerDataObject->getWebsiteId(),
+            'orders' => $this->getOrderIncrementIdArray(),
+            'invoices' => $this->getInvoiceIncrementIdArray()
         ] + $this->customerDataObject->__toArray();
     }
 
@@ -115,4 +143,58 @@ class Customer implements SectionSourceInterface
         }
         return $data;
     }
+
+    public function getInvoiceIncrementIdArray()
+    {
+        $invoices = $this->getInvoiceCollection();
+        if(!$invoices) return [];
+
+        return $invoices->getColumnValues('increment_id');
+    }
+
+    public function getInvoiceCollection()
+    {
+        $collection = $this->invoiceCollectionFactory->create();
+        $collection
+            ->getSelect()
+            ->joinLeft(
+                ['order' => $collection->getTable('sales_order')],
+                'order.entity_id=main_table.order_id',
+                array('customer_id' => 'customer_id')
+            );
+        $collection
+            ->addFieldToFilter('customer_id',$this->getCustomerId());
+        return $collection;
+    }
+
+    public function getOrderIncrementIdArray()
+    {
+        if(!$this->getOrderCollection()){
+            return [];
+        }
+        return $this->getOrderCollection()
+            ->getColumnValues('increment_id');
+    }
+
+    public function getOrderCollection()
+    {
+        if (!$this->orders) {
+            $this->orders = $this->orderCollectionFactory
+                ->create($this->getCustomerId())
+                ->addFieldToSelect(
+                    'increment_id'
+                )->addFieldToFilter(
+                    'status',
+                    ['in' => $this->orderConfig->getVisibleOnFrontStatuses()]
+                );
+        }
+        return $this->orders;
+    }
+
+    public function getCustomerId()
+    {
+        return $this->currentCustomer->getCustomerId();
+    }
+
+
 }

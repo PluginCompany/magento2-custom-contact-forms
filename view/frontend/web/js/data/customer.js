@@ -17,8 +17,6 @@ define([
                 }
                 originalCleanExternalData();
             };
-            // ko.utils.domNodeDisposal['cleanExternalData'] = original;
-            // this._super();
             this.fields = customerData.get('pc-customer-data');
         },
         getValue: function(key) {

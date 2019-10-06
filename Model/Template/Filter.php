@@ -36,6 +36,10 @@ class Filter
      * @var StoreManager
      */
     private $storeManager;
+    /**
+     * @var FormHtmlFilter
+     */
+    private $formHtmlFilter;
 
     /**
      * Filter constructor.
@@ -47,6 +51,7 @@ class Filter
      * @param StoreManagerInterface $storeManager
      * @param EmailTemplate $emailTemplate
      * @param PrivateContentFilter $privateContentFilter
+     * @param FormHtmlFilter $formHtmlFilter
      */
     public function __construct(
         CmsFilter $filter,
@@ -56,7 +61,8 @@ class Filter
         Product $product,
         StoreManagerInterface $storeManager,
         EmailTemplate $emailTemplate,
-        PrivateContentFilter $privateContentFilter
+        PrivateContentFilter $privateContentFilter,
+        FormHtmlFilter $formHtmlFilter
     ){
         $this->filter = $filter;
         $this->emailFilter = $emailFilter;
@@ -72,6 +78,7 @@ class Filter
 
         $this->privateContentFilter = $privateContentFilter;
         $this->storeManager = $storeManager;
+        $this->formHtmlFilter = $formHtmlFilter;
     }
 
     public function initFrontEndVariables()
@@ -178,6 +185,11 @@ class Filter
     public function rewriteDefaultCustomerValuesToKo($string)
     {
         return $this->privateContentFilter->rewriteDefaultCustomerValuesToKo($string);
+    }
+
+    public function prepareFormHtml($html)
+    {
+        return $this->formHtmlFilter->prepareFormHtmlForDisplay($html);
     }
 
     public function filter($string)

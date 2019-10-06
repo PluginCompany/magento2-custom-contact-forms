@@ -34,14 +34,16 @@ class PrivateContentFilter
 
     public function rewriteDefaultCustomerValuesToKo($html)
     {
+        $this->html = $html;
+
         if(!$this->currentCustomer->getCustomerId()) {
-            return $html;
-        }
-        if(!$this->pageCacheConfig->isEnabled()) {
-            return $html;
+            return $this->html;
         }
 
-        $this->html = $html;
+        if(!$this->pageCacheConfig->isEnabled()) {
+            return $this->html;
+        }
+
         $this
             ->rewriteInputValues()
             ->rewriteTextareaValues()

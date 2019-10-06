@@ -19,10 +19,10 @@
 $form = $this->getCurrentForm();
 if ($form) {
     ?>
-<div class="<?= $this->getUniqueComponentClassName() ?>" >
+<div class="<?= $this->getUniqueComponentClassName() ?>">
     <div class="pccf-customer-data-scope" style="<?php echo $this->getWrapperStyles(); ?>" data-bind="scope: 'PCContactFormData'" >
         <div id="pccf_form_<?php echo $form->getId() ?>"
-             class="<?php echo $this->getCssClasses(); ?>"
+             class="<?php echo $this->getCssClasses(); ?> <?= $this->isCustomerLoggedIn() ? 'pc-customer-logged-in' : 'pc-customer-logged-out' ?>"
              style="<?php echo $this->getStyles(); ?>;">
             <img class="pccf_loader" src="<?php echo $this->getViewFileUrl('PluginCompany_ContactForms::img/gears-anim.gif'); ?>" style="position:absolute;left:50%;top:50%;margin-left:-90px;margin-top:-80px" />
             <div class="form-view pccformwrapper <?php echo $form->getWrapClass(); ?> " style="position:relative;visibility:hidden;">

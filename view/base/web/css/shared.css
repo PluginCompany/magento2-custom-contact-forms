@@ -1494,7 +1494,18 @@ div.pccf .form-group.recaptcha-not-inline label {
 {
     visibility:hidden;
 }
-
 .pccf.rtl select {
     background-position: 0% 45%;
+}
+.pc-not-logged-in-text {
+    padding-top:7px;
+}
+.pc-customer-logged-in .pc-not-logged-in-text {
+    display:none;
+}
+.pc-customer-logged-out .pc-order-select select.form-control {
+    display:none!important;
+}
+.pc-customer-logged-in .pc-order-select select.form-control {
+    display:block!important;
 }

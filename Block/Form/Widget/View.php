@@ -176,6 +176,7 @@ class View extends Template implements BlockInterface
 
         $formHtml = $this->getFilter()->rewriteDefaultCustomerValuesToKo($formHtml);
         $formHtml = $this->getFilter()->filter($formHtml);
+        $formHtml = $this->getFilter()->prepareFormHtml($formHtml);
         return $formHtml;
     }
 

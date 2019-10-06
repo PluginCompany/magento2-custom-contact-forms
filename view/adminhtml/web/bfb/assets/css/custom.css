@@ -222,3 +222,11 @@
     display: block !important;
 }
 
+log_in_link {
+    color: #428bca;
+    text-decoration:underline;
+}
+
+.pc-not-logged-in-text {
+    display:none;
+}
