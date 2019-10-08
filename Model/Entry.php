@@ -80,6 +80,10 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
      * @var EntryTranslator
      */
     private $translator;
+    /**
+     * @var EntryRepository
+     */
+    private $entryRepository;
 
 
     /**
@@ -105,6 +109,7 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
      * @param ProductMetadataInterface $productMetadata
      * @param UrlInterface $urlBuilder
      * @param EntryTranslator $translator
+     * @param EntryRepository $entryRepository
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
@@ -122,6 +127,7 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
         ProductMetadataInterface $productMetadata,
         UrlInterface $urlBuilder,
         EntryTranslator $translator,
+        EntryRepository $entryRepository,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = [])
@@ -138,6 +144,7 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
         $this->urlBuilder = $urlBuilder;
         $this->translator = $translator;
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
+        $this->entryRepository = $entryRepository;
     }
 
     /**
@@ -169,10 +176,13 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
         $this
             ->setSubmissionParams($params)
             ->initFormIdFromParams()
-            ->initFilterParams()
         ;
+        if($this->getForm()->getEnableEntries()) {
+            $this->initIncrementId();
+        }
+        $this->initFilterParams();
 
-        $this->setData(
+        $this->addData(
             [
                 'form_id' => $this->getForm()->getId(),
                 'store_id'=> $this->storeManager->getStore()->getStoreId(),
@@ -191,11 +201,28 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
                 'admin_sender_email'=> $this->getAdminSenderEmail(),
                 'admin_reply_to_email'=> $this->getAdminReplyToEmail(),
                 'fields'=> $this->getSubmissionParams()->toJson(),
-                'increment_id' => $this->getForm()->getNextEntryIncrementIdCounter(),
-                'increment_text' => $this->getForm()->getNextIncrementText(),
                 'upload_dir' => $this->getUploadDir()
             ]
         );
+        return $this;
+    }
+
+    private function initIncrementId()
+    {
+        $this
+            ->setIncrementId(
+                $this->getForm()->getNextEntryIncrementIdCounter()
+            )
+            ->setIncrementText(
+                $this->getForm()->getNextIncrementText()
+            )
+        ;
+        $this
+            ->getSubmissionParams()
+            ->setReference(
+                $this->getIncrementText()
+            )
+        ;
         return $this;
     }
 
@@ -218,8 +245,14 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
         ;
     }
 
+    /**
+     * @return DataObject
+     */
     public function getSubmissionParams()
     {
+        if(!$this->submissionParams) {
+            $this->submissionParams = new DataObject();
+        }
         return $this->submissionParams;
     }
 
@@ -229,10 +262,18 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
         $variables['submission'] = $this->getSubmissionParams();
         $variables['submission_overview'] = '##submission_overview##';
         $variables['uploaded_file_links'] = '##uploaded_file_links##';
+        if($this->getForm()->getEnableEntries()) {
+            $variables['submission_id'] = $this->getNextEntityId();
+        }
         $variables = array_merge($variables, $this->getSubmissionParams()->toArray());
         $this->filter
             ->setVariables($variables);
         return $this;
+    }
+
+    private function getNextEntityId()
+    {
+        return $this->entryRepository->getLastId() + 1;
     }
 
     public function getUploadedFileUrls()

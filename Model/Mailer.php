@@ -123,55 +123,6 @@ class Mailer extends TransportBuilder
         return $scopeConfig->isSetFlag('plugincompany_contactforms/admin_notification/include_uploads', 'store');
     }
 
-    /**
-     * Send Customer Comment e-mail message
-     *
-     * @param Entry $entry
-     * @return $this|bool
-     */
-    public function sendCommentNotification(Entry $entry, $comment)
-    {
-        $form = $entry->getParentForm();
-        $params = $entry->getParamsArray();
-
-        $params['comment_text'] = nl2br($comment);
-        $params['customer_name'] = $entry->getCustomerName();
-
-        $mailData = [];
-
-        //use name or else firstname and lastname as recipient title
-        $mailData['to_name'] = $entry->getCustomerName();
-        $mailData['to_email'] = $entry->getCustomerEmail();
-        $mailData['from_name'] = $form->getMailVar('customer_from_name');
-        $mailData['from_email'] = $form->getMailVar('customer_from_email');
-        $mailData['body'] = $this->_getCommentTemplate($entry->getStoreId());
-        $mailData['subject'] = $this->_getCommentNotificationSubject($entry->getStoreId());
-        $mailData['bcc'] = $form->getMailVar('customer_mail_bcc');
-
-        //insert variables into e-mail data
-        $mailData = $this->insertVariables($mailData,$params);
-
-        //create parameter object
-        $paramsObj = new DataObject();
-        $paramsObj
-            ->setData($mailData)
-            ->setCanSendMail(true);
-
-        //event hook
-        $this->_eventManagerInterface->dispatch('pc_contactforms_comment_notify_before', ['entry' => $entry, 'comment' => $comment]);
-
-        //send e-mail
-        if($paramsObj->getCanSendMail()){
-            $mailData = $paramsObj->getData();
-            $this->sendMail($mailData);
-
-            $this->_eventManagerInterface->dispatch('pc_contactforms_comment_notify_after', ['entry' => $entry, 'comment' => $comment]);
-        }
-
-        return $this;
-
-    }
-
     public function sendMail()
     {
         $mailData = $this->mailData;

@@ -192,4 +192,19 @@ class EntryRepository implements EntryRepositoryInterface
         $collection->addFieldToFilter('form_id', $formId);
         return $collection->getAllIds();
     }
+
+    /**
+     * @return array
+     */
+    public function getLastId()
+    {
+        /** @var \PluginCompany\ContactForms\Model\ResourceModel\Entry\Collection $collection */
+        $collection = $this->entryCollectionFactory->create();
+        $lastItem = $collection->addOrder('entity_id')->getFirstItem();
+        if(!$lastItem || !$lastItem->getId()) {
+            return 0;
+        }
+        return $lastItem->getId();
+    }
+
 }

@@ -1,4 +1,4 @@
-<div class="htmlBox" data-bind="ifnot: value">
+<div class="htmlBox" data-bind="visible: !value">
     <!-- ko i18n: 'No fields submitted' --><!-- /ko -->
 </div>
 <table class="data-grid" afterRender="onElementRender" data-bind="if: value">
