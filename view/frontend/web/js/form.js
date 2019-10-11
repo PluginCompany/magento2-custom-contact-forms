@@ -747,7 +747,14 @@ define([
         renderDateElements: function() {
             var form = this.form;
             var locale =  document.documentElement.lang.split('_')[0].split('-')[0].toLowerCase();
+
+            //set global locale
             moment.locale(locale);
+            locale = this.config.locale;
+            //set sub locale like en-gb etc
+            moment.locale(locale);
+            locale = moment.locale();
+
             //date & time
             form.find('.date.dateandtime').datetimepicker({
                 allowInputToggle: true,

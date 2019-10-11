@@ -9,6 +9,7 @@
 namespace PluginCompany\ContactForms\Block\Form\Widget;
 
 use Magento\Framework\App\Http\Context as HttpContext;
+use Magento\Framework\Locale\Resolver;
 use Magento\Framework\View\Element\Template;
 use Magento\Widget\Block\BlockInterface;
 use PluginCompany\ContactForms\Helper\ConditionsTranslator;
@@ -35,6 +36,10 @@ class View extends Template implements BlockInterface
      * @var ConditionsTranslator
      */
     private $conditionsTranslator;
+    /**
+     * @var Resolver
+     */
+    private $localeResolver;
 
     /**
      * Constructor
@@ -45,6 +50,7 @@ class View extends Template implements BlockInterface
      * @param FormHtmlTranslator $translator
      * @param ConditionsTranslator $conditionsTranslator
      * @param HttpContext $httpContext
+     * @param Resolver $localeResolver
      * @param array $data
      */
     public function __construct
@@ -55,6 +61,7 @@ class View extends Template implements BlockInterface
         FormHtmlTranslator $translator,
         ConditionsTranslator $conditionsTranslator,
         HttpContext $httpContext,
+        Resolver $localeResolver,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -63,6 +70,7 @@ class View extends Template implements BlockInterface
         $this->translator = $translator;
         $this->httpContext = $httpContext;
         $this->conditionsTranslator = $conditionsTranslator;
+        $this->localeResolver = $localeResolver;
     }
 
     /**
@@ -125,7 +133,8 @@ class View extends Template implements BlockInterface
             'pageloadJs' => $form->getPageloadJs(),
             'rtl' => (bool)$form->getRtl(),
             'widget' => $this->getEscapedData(),
-            'maxUploadSize' => $this->getFileUploadMaxSize()
+            'maxUploadSize' => $this->getFileUploadMaxSize(),
+            'locale' => $this->getCurrentLocale()
         ];
         return $config;
     }
@@ -270,6 +279,11 @@ class View extends Template implements BlockInterface
         } else {
             return round($size);
         }
+    }
+
+    private function getCurrentLocale()
+    {
+        return strtolower(str_replace('_', '-', $this->localeResolver->getLocale()));
     }
 
 
