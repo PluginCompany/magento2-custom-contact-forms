@@ -74,7 +74,6 @@
                 formbuilderFields: [],
                 storeViews: window.StoreViews,
                 formatValue: function(value, fieldType) {
-                    // console.log(value);
                     if(Array.isArray(value)) {
                         value = value.join("\n");
                     }
@@ -114,9 +113,9 @@
             window.addEventListener('formbuilderfieldremoved', function(event) {
                 self.removeFieldById(event.detail.id);
             })
-            self.observe( 'fields fields.* displayFields.*.*.translations ', function ( newValue, oldValue, keypath ) {
+            self.observe( 'fields fields.* displayFields.*.*.translations ', _.debounce(function ( newValue, oldValue, keypath ) {
                 self.updateTranslationFieldInForm();
-            });
+            },300));
         },
         getTranslationJson: function() {
             var self = this;
@@ -132,7 +131,7 @@
             });
             return window.TranslationJSON;
         },
-        updateFieldsFromBuilder: _.throttle(function() {
+        updateFieldsFromBuilder: _.debounce(function() {
             var self = this;
             var collection = window.formBuilder.builder.collection.models;
             _.each(self.mapFormBuilderFields(collection), function(data, k) {
@@ -143,7 +142,7 @@
             })
             self.sortFields();
             self.updateTranslationFieldInForm();
-        }, 5000, {leading: false}),
+        }, 5000),
         mapFormBuilderFields: function(collection) {
             return _.mapObject(collection,function(field){
                 var attributes = field.attributes;
@@ -270,10 +269,10 @@
             });
             return this;
         },
-        updateTranslationFieldInForm: function()
+        updateTranslationFieldInForm: _.debounce(function()
         {
             this.getDataSource().set('data.translation', JSON.stringify(this.get('fields')));
-        },
+        }, 200),
         getDataSource: function() {
             return requirejs('uiRegistry').get("plugincompany_form_form.form_form_data_source");
         },

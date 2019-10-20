@@ -140,5 +140,21 @@ class AbstractCaptcha extends Action
         return $this->logger;
     }
 
+    protected function streamFile($file) {
+        if ($file && is_array($file)) {
+            /** @var \Magento\Framework\App\Response\Http $response */
+            $response = $this->getResponse();
+            foreach($file['headers'] as $header => $value) {
+                $response->setHeader($header, $value);
+            }
+            $response
+                ->setContent($file['content'])
+            ;
+        }else{
+            $this->getResponse()->setContent(
+                'pass?'
+            );
+        }
+    }
 
 }

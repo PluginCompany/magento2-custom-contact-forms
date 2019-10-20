@@ -206,7 +206,6 @@ class Captcha {
     // Return generated image option at index
     public function getImageOptionAtIndex( $index ) {
         $imageOptions = $this->getImageOptions();
-
         return ( isset( $imageOptions[ $index ] ) ) ? $imageOptions[ $index ] : null;
     }
 
@@ -276,9 +275,10 @@ class Captcha {
         $headers[ 'Pragma' ] = 'no-cache';
         $headers[ 'Expires' ] = 0;
 
-        readfile( $filePath );
-
-        return true;
+        return [
+            'headers' => $headers,
+            'content'  => file_get_contents($filePath)
+        ];
     }
 
     // Get File's mime type

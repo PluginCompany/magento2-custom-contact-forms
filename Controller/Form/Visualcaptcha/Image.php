@@ -15,14 +15,11 @@ class Image extends AbstractCaptcha
         $retina = $this->getRequest()->getParam('retina');
 
         $captcha = $this->getCaptcha();
-        if ( !$captcha->streamImage(
+        $image = $captcha->streamImage(
             array(),
             $index,
             $retina
-        ) ) {
-            $this->getResponse()->setContent(
-                'pass?'
-            );
-        }
+        );
+        $this->streamFile($image);
     }
 }

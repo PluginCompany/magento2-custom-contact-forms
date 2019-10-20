@@ -455,7 +455,7 @@
 
             params.push( config.randomParam + '=' + config.randomNonce );
 
-            return url + '?' + params.join( '&' );
+            return url + '/?' + params.join( '&' );
         };
 
         _refresh = function( config ) {
