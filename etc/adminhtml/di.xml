@@ -3,4 +3,13 @@
     <type name="Magento\Ui\Model\Export\ConvertToCsv">
         <plugin sortOrder="1" name="pluginCompanyContactFormsConvertToCsv" type="PluginCompany\ContactForms\Plugin\Model\Export\ConvertToCsvPlugin"/>
     </type>
+    <type name="Magento\Framework\View\Element\UiComponent\Argument\Interpreter\ConfigurableObject">
+        <arguments>
+            <argument name="classWhitelist" xsi:type="array">
+                <item name="0" xsi:type="string">Magento\Framework\Data\OptionSourceInterface</item>
+                <item name="1" xsi:type="string">Magento\Framework\View\Element\UiComponent\DataProvider\DataProviderInterface</item>
+                <item name="2" xsi:type="string">Magento\Framework\View\Element\UiComponent\ContextInterface</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
