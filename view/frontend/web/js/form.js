@@ -442,6 +442,7 @@ define([
         },
         initValidator: function() {
             this.form.find('.form-group.required-control input[type=checkbox]').addClass('checkbox required');
+            this.form.find('.form-group.required-control input[type=radio]').addClass('required');
             this.form.validate({
                 errorClass:'mage-error',
                 errorElement: 'div',
