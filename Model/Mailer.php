@@ -19,6 +19,8 @@ class Mailer extends TransportBuilder
 
     public function sendCustomerNotification()
     {
+        $this->initMessage();
+
         if(!$this->getEntry()){
             $this->throwNoEntryLoadedException();
         }
@@ -74,6 +76,7 @@ class Mailer extends TransportBuilder
 
     public function sendAdminNotification()
     {
+        $this->initMessage();
         if(!$this->getEntry()){
             $this->throwNoEntryLoadedException();
         }
@@ -244,11 +247,6 @@ class Mailer extends TransportBuilder
         return $mail;
     }
 
-    protected function prepareMessage()
-    {
-        return $this;
-    }
-
     protected function _getCommentTemplate($storeId)
     {
         return $this->_configScopeConfigInterface->getValue('plugincompany_contactforms/customer_notification/comment_template', ScopeInterface::SCOPE_STORE,$storeId);
@@ -276,6 +274,17 @@ class Mailer extends TransportBuilder
     {
         /** @var \Magento\Framework\App\ProductMetadataInterface $metaData */
         return $this->objectManager->create('\Magento\Framework\App\ProductMetadataInterface');
+    }
+
+    protected function prepareMessage()
+    {
+        return $this;
+    }
+
+    private function initMessage()
+    {
+        $this->message = $this->objectManager->create('Magento\Framework\Mail\MessageInterface');
+        return $this;
     }
 
 }
