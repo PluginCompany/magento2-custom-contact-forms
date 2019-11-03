@@ -18,4 +18,10 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\Framework\Mail\MimeMessageInterfaceFactory">
+        <plugin name="mime_message_add_attachments" type="PluginCompany\ContactForms\Plugin\Mail\AddAttachments" sortOrder="1" />
+    </type>
+    <type name="Magento\Framework\Mail\TransportInterfaceFactory">
+        <plugin name="transport_interface_factory_add_attachments" type="PluginCompany\ContactForms\Plugin\Mail\AddAttachments" sortOrder="1" />
+    </type>
 </config>

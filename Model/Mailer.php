@@ -7,20 +7,49 @@
  */
 namespace PluginCompany\ContactForms\Model;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\DataObject;
+use Magento\Framework\Mail\Transport;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\Mail\Template\TransportBuilder;
+use PluginCompany\ContactForms\Model\Mailer\AttachmentManager;
 
-class Mailer extends TransportBuilder
+class Mailer
 {
     private $mailData;
-    /** @var  \PluginCompany\ContactForms\Model\Entry */
+    /** @var  Entry */
     private $entry;
+    /** @var TransportBuilder */
+    private $transportBuilder;
+    /** @var Transport */
+    private $transport;
+    /** @var ScopeConfigInterface */
+    private $scopeConfig;
+    /**
+     * @var AttachmentManager
+     */
+    private $attachmentManager;
+
+    /**
+     * Mailer constructor.
+     * @param TransportBuilder $transportBuilder
+     * @param ScopeConfigInterface $scopeConfig
+     * @param AttachmentManager $attachmentManager
+     */
+    public function __construct(
+        TransportBuilder $transportBuilder,
+        ScopeConfigInterface $scopeConfig,
+        AttachmentManager $attachmentManager
+    )
+    {
+        $this->transportBuilder = $transportBuilder;
+        $this->scopeConfig = $scopeConfig;
+        $this->attachmentManager = $attachmentManager;
+    }
 
     public function sendCustomerNotification()
     {
-        $this->initMessage();
-
         if(!$this->getEntry()){
             $this->throwNoEntryLoadedException();
         }
@@ -76,7 +105,6 @@ class Mailer extends TransportBuilder
 
     public function sendAdminNotification()
     {
-        $this->initMessage();
         if(!$this->getEntry()){
             $this->throwNoEntryLoadedException();
         }
@@ -121,105 +149,47 @@ class Mailer extends TransportBuilder
 
     public function attachmentsAllowed()
     {
-        /** @var \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig */
-        $scopeConfig = $this->objectManager->create('\Magento\Framework\App\Config\ScopeConfigInterface');
-        return $scopeConfig->isSetFlag('plugincompany_contactforms/admin_notification/include_uploads', 'store');
+        return $this->scopeConfig->isSetFlag('plugincompany_contactforms/admin_notification/include_uploads', 'store');
     }
 
     public function sendMail()
     {
         $mailData = $this->mailData;
-        $message = $this->message;
-
-        $this->setBodyHtmlToMessage();
-        $this->addAttachmentsToMessage();
-
-        $message
-            ->setSubject($mailData->getSubject())
-            ->setFrom($mailData->getFromEmail(), $mailData->getFromName())
+        $transportBuilder = $this->transportBuilder
+            ->setTemplateIdentifier('custom_contact_forms_notification')
+            ->setTemplateOptions(
+                [
+                    'area' => 'frontend',
+                    'store' => $this->getEntry()->getStoreId()
+                ]
+            )
+            ->setTemplateVars(
+                [
+                    'content' => $mailData->getBody(),
+                    'email_subject' => $mailData->getSubject()
+                ]
+            )
+            ->setFrom(
+                [
+                    'email' => $mailData->getFromEmail(),
+                    'name' => $mailData->getFromName()
+                ]
+            )
             ->addTo($this->getToEmail(), $mailData->getToName())
         ;
         if($mailData->getReplyTo()) {
-            $message->setReplyTo($mailData->getReplyTo());
+            $transportBuilder->setReplyTo($mailData->getReplyTo());
         }
-        //bcc needs to be checked for SendGrid extension compatibility
         if($this->getBcc()){
-            $message->addBcc($this->getBcc());
+            $transportBuilder->addBcc($this->getBcc());
         }
-        $this->getTransport()->sendMessage();
+
+        $this->attachmentManager->setAttachmentsToAdd($mailData->getAttachments());
+        $this->transport = $transportBuilder->getTransport();
+        $this->attachmentManager->setAttachmentsToAdd([]);
+
+        $this->transport->sendMessage();
         return $this;
-    }
-
-    private function setBodyHtmlToMessage()
-    {
-        if($this->isMagento228Plus()) {
-            $this->message->setBodyHtml($this->mailData->getBody());
-            return $this;
-        }
-        $this->message
-            ->setMessageType('text/html')
-            ->setBody($this->mailData->getBody());
-        return $this;
-    }
-
-    /**
-     * @param $paths
-     * @return $this
-     */
-    private function addAttachmentsToMessage()
-    {
-        $paths = $this->mailData->getAttachments();
-        if(!is_array($paths)){
-            return $this;
-        }
-        foreach($paths as $filePath) {
-            if (!file_exists($filePath)) {
-                continue;
-            }
-            $this->addAttachment($filePath);
-        }
-        return $this;
-    }
-
-    private function addAttachment($filePath)
-    {
-        if($this->isMagento228Plus()) {
-            return $this->addAttachment228Plus($filePath);
-        }
-        return $this->addAttachment228Below($filePath);
-    }
-
-    private function addAttachment228Plus($filePath)
-    {
-        $mp = new \Zend\Mime\Part(file_get_contents($filePath));
-        $mp->type = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $filePath);
-        $mp->encoding = \Zend\Mime\Mime::ENCODING_BASE64;
-        $mp->disposition = \Zend\Mime\Mime::DISPOSITION_ATTACHMENT;
-        $mp->filename = $this->getFileNameFromPath($filePath);
-
-        $body = $this->message->getBody();
-        $body->addPart($mp);
-        $this->message->setBodyHtml($body);
-
-        return $this;
-    }
-
-    private function addAttachment228Below($filePath)
-    {
-        $this->message->createAttachment(
-            file_get_contents($filePath),
-            finfo_file(finfo_open(FILEINFO_MIME_TYPE), $filePath),
-            \Zend_Mime::DISPOSITION_ATTACHMENT,
-            \Zend_Mime::ENCODING_BASE64,
-            $this->getFileNameFromPath($filePath)
-        );
-        return $this;
-    }
-
-    private function getFileNameFromPath($path)
-    {
-        $parts = explode('/', $path);
-        return array_pop($parts);
     }
 
     public function getToEmail()
@@ -245,46 +215,6 @@ class Mailer extends TransportBuilder
             $mail = array_map('trim', $mail);
         }
         return $mail;
-    }
-
-    protected function _getCommentTemplate($storeId)
-    {
-        return $this->_configScopeConfigInterface->getValue('plugincompany_contactforms/customer_notification/comment_template', ScopeInterface::SCOPE_STORE,$storeId);
-    }
-
-    protected function _getCommentNotificationSubject($storeId)
-    {
-        return $this->_configScopeConfigInterface->getValue('plugincompany_contactforms/customer_notification/comment_subject', ScopeInterface::SCOPE_STORE,$storeId);
-    }
-
-    private function isMagento228Plus()
-    {
-        return version_compare($this->getMagentoVersion(), '2.2.8') >= 0;
-    }
-
-    private function getMagentoVersion()
-    {
-        return $this->getProductMetaData()->getVersion();
-    }
-
-    /**
-     * @return \Magento\Framework\App\ProductMetadataInterface
-     */
-    private function getProductMetaData()
-    {
-        /** @var \Magento\Framework\App\ProductMetadataInterface $metaData */
-        return $this->objectManager->create('\Magento\Framework\App\ProductMetadataInterface');
-    }
-
-    protected function prepareMessage()
-    {
-        return $this;
-    }
-
-    private function initMessage()
-    {
-        $this->message = $this->objectManager->create('Magento\Framework\Mail\MessageInterface');
-        return $this;
     }
 
 }
