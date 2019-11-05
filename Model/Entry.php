@@ -262,6 +262,7 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
         $variables['submission'] = $this->getSubmissionParams();
         $variables['submission_overview'] = '##submission_overview##';
         $variables['uploaded_file_links'] = '##uploaded_file_links##';
+        $variables['has_uploads'] = $this->hasUploadedFileLinks();
         if($this->getForm()->getEnableEntries()) {
             $variables['submission_id'] = $this->getNextEntityId();
         }
@@ -276,6 +277,10 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
         return $this->entryRepository->getLastId() + 1;
     }
 
+    public function hasUploadedFileLinks()
+    {
+        return !empty($this->getUploadedFileUrls());
+    }
     public function getUploadedFileUrls()
     {
         if(!$this->uploadedFileUrls) {
@@ -307,16 +312,16 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
             . '/' . $fileName;
     }
 
-    public function addHtmlFilterVariables($html)
+    public function addHtmlFilterVariables($html, $variablesExcludedFromTable = [])
     {
-        $html = $this->addSubmissionTableToString($html);
+        $html = $this->addSubmissionTableToString($html, $variablesExcludedFromTable);
         $html = $this->addFileUploadsToString($html);
         return $html;
     }
 
-    public function addSubmissionTableToString($html)
+    public function addSubmissionTableToString($html, $excludedVariables = [])
     {
-        $table = $this->getSubmissionOverviewTable();
+        $table = $this->getSubmissionOverviewTable($excludedVariables);
         return str_replace(
             '##submission_overview##',
             $table,
@@ -324,20 +329,23 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
         );
     }
 
-    public function getSubmissionOverviewTable()
+    public function getSubmissionOverviewTable($excludedVariables = [])
     {
         return $this->blockFactory
             ->createBlock('Magento\Framework\View\Element\Template')
             ->setTemplate('PluginCompany_ContactForms::email/submission_overview_table.phtml')
-            ->setSubmissionParams($this->getFilteredSubmissionParamsForTable())
+            ->setSubmissionParams($this->getFilteredSubmissionParamsForTable($excludedVariables))
             ->toHtml()
         ;
     }
 
-    private function getFilteredSubmissionParamsForTable()
+    private function getFilteredSubmissionParamsForTable($excludedVariables = [])
     {
         $params = [];
         foreach($this->getSubmissionParams()->getData() as $key => $param){
+            if(in_array($key, $excludedVariables)) {
+                continue;
+            }
             $params[$this->getFieldLabel($key)] = $this->filterVar($param);
         }
         return $params;
@@ -482,7 +490,7 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
             'customer_notification',
             'customer_mail_content'
         );
-        return $this->addHtmlFilterVariables($html);
+        return $this->addHtmlFilterVariables($html, ['form_key', 'form_id']);
     }
 
     public function getAdminEmail()
@@ -524,7 +532,7 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
             'admin_notification',
             'admin_notification_content'
         );
-        return $this->addHtmlFilterVariables($html);
+        return $this->addHtmlFilterVariables($html, ['form_key']);
     }
 
     public function getAdminSubject()

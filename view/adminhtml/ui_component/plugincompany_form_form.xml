@@ -790,14 +790,14 @@
 		<field name="customer_mail_content">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
-					<item name="default" xsi:type="string"><![CDATA[{{template config_path="design/email/header_template"}}
-<p>Dear {{var name}},</p>
-<p>Thank you for contacting us.</p>
-<p>We have received your message and will get in touch with you shortly.</p>
+					<item name="default" xsi:type="string"><![CDATA[<p>Dear {{var name}},</p>
+<p>Thank you for contacting us!<br>We have received your message and will get in touch with you shortly.</p>
+<h3>Request details</h3>
+<hr>
+<p>{{var submission_overview}}</p>
+<hr>
 <p>If you have any other questions in the mean time, feel free to contact us by phone on {{config path="general/store_information/phone"}} or by e-mail at {{config path="trans_email/ident_general/email"}}.</p>
-<p>Best regards,</p>
-<p>{{config path="trans_email/ident_general/name"}}</p>
-{{template config_path="design/email/footer_template"}}]]></item>
+<p>Best regards,<br>{{config path="trans_email/ident_general/name"}}</p>]]></item>
 					<item name="dataType" xsi:type="string">text</item>
 					<item name="formElement" xsi:type="string">wysiwyg</item>
 					<item name="component" xsi:type="string">PluginCompany_ContactForms/js/form/element/wysiwygfix</item>
@@ -1033,10 +1033,12 @@
 		<field name="admin_notification_content">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
-					<item name="default" xsi:type="string"><![CDATA[{{template config_path="design/email/header_template"}}
-<p>New contact request for: {{config path="general/store_information/name"}}</p>
+					<item name="default" xsi:type="string"><![CDATA[<h1 style="margin-top: 0px;">New contact request</h1>
+<h3 style="margin-top: 30px;">Request details</h3>
+<hr>
 <p>{{var submission_overview}}</p>
-{{template config_path="design/email/footer_template"}}]]></item>
+<hr>
+<p>{{var uploaded_file_links}}</p>]]></item>
 					<item name="dataType" xsi:type="string">text</item>
 					<item name="formElement" xsi:type="string">wysiwyg</item>
 					<item name="component" xsi:type="string">PluginCompany_ContactForms/js/form/element/wysiwygfix</item>
