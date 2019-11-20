@@ -9,6 +9,7 @@
 namespace PluginCompany\ContactForms\Controller\Form;
 
 use Magento\Customer\Model\Session;
+use Magento\Framework\App\Request\Http;
 use Magento\Framework\Exception\LocalizedException;
 use Exception;
 use Magento\Framework\App\Action\Action;
@@ -26,6 +27,10 @@ use Magento\Framework\App\Helper\Context as ContextHelper;
 use PluginCompany\ContactForms\Model\VisualCaptchaSession;
 
 
+/**
+ * @method \Magento\Framework\App\Response\Http getResponse
+ * @method \Magento\Framework\App\Request\Http getRequest
+ */
 class Submit extends Action
 {
     CONST CAPTCHA_ERROR = 2;
@@ -108,6 +113,9 @@ class Submit extends Action
     public function execute()
     {
         try {
+            if(!$this->getRequest()->isPost()) {
+                return $this->redirectToHomePage();
+            }
             $this->checkCanContinue();
             $this->runExecute();
         } catch (LocalizedException $e) {
@@ -117,6 +125,11 @@ class Submit extends Action
         } catch (\Throwable $e) {
             $this->processError($e);
         }
+    }
+
+    private function redirectToHomePage()
+    {
+        return $this->_redirect->redirect($this->getResponse(), '/');
     }
 
     public function checkCanContinue()
@@ -392,13 +405,16 @@ class Submit extends Action
     /**
      * Create json response
      *
-     * @return \Magento\Framework\Controller\ResultInterface
+     * @param string $responseData
+     * @return void
      */
-    public function jsonResponse($response = '')
+    public function jsonResponse($responseData = '')
     {
-        return $this->getResponse()->representJson(
-            $this->jsonHelper->jsonEncode($response)
-        );
+        $this->getResponse()
+            ->setHeader('X-Robots-Tag', 'none, noindex, nofollow', true)
+            ->representJson(
+                $this->jsonHelper->jsonEncode($responseData)
+            );
     }
 
     private function getCodeForError($e)

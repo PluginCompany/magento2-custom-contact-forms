@@ -137,12 +137,21 @@ class FormHtmlTranslator extends AbstractHelper
             if(!isset($options[$k])) break;
             $oldTag = array_shift($options[$k]);
             $newTag = $options[$k];
+            if($this->isTranslationOptionDefaultSelected($translation)) {
+                $translation = substr($translation, 1);
+                $newTag[2] = '" selected="selected">';
+            }
             $newTag[1] = $translation;
             $newTag[3] = $translation;
             $newTag = implode('', $newTag);
             $newSelectTag = str_replace($oldTag, $newTag, $newSelectTag);
         }
         $this->html = str_replace($selectTag, $newSelectTag, $this->html);
+    }
+
+    private function isTranslationOptionDefaultSelected($translationText)
+    {
+        return substr($translationText, 0, 1) == '*';
     }
 
     private function replaceEmptyoption($id, $newText)
