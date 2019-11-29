@@ -746,9 +746,10 @@ define([
             return this.form.find('.date').length > 0;
         },
         renderDateElements: function() {
+            var that = this;
             var form = this.form;
-            var locale =  document.documentElement.lang.split('_')[0].split('-')[0].toLowerCase();
 
+            var locale =  document.documentElement.lang.split('_')[0].split('-')[0].toLowerCase();
             //set global locale
             moment.locale(locale);
             locale = this.config.locale;
@@ -757,17 +758,23 @@ define([
             locale = moment.locale();
 
             //date & time
-            form.find('.date.dateandtime').datetimepicker({
-                allowInputToggle: true,
-                sideBySide:true,
-                widgetPositioning: {horizontal:'right'},
-                locale: locale
-            });
+            form.find('.date.dateandtime').each(function() {
+                $(this).datetimepicker({
+                    allowInputToggle: true,
+                    sideBySide:true,
+                    widgetPositioning: {horizontal:'right'},
+                    locale: locale,
+                    daysOfWeekDisabled: that.getDisabledDaysForDateElement(this),
+                    minDate: that.getMinDateForDateElement(this)
+                });
+            })
             //only date
             form.find('.date.dateonly').datetimepicker({
                 allowInputToggle: true,
                 format:'L',
-                locale: locale
+                locale: locale,
+                daysOfWeekDisabled: that.getDisabledDaysForDateElement(this),
+                minDate: that.getMinDateForDateElement(this)
             });
             //only time
             form.find('.date.time').datetimepicker({
@@ -807,6 +814,28 @@ define([
                 }
             })
             return this;
+        },
+        getDisabledDaysForDateElement: function(element) {
+            var disabledDays = $(element).attr('data-disableddays');
+            if(typeof disabledDays === "undefined") {
+                return [];
+            }
+            return JSON.parse(disabledDays);
+        },
+        getMinDateForDateElement: function(element) {
+            var minDate = $(element).attr('data-mindate');
+            if(minDate == 'todayandlater') {
+                return this.getTodayDate();
+            }
+            if(minDate == 'tomorrowandlater') {
+                return this.getTomorrowDate();
+            }
+        },
+        getTodayDate: function() {
+            return moment();
+        },
+        getTomorrowDate: function() {
+            return moment().add(1, 'days').toISOString().substr(0,10);
         },
         initUploadElements: function() {
             if(this.config.hasUploadField) {

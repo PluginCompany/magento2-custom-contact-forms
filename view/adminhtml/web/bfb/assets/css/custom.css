@@ -12,6 +12,9 @@
 
 #formtabs {
     font-size: 14px;
+    background: white;
+    border-top: 0;
+    padding-top:10px;
 }
 
 .pccf .tab-pane {
@@ -21,6 +24,9 @@
 .pccf .nav>li>a {
     padding: 8px 13px;
     display:block!important;
+    border: 1px solid #dddddd;
+    background: #f7f7f7;
+    color: #727272;
 }
 
 /* FORM BUILDER SECTIONS */
@@ -229,4 +235,7 @@ log_in_link {
 
 .pc-not-logged-in-text {
     display:none;
+}
+.popover-content select[multiple] {
+    padding:4px!important;
 }
