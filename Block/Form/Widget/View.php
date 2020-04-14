@@ -22,6 +22,7 @@ class View extends Template implements BlockInterface
 {
 
     protected $_template = "form/widget/view.phtml";
+
     private $formRepository;
     private $filter;
     /**
