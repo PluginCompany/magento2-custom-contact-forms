@@ -35,6 +35,8 @@ define(function() {
     if (typeof window == 'undefined')
         return { load: function(n, r, load){ load() } };
 
+    var minificationUsed = document.querySelectorAll('link[rel=stylesheet]')[0].href.indexOf('.min.css') !== -1;
+
     var head = document.getElementsByTagName('head')[0];
 
     var engine = window.navigator.userAgent.match(/Trident\/([^ ;]*)|AppleWebKit\/([^ ;]*)|Opera\/([^ ;]*)|rv\:([^ ;]*)(.*?)Gecko\/([^ ;]*)|MSIE\s([^ ;]*)|AndroidWebKit\/([^ ;]*)/) || 0;
@@ -160,7 +162,12 @@ define(function() {
 //>>excludeStart("excludeRequireCss", pragmas.excludeRequireCss)
     cssAPI.load = function(cssId, req, load, config) {
 
-        (useImportLoad ? importLoad : linkLoad)(req.toUrl(cssId + '.css'), load);
+        var suffix = '.css';
+        if(minificationUsed && cssId.slice(-4) !== '.min') {
+            suffix = '.min.css';
+        }
+
+        (useImportLoad ? importLoad : linkLoad)(req.toUrl(cssId + suffix), load);
 
     }
 
