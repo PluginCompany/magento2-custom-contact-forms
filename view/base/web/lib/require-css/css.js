@@ -35,7 +35,7 @@ define(function() {
     if (typeof window == 'undefined')
         return { load: function(n, r, load){ load() } };
 
-    var minificationUsed = document.querySelectorAll('link[rel=stylesheet]')[0].href.indexOf('.min.css') !== -1;
+    var minificationUsed = document.querySelector('link[rel=stylesheet][href*="' + window.location.host + '"]').href.indexOf('.min.css') !== -1;
 
     var head = document.getElementsByTagName('head')[0];
 
