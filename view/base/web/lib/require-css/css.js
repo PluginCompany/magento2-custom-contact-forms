@@ -35,7 +35,17 @@ define(function() {
     if (typeof window == 'undefined')
         return { load: function(n, r, load){ load() } };
 
-    var minificationUsed = document.querySelector('link[rel=stylesheet][href*="' + window.location.host + '"]').href.indexOf('.min.css') !== -1;
+    var isMinificationUsed = function() {
+        if(window.cssMinificationEnabled) {
+            return true;
+        }
+        var firstStylesheet = document.querySelector('link[rel=stylesheet][href*="' + window.location.host + '"]');
+        if(firstStylesheet) {
+            window.cssMinificationEnabled = firstStylesheet.href.indexOf('.min.css') !== -1;
+            return window.cssMinificationEnabled;
+        }
+        return false;
+    }
 
     var head = document.getElementsByTagName('head')[0];
 
@@ -163,7 +173,7 @@ define(function() {
     cssAPI.load = function(cssId, req, load, config) {
 
         var suffix = '.css';
-        if(minificationUsed && cssId.slice(-4) !== '.min') {
+        if(isMinificationUsed() && cssId.slice(-4) !== '.min') {
             suffix = '.min.css';
         }
 

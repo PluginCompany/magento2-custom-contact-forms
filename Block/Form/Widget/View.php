@@ -306,5 +306,11 @@ class View extends Template implements BlockInterface
         return 'pc_' . str_replace('\\', '_', $this->_nameInLayout);
     }
 
+    public function isCssMinificationEnabled()
+    {
+        return $this->_scopeConfig->isSetFlag('dev/css/minify_files', 'store')
+            && $this->_appState->getMode() != 'developer';
+    }
+
 
 }
