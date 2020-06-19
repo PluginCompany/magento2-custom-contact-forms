@@ -10,6 +10,7 @@ namespace PluginCompany\ContactForms\Controller\Form;
 
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Request\Http;
+use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 use Exception;
 use Magento\Framework\App\Action\Action;
@@ -446,7 +447,19 @@ class Submit extends Action
 
     private function getFilter()
     {
+        $this->filter->setVariables(
+            $this->getSubmissionData()
+        );
         return $this->filter;
+    }
+
+    private function getSubmissionData()
+    {
+        return
+            array_merge(
+                $this->getEntryWithSubmissionData()->getData(),
+                $this->getEntryWithSubmissionData()->getSubmissionParams()->getData()
+            );
     }
 
     public function initTranslator()
