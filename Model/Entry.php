@@ -268,6 +268,7 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
         }
         $variables = array_merge($variables, $this->getSubmissionParams()->toArray());
         $this->filter
+            ->initFrontEndVariables()
             ->setVariables($variables);
         return $this;
     }

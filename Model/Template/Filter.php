@@ -7,6 +7,7 @@
  */
 namespace PluginCompany\ContactForms\Model\Template;
 
+use Magento\Framework\App\RequestInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Cms\Model\Template\Filter as CmsFilter;
 use Magento\Email\Model\Template\Filter as EmailFilter;
@@ -40,6 +41,10 @@ class Filter
      * @var FormHtmlFilter
      */
     private $formHtmlFilter;
+    /**
+     * @var RequestInterface
+     */
+    private $request;
 
     /**
      * Filter constructor.
@@ -52,6 +57,7 @@ class Filter
      * @param EmailTemplate $emailTemplate
      * @param PrivateContentFilter $privateContentFilter
      * @param FormHtmlFilter $formHtmlFilter
+     * @param RequestInterface $request
      */
     public function __construct(
         CmsFilter $filter,
@@ -62,7 +68,8 @@ class Filter
         StoreManagerInterface $storeManager,
         EmailTemplate $emailTemplate,
         PrivateContentFilter $privateContentFilter,
-        FormHtmlFilter $formHtmlFilter
+        FormHtmlFilter $formHtmlFilter,
+        RequestInterface $request
     ){
         $this->filter = $filter;
         $this->emailFilter = $emailFilter;
@@ -79,6 +86,7 @@ class Filter
         $this->privateContentFilter = $privateContentFilter;
         $this->storeManager = $storeManager;
         $this->formHtmlFilter = $formHtmlFilter;
+        $this->request = $request;
     }
 
     public function initFrontEndVariables()
@@ -88,6 +96,7 @@ class Filter
             ->addProductVariables()
             ->addCategoryVariables()
             ->addStoreVariables()
+            ->addRequestVariables()
         ;
         return $this;
     }
@@ -164,6 +173,14 @@ class Filter
     {
         $this->setVariables(
             ['store' => $this->getCurrentStore()]
+        );
+        return $this;
+    }
+
+    public function addRequestVariables()
+    {
+        $this->setVariables(
+            ['request' => $this->request]
         );
         return $this;
     }
