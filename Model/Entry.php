@@ -347,7 +347,10 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
             if(in_array($key, $excludedVariables)) {
                 continue;
             }
-            $params[$this->getFieldLabel($key)] = $this->filterVar($param);
+            $params[$key] = [
+                'label' => $this->getFieldLabel($key),
+                'value' => $this->filterVar($param)
+            ];
         }
         return $params;
     }
