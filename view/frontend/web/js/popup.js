@@ -119,7 +119,7 @@ define([
         },
         getNewButton: function() {
             var btn = this.getBtnBaseEm();
-            btn.find('span').text(this.getButtonText());
+            btn.find('span').html(this.getButtonText());
             return btn;
         },
         getBtnBaseEm: function() {
