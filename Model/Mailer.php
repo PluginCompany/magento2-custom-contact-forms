@@ -73,6 +73,8 @@ class Mailer
                 $entry->getSenderName()
             )->setFromEmail(
                 $entry->getSenderEmail()
+            )->setTemplateIdentifier(
+                $entry->getForm()->getCustomerNotificationTemplate()
             )
             ->setReplyTo(null)
         ;
@@ -130,6 +132,8 @@ class Mailer
                 $entry->getAdminSenderEmail()
             )->setReplyTo(
                 $entry->getAdminReplyToEmail()
+            )->setTemplateIdentifier(
+                $entry->getForm()->getAdminNotificationTemplate()
             )->setAttachments(
                 $this->getAttachments()
             )
@@ -156,7 +160,7 @@ class Mailer
     {
         $mailData = $this->mailData;
         $transportBuilder = $this->transportBuilder
-            ->setTemplateIdentifier('custom_contact_forms_notification')
+            ->setTemplateIdentifier($mailData->getTemplateIdentifier())
             ->setTemplateOptions(
                 [
                     'area' => 'frontend',
@@ -166,6 +170,7 @@ class Mailer
             ->setTemplateVars(
                 [
                     'content' => $mailData->getBody(),
+                    'content_plain' => strip_tags($mailData->getBody()),
                     'email_subject' => $mailData->getSubject()
                 ]
             )

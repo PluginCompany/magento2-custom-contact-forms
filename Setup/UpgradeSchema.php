@@ -33,6 +33,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         $setup->startSetup();
         $this->increaseFormHtmlAndJSONFieldsLength();
         $this->addTranslationField();
+        $this->addEmailTemplateFields();
         $setup->endSetup();
     }
 
@@ -80,6 +81,32 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     'type' => Table::TYPE_TEXT,
                     'comment' => 'General Translation',
                     'length' => '2m'
+                ]
+            );
+    }
+
+    private function addEmailTemplateFields()
+    {
+        $this->setup->getConnection()
+            ->addColumn(
+                $this->setup->getTable('plugincompany_contactforms_form'),
+                'customer_notification_template',
+                [
+                    'type' => Table::TYPE_TEXT,
+                    'comment' => 'Customer Notification Template',
+                    'length' => 255,
+                    'default' => 'custom_contact_forms_notification'
+                ]
+            );
+        $this->setup->getConnection()
+            ->addColumn(
+                $this->setup->getTable('plugincompany_contactforms_form'),
+                'admin_notification_template',
+                [
+                    'type' => Table::TYPE_TEXT,
+                    'comment' => 'Admin Notification Template',
+                    'length' => 255,
+                    'default' => 'custom_contact_forms_notification'
                 ]
             );
     }

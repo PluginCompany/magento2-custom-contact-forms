@@ -818,6 +818,19 @@
 				</item>
 			</argument>
 		</field>
+        <field name="customer_notification_template">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">PluginCompany\ContactForms\Model\Email\Source\Templates</item>
+                <item name="config" xsi:type="array">
+                    <item name="default" xsi:type="string">custom_contact_forms_notification</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Notification Template</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="source" xsi:type="string">Form</item>
+                    <item name="dataScope" xsi:type="string">customer_notification_template</item>
+                </item>
+            </argument>
+        </field>
 	</fieldset>
 	<fieldset name="admin_notification">
 		<argument name="data" xsi:type="array">
@@ -1059,6 +1072,19 @@
 				</item>
 			</argument>
 		</field>
+        <field name="admin_notification_template">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">PluginCompany\ContactForms\Model\Email\Source\Templates</item>
+                <item name="config" xsi:type="array">
+                    <item name="default" xsi:type="string">custom_contact_forms_notification</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Notification Template</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="source" xsi:type="string">Form</item>
+                    <item name="dataScope" xsi:type="string">admin_notification_template</item>
+                </item>
+            </argument>
+        </field>
 	</fieldset>
 	<fieldset name="store_views">
 		<argument name="data" xsi:type="array">
