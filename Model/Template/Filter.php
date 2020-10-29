@@ -21,9 +21,21 @@ use PluginCompany\ContactForms\Model\Template\FilterObjects\Product;
 class Filter
 {
 
+    /**
+     * @var CmsFilter
+     */
     private $filter;
+    /**
+     * @var Registry
+     */
     private $registry;
+    /**
+     * @var Customer
+     */
     private $customer;
+    /**
+     * @var Product
+     */
     private $product;
     /**
      * @var PrivateContentFilter
@@ -211,7 +223,10 @@ class Filter
 
     public function filter($string)
     {
-        return $this->filter->filter($string);
+        $oldMode = $this->filter->setStrictMode(false);
+        $result = $this->filter->filter($string);
+        $this->filter->setStrictMode($oldMode);
+        return $result;
     }
 
     public function getFilter()
@@ -221,7 +236,10 @@ class Filter
 
     public function filterForEmail($string)
     {
-        return $this->emailFilter->filter($string);
+        $oldMode = $this->emailFilter->setStrictMode(false);
+        $result = $this->emailFilter->filter($string);
+        $this->emailFilter->setStrictMode($oldMode);
+        return $result;
     }
 
 }
