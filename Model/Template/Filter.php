@@ -223,9 +223,16 @@ class Filter
 
     public function filter($string)
     {
-        $oldMode = $this->filter->setStrictMode(false);
+        if(method_exists($this->filter, 'setStrictMode')) {
+            $oldMode = $this->filter->setStrictMode(false);
+        }
+
         $result = $this->filter->filter($string);
-        $this->filter->setStrictMode($oldMode);
+
+        if(isset($oldMode)) {
+            $this->filter->setStrictMode($oldMode);
+        }
+
         return $result;
     }
 
@@ -236,9 +243,16 @@ class Filter
 
     public function filterForEmail($string)
     {
-        $oldMode = $this->emailFilter->setStrictMode(false);
+        if(method_exists($this->emailFilter, 'setStrictMode')) {
+            $oldMode = $this->emailFilter->setStrictMode(false);
+        }
+
         $result = $this->emailFilter->filter($string);
-        $this->emailFilter->setStrictMode($oldMode);
+
+        if(isset($oldMode)) {
+            $this->emailFilter->setStrictMode($oldMode);
+        }
+
         return $result;
     }
 

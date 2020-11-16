@@ -255,6 +255,7 @@ class Form extends AbstractModel implements FormInterface
             return false;
         }
 
+        $condEmail = $this->getConditToEmail();
         // loop through all conditional e-mails
         $conditionalMatches = [];
         foreach($this->getConditToEmail() as $field){
@@ -266,7 +267,7 @@ class Form extends AbstractModel implements FormInterface
 
             if($field['match_type'] == 'exact' && $params[$fieldName] == $field['value']){
                 $conditionalMatches[] = $field['email'];
-            }elseif($field['match_type'] == 'contains' && stristr($params[$fieldName],$field['value'])){
+            }elseif($field['match_type'] == 'partial' && stristr($params[$fieldName],$field['value'])){
                 $conditionalMatches[] = $field['email'];
             }
         }

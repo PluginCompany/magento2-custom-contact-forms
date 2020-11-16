@@ -443,9 +443,17 @@ class Submit extends Action
     private function filterContent($content)
     {
         $filter = $this->getFilter();
-        $oldMode = $filter->setStrictMode(false);
+
+        if(method_exists($filter, 'setStrictMode')) {
+            $oldMode = $filter->setStrictMode(false);
+        }
+
         $content = $this->getFilter()->filter($content);
-        $filter->setStrictMode($oldMode);
+
+        if(isset($oldMode)) {
+            $filter->setStrictMode($oldMode);
+        }
+
         return $content;
     }
 
