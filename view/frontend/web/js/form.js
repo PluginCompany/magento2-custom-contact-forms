@@ -769,12 +769,15 @@ define([
                 });
             })
             //only date
-            form.find('.date.dateonly').datetimepicker({
-                allowInputToggle: true,
-                format:'L',
-                locale: locale,
-                daysOfWeekDisabled: that.getDisabledDaysForDateElement(this),
-                minDate: that.getMinDateForDateElement(this)
+            form.find('.date.dateonly').each(function(){
+                $(this).datetimepicker({
+                    allowInputToggle: true,
+                    format:'L',
+                    locale: locale,
+                    daysOfWeekDisabled: that.getDisabledDaysForDateElement(this),
+                    minDate: that.getMinDateForDateElement(this),
+                    debug:true
+                });
             });
             //only time
             form.find('.date.time').datetimepicker({

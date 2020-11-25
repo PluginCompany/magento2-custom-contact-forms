@@ -1509,3 +1509,8 @@ div.pccf .form-group.recaptcha-not-inline label {
 .pc-customer-logged-in .pc-order-select select.form-control {
     display:block!important;
 }
+
+.pccf .bootstrap-datetimepicker-widget .list-unstyled {
+    list-style: none;
+    padding-left: 0;
+}
