@@ -36,9 +36,10 @@ define(function() {
         return { load: function(n, r, load){ load() } };
 
     var isMinificationUsed = function() {
-        if(window.cssMinificationEnabled) {
-            return true;
+        if(typeof window.cssMinificationEnabled != "undefined") {
+            return window.cssMinificationEnabled;
         }
+        //fallback if not set globally already
         var firstStylesheet = document.querySelector('link[rel=stylesheet][href*="' + window.location.host + '"]');
         if(firstStylesheet) {
             window.cssMinificationEnabled = firstStylesheet.href.indexOf('.min.css') !== -1;
