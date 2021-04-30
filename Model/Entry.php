@@ -714,9 +714,19 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
     private function retrieveUploadsList()
     {
         $dir = $this->getUploadBaseDir() . $this->getUploadDir();
-        $io = $this->ioFile;
-        $io->cd($dir);
-        return $io->ls();
+
+        if(!is_dir($dir)) return [];
+
+        try{
+            $io = $this->ioFile;
+            $io->cd($dir);
+            return $io->ls();
+        }
+        catch(\Exception $e) {
+            $this->_logger->error($e->getMessage());
+        }
+
+        return [];
     }
 
     private function getUploadBaseDir()
