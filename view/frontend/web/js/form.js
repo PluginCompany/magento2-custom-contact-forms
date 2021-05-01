@@ -775,8 +775,7 @@ define([
                     format:'L',
                     locale: locale,
                     daysOfWeekDisabled: that.getDisabledDaysForDateElement(this),
-                    minDate: that.getMinDateForDateElement(this),
-                    debug:true
+                    minDate: that.getMinDateForDateElement(this)
                 });
             });
             //only time
