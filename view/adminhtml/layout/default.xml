@@ -4,4 +4,9 @@
         <css src="PluginCompany_ContactForms::iconfont/logo.css"/>
         <css src="PluginCompany_ContactForms::css/menu.css"/>
     </head>
+    <body>
+        <referenceContainer name="after.body.start">
+            <block class="PluginCompany\ContactForms\Block\Adminhtml\Head\Cssminification" name="is_css_minification_enabled" template="PluginCompany_ContactForms::head/cssminificationflag.phtml" />
+        </referenceContainer>
+    </body>
 </page>

@@ -72,7 +72,7 @@ if ($form) {
     </script>
 <?php } ?>
 
-<?php if(trim($form->getCustomCss())){ ?>
+<?php if(is_string($form->getCustomCss()) && trim($form->getCustomCss())){ ?>
     <style type="text/css">
         <?php echo $form->getCustomCss(); ?>
     </style>

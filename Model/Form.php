@@ -78,7 +78,6 @@ class Form extends AbstractModel implements FormInterface
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
     }
 
-
     public function getAllCssClasses()
     {
         $classes = ['pccf'];
@@ -87,8 +86,13 @@ class Form extends AbstractModel implements FormInterface
         if($this->getRtl()) {
             $classes[] = 'rtl';
         }
-        $classes = array_merge($classes, explode(' ', $this->getCssClasses()));
+        $classes = array_merge($classes, $this->getCssClassesAsArray());
         return $classes;
+    }
+
+    private function getCssClassesAsArray()
+    {
+        return $this->getData('css_classes') ? explode(' ', $this->getData('css_classes')) : [];
     }
 
     public function getStyles()

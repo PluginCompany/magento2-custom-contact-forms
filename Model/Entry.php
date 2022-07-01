@@ -610,6 +610,9 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
 
     private function fixTemplateHeaderAndFooter($value)
     {
+        if(empty($value) || !is_string($value)) {
+            return $value;
+        }
         $value = preg_replace("/(<p.*?>)(.*?header_template.*)(<\/p>)/", "", $value);
         $value = preg_replace("/(<p.*?>)(.*?footer_template.*)(<\/p>)/", "", $value);
         $value = str_replace('{{template config_path="design/email/header_template"}}', '', $value);

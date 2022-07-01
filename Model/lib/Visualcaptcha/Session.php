@@ -12,9 +12,12 @@ class Session {
      * @param \Magento\Customer\Model\Session $customerSession
      */
     public function __construct(
-        $namespace = array('namespace' => 'visualcaptcha'),
+        $namespace,
         $customerSession
     ) {
+        if(empty($namespace) || !is_array($namespace)) {
+            $namespace = array('namespace' => 'visualcaptcha');
+        }
         if(isset($namespace['namespace'])){
             $namespace = $namespace['namespace'];
         }else{
@@ -23,6 +26,7 @@ class Session {
         $this->namespace = $namespace;
         $this->customerSession = $customerSession;
     }
+
 
     public function get( $key ) {
         if (!$this->isNamespaceInitialized()) {
