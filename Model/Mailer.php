@@ -200,20 +200,20 @@ class Mailer
     public function getToEmail()
     {
         return $this->explodeIfCommaDelimited(
-            $this->mailData->getData('to_email')
+            $this->mailData->getData('to_email') ?? ''
         );
     }
 
     public function getBcc()
     {
         return $this->explodeIfCommaDelimited(
-            $this->mailData->getData('bcc')
+            $this->mailData->getData('bcc') ?? ''
         );
     }
 
     private function explodeIfCommaDelimited($mail)
     {
-        if(!is_array($mail) && stristr($mail,',')){
+        if(is_string($mail) && strstr($mail,',')){
             $mail = explode(',', $mail);
         }
         if(is_array($mail)) {

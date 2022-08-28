@@ -227,7 +227,10 @@ class Filter
             $oldMode = $this->filter->setStrictMode(false);
         }
 
-        $result = $this->filter->filter($string);
+        $result = $this->filter
+            ->filter(
+                strval($string)
+            );
 
         if(isset($oldMode)) {
             $this->filter->setStrictMode($oldMode);
@@ -247,7 +250,10 @@ class Filter
             $oldMode = $this->emailFilter->setStrictMode(false);
         }
 
-        $result = $this->emailFilter->filter($string);
+        $result = $this->emailFilter
+            ->filter(
+                strval($string)
+            );
 
         if(isset($oldMode)) {
             $this->emailFilter->setStrictMode($oldMode);

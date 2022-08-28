@@ -177,6 +177,7 @@ class View extends Template implements BlockInterface
     {
         $captcha = '<div class="g-recaptcha" data-sitekey="' . $this->getRecaptchaKey() . '"></div>';
         $formHtml = str_replace(['<captcha></captcha>','<legend></legend>'],[$captcha,''], $this->getCurrentForm()->getContactFormHtml());
+        $formHtml = preg_replace('/<captcha>.*?<\/captcha>/', $captcha, $formHtml);
         $formHtml = preg_replace('/<legend>(.*?)<\/legend>/','',$formHtml);
         $formHtml = str_replace('col-lg-6 visualcaptcha', 'col-lg-8 visualcaptcha', $formHtml);
 

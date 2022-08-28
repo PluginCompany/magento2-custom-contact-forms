@@ -579,7 +579,7 @@ class Entry extends \Magento\Framework\Model\AbstractModel implements EntryInter
         if(!$this->getData($key)){
             $this->initSubmissionParameterFromForm($key, $formKey);
         }
-        return $this->getData($key);
+        return strval($this->getData($key));
     }
 
     private function initSubmissionParameterFromForm($key, $formKey)
