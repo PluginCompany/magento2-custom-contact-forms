@@ -53,6 +53,17 @@ class Product extends DataObject
         $this->priceHelper = $priceHelper;
     }
 
+    public function getData($key = '', $index = null)
+    {
+        $method = $this->convertKeyToGetMethod($key);
+        return $this->{$method}();
+    }
+
+    private function convertKeyToGetMethod($key)
+    {
+        return 'get' . str_replace(' ', '', ucwords(str_replace('_', ' ', $key)));
+    }
+
     public function __call($method, $args)
     {
         if(substr($method, 0, 3) == 'get') {
