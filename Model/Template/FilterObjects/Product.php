@@ -183,8 +183,11 @@ class Product extends DataObject
 
     private function getRequestHandles()
     {
-        $handles = json_decode($this->request->getQueryValue('handles'));
-        if(!empty($handles)){
+        $handles = $this->request->getQueryValue('handles');
+        if(is_string($handles)) {
+            $handles = json_decode($handles);
+        }
+        if(is_array($handles)){
             return $handles;
         }
         return [];
